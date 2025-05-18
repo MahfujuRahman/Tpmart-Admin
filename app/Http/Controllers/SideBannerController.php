@@ -19,7 +19,10 @@ class SideBannerController extends Controller
     public function saveNewSideBanner(Request $request){
         $request->validate([
             'banner_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'banner_link' => 'required|url',
+            'banner_link' => 'nullable|url',
+            'title' => 'nullable|string|max:255',
+            'button_title' => 'nullable|string|max:255',
+            'button_url' => 'nullable|url',
         ]);
 
         $image = null;
@@ -41,6 +44,9 @@ class SideBannerController extends Controller
         SideBanner::insert([
             'banner_img' => $image,
             'banner_link' => request()->banner_link,
+            'title' => $request->title,
+            'button_title' => $request->button_title,
+            'button_url' => $request->button_url,
 
             'creator' => auth()->user()->id,
             'slug' => $slug,
@@ -105,6 +111,9 @@ class SideBannerController extends Controller
             'banner_img' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'banner_link' => 'required|url',
             'status' => 'nullable|in:active,inactive',
+            'title' => 'nullable|string|max:255',
+            'button_title' => 'nullable|string|max:255',
+            'button_url' => 'nullable|url',
         ]);
         $image = $data->banner_img;
         if ($request->hasFile('banner_img')){
@@ -130,6 +139,10 @@ class SideBannerController extends Controller
         SideBanner::where('id', $request->custom_id)->update([
             'banner_img' => $image,
             'banner_link' => $request->banner_link,
+            'title' => $request->title,
+            'button_title' => $request->button_title,
+            'button_url' => $request->button_url,
+            
             'creator' => auth()->user()->id,
             'slug' => $slug,
             'status' => $request->status,

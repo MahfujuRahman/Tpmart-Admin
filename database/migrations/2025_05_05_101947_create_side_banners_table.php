@@ -17,6 +17,9 @@ class CreateSideBannersTable extends Migration
             $table->id();
             $table->string('banner_img')->nullable();
             $table->string('banner_link')->nullable();
+            $table->string('title')->nullable();
+            $table->string('button_title')->nullable();
+            $table->string('button_url')->nullable();
             
             $table->unsignedBigInteger('creator')->nullable();
             $table->string('slug')->nullable();

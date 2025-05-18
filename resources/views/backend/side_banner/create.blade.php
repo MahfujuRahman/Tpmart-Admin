@@ -37,17 +37,43 @@
                             <div class="col-lg-5">
 
                                 <div class="form-group">
-                                    <label for="colFormLabel" class="col-form-label">Side Banner Image (1112px X 400px)</label>
+                                    <label for="colFormLabel" class="col-form-label">Side Banner Image (1112px X 400px) <span class="text-danger">*</span></label>
                                     <input type="file" name="banner_img" class="dropify" data-height="250" data-max-file-size="1M" accept="image/*"/>
                                 </div>
                             </div>
                             <div class="col-lg-7">
-
                                 <div class="form-group">
-                                    <label for="banner_link" class="col-form-label">URL LINK<span class="text-danger">*</span></label>
-                                    <input type="text" name="banner_link" class="form-control" id="banner_link" placeholder="Url link" required>
+                                    <label for="title" class="col-form-label">Title</label>
+                                    <input type="text" name="title" class="form-control" id="title" placeholder="Title...">
+                                    <div class="invalid-feedback" style="display: block;">
+                                        @error('title')
+                                            {{ $message }}
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="banner_link" class="col-form-label">URL LINK</label>
+                                    <input type="text" name="banner_link" class="form-control" id="banner_link" placeholder="Url link">
                                     <div class="invalid-feedback" style="display: block;">
                                         @error('banner_link')
+                                            {{ $message }}
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="button_title" class="col-form-label">Button Link</label>
+                                    <input type="text" name="button_title" class="form-control" id="button_title" placeholder="Click here..">
+                                    <div class="invalid-feedback" style="display: block;">
+                                        @error('button_title')
+                                            {{ $message }}
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="button_url" class="col-form-label">Button Url</label>
+                                    <input type="text" name="button_url" class="form-control" id="button_url" placeholder="https://tpmart.techparkit.org" >
+                                    <div class="invalid-feedback" style="display: block;">
+                                        @error('button_url')
                                             {{ $message }}
                                         @enderror
                                     </div>
