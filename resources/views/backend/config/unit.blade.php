@@ -4,23 +4,26 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -40,7 +43,8 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <button class="btn btn-success btn-sm" id="addNewFlag" style="margin-left: 5px"><i class="feather-plus"></i> Add New Unit</button>
+                            <button class="btn btn-success btn-sm" id="addNewFlag" style="margin-left: 5px"><i
+                                    class="feather-plus"></i> Add New Unit</button>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -72,7 +76,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm2" name="productForm2" class="form-horizontal">
@@ -97,7 +102,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm" name="productForm" class="form-horizontal">
@@ -154,26 +160,26 @@
                     data: 'name',
                     name: 'name'
                 },
-                {data: 'status', name: 'status'},
-                {data: 'created_at', name: 'created_at'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'status', name: 'status' },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
-            initComplete: function() {
-                this.api().columns([1]).every(function() {
+            initComplete: function () {
+                this.api().columns([1]).every(function () {
                     var column = this;
                     var input = document.createElement("input");
                     $(input).appendTo($(column.footer()).empty())
-                        .on('change', function() {
+                        .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
                             column.search(val ? val : '', true, false).draw();
                         });
                 });
 
-                this.api().columns([2]).every(function() {
+                this.api().columns([2]).every(function () {
                     var column = this;
                     var select = $('<select style="width:100%"><option value="">All</option></select>')
                         .appendTo($(column.footer()).empty())
-                        .on('change', function() {
+                        .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex(
                                 $(this).val()
                             );
@@ -181,7 +187,7 @@
                                 .search(val ? '^' + val + '$' : '', true, false)
                                 .draw();
                         });
-                    column.each(function() {
+                    column.each(function () {
                         select.append('<option value="Active">' + 'Active' + '</option>')
                         select.append('<option value="Inactive">' + 'Inactive' + '</option>')
 
@@ -232,7 +238,7 @@
 
         $('body').on('click', '.editBtn', function () {
             var id = $(this).data('id');
-            $.get("{{ url('get/unit/info') }}" +'/' + id, function (data) {
+            $.get("{{ url('get/unit/info') }}" + '/' + id, function (data) {
                 $('#exampleModal').modal('show');
                 $('#flag_slug').val(id);
                 $('#flag_name').val(data.name);
@@ -264,10 +270,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/unit') }}"+'/'+id,
+                    url: "{{ url('delete/unit') }}" + '/' + id,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Unit has been Deleted", "Deleted Successfully");

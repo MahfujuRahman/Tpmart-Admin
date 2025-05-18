@@ -4,36 +4,45 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             text-align: center !important;
             font-weight: 600;
         }
-        table.dataTable tbody td:nth-child(2){
+
+        table.dataTable tbody td:nth-child(2) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(3){
+
+        table.dataTable tbody td:nth-child(3) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(4){
+
+        table.dataTable tbody td:nth-child(4) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(5){
+
+        table.dataTable tbody td:nth-child(5) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(6){
+
+        table.dataTable tbody td:nth-child(6) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(7){
+
+        table.dataTable tbody td:nth-child(7) {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
     </style>
@@ -55,7 +64,9 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <a href="{{url('new/user/role')}}" class="btn btn-success btn-sm d-inline-block text-white" style="margin-left: 5px; cursor:pointer"><b><i class="feather-plus"></i> Create New Role</b></a>
+                            <a href="{{url('new/user/role')}}" class="btn btn-success btn-sm d-inline-block text-white"
+                                style="margin-left: 5px; cursor:pointer"><b><i class="feather-plus"></i> Create New
+                                    Role</b></a>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -115,7 +126,7 @@
                     data: 'updated_at',
                     name: 'updated_at'
                 },
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
 
@@ -130,10 +141,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/user/role') }}"+'/'+id,
+                    url: "{{ url('delete/user/role') }}" + '/' + id,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("User Role has been Deleted", "Deleted Successfully");

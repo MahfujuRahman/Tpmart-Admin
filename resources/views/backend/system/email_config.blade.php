@@ -4,53 +4,64 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             text-align: center !important;
             font-weight: 600;
         }
-        table.dataTable tbody td:nth-child(2){
+
+        table.dataTable tbody td:nth-child(2) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(3){
+
+        table.dataTable tbody td:nth-child(3) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(4){
+
+        table.dataTable tbody td:nth-child(4) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(5){
+
+        table.dataTable tbody td:nth-child(5) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(6){
-            text-align: center !important;
-            min-width: 100px !important;
-        }
-        table.dataTable tbody td:nth-child(7){
-            text-align: center !important;
-            min-width: 80px !important;
-        }
-        table.dataTable tbody td:nth-child(8){
-            text-align: center !important;
-            min-width: 80px !important;
-        }
-        table.dataTable tbody td:nth-child(9){
-            text-align: center !important;
-            min-width: 80px !important;
-        }
-        table.dataTable tbody td:nth-child(10){
+
+        table.dataTable tbody td:nth-child(6) {
             text-align: center !important;
             min-width: 100px !important;
         }
+
+        table.dataTable tbody td:nth-child(7) {
+            text-align: center !important;
+            min-width: 80px !important;
+        }
+
+        table.dataTable tbody td:nth-child(8) {
+            text-align: center !important;
+            min-width: 80px !important;
+        }
+
+        table.dataTable tbody td:nth-child(9) {
+            text-align: center !important;
+            min-width: 80px !important;
+        }
+
+        table.dataTable tbody td:nth-child(10) {
+            text-align: center !important;
+            min-width: 100px !important;
+        }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -70,7 +81,8 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <button class="btn btn-success btn-sm" id="addNewEmailServer" style="margin-left: 5px"><b><i class="feather-plus"></i> Add Email Server</b></button>
+                            <button class="btn btn-success btn-sm" id="addNewEmailServer" style="margin-left: 5px"><b><i
+                                        class="feather-plus"></i> Add Email Server</b></button>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -98,7 +110,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm2" name="productForm2" class="form-horizontal">
@@ -122,7 +135,8 @@
                             <input type="text" class="form-control" placeholder="example@gmail.com" name="email" required>
                         </div>
                         <div class="form-group">
-                            <label>Password<span class="text-danger">*</span> <small>(Stored in DB as Encrypted Format)</small></label>
+                            <label>Password<span class="text-danger">*</span> <small>(Stored in DB as Encrypted
+                                    Format)</small></label>
                             <input type="text" class="form-control" placeholder="*********" name="password" required>
                         </div>
                         <div class="form-group">
@@ -131,7 +145,8 @@
                         </div>
                         <div class="form-group">
                             <label>Mail From Email</label>
-                            <input type="email" class="form-control" placeholder="companyemail@company.com" name="mail_from_email">
+                            <input type="email" class="form-control" placeholder="companyemail@company.com"
+                                name="mail_from_email">
                         </div>
                         <div class="form-group">
                             <label>Encryption<span class="text-danger">*</span></label>
@@ -152,7 +167,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm" name="productForm" class="form-horizontal">
@@ -166,7 +182,8 @@
                         <input type="hidden" name="email_config_slug" id="email_config_slug">
                         <div class="form-group">
                             <label>Host Server<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" placeholder="smpt.gmail.com" id="host" name="host" required>
+                            <input type="text" class="form-control" placeholder="smpt.gmail.com" id="host" name="host"
+                                required>
                         </div>
                         <div class="form-group">
                             <label>Server PORT<span class="text-danger">*</span></label>
@@ -174,15 +191,18 @@
                         </div>
                         <div class="form-group">
                             <label>Email/Username<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" placeholder="example@gmail.com" id="email" name="email" required>
+                            <input type="text" class="form-control" placeholder="example@gmail.com" id="email" name="email"
+                                required>
                         </div>
                         <div class="form-group">
                             <label>Mail From Name</label>
-                            <input type="text" class="form-control" placeholder="Company Name" id="mail_from_name" name="mail_from_name">
+                            <input type="text" class="form-control" placeholder="Company Name" id="mail_from_name"
+                                name="mail_from_name">
                         </div>
                         <div class="form-group">
                             <label>Mail From Email</label>
-                            <input type="email" class="form-control" placeholder="companyemail@company.com" id="mail_from_email" name="mail_from_email">
+                            <input type="email" class="form-control" placeholder="companyemail@company.com"
+                                id="mail_from_email" name="mail_from_email">
                         </div>
                         <div class="form-group">
                             <label>Encryption<span class="text-danger">*</span></label>
@@ -250,10 +270,10 @@
                     data: 'mail_from_name',
                     name: 'mail_from_name'
                 },
-                {data: 'mail_from_email', name: 'mail_from_email'},
-                {data: 'encryption', name: 'encryption'},
-                {data: 'status', name: 'status'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'mail_from_email', name: 'mail_from_email' },
+                { data: 'encryption', name: 'encryption' },
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
 
@@ -297,10 +317,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure to Delete !")){
+            if (confirm("Are You sure to Delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/email/config') }}"+'/'+slug,
+                    url: "{{ url('delete/email/config') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.success("Config has been Deleted", "Deleted Successfully");
@@ -315,7 +338,7 @@
 
         $('body').on('click', '.editBtn', function () {
             var slug = $(this).data('id');
-            $.get("{{ url('get/email/config/info') }}" +'/' + slug, function (data) {
+            $.get("{{ url('get/email/config/info') }}" + '/' + slug, function (data) {
                 $('#exampleModal').modal('show');
                 $('#email_config_slug').val(slug);
                 $('#host').val(data.host);

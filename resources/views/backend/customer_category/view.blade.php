@@ -110,38 +110,38 @@
             serverSide: true,
             ajax: "{{ route('ViewAllCustomerCategory') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'title',
-                    name: 'title'
-                },
-                {
-                    data: 'description',
-                    name: 'description',
-                    render: function(data, type, full, meta) {
-                        if (data) {
-                            // Decode HTML entities first, then remove HTML tags
-                            var decodedData = $('<div>').html(data).text();
-                            var cleanText = decodedData.replace(/(<([^>]+)>)/gi, "");
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'title',
+                name: 'title'
+            },
+            {
+                data: 'description',
+                name: 'description',
+                render: function (data, type, full, meta) {
+                    if (data) {
+                        // Decode HTML entities first, then remove HTML tags
+                        var decodedData = $('<div>').html(data).text();
+                        var cleanText = decodedData.replace(/(<([^>]+)>)/gi, "");
 
-                            // Limit to 20 characters and append "..." if text is longer
-                            return cleanText.length > 20 ? cleanText.substring(0, 10) + '...' : cleanText;
-                        }
-                        return '';
+                        // Limit to 20 characters and append "..." if text is longer
+                        return cleanText.length > 20 ? cleanText.substring(0, 10) + '...' : cleanText;
                     }
-                },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
+                    return '';
+                }
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
             ],
         });
     </script>
@@ -155,20 +155,22 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var customerCategorySlug = $(this).data("id");
             console.log("customerCategorySlug - ", customerCategorySlug);
 
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/customer-category') }}" + '/' + customerCategorySlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Customer category has been Deleted", "Deleted Successfully");
                     },
-                    error: function(xhr) {                        
-                        console.log('Error 11:', xhr.responseJSON.error);                    
+                    error: function (xhr) {
+                        console.log('Error 11:', xhr.responseJSON.error);
                         if (xhr.responseJSON && xhr.responseJSON.error) {
                             toastr.error(xhr.responseJSON.error, "Error");
                         } else {

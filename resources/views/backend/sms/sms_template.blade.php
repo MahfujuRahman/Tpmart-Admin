@@ -4,40 +4,50 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             text-align: center !important;
             font-weight: 600;
         }
-        table.dataTable tbody td:nth-child(2){
+
+        table.dataTable tbody td:nth-child(2) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(3){
+
+        table.dataTable tbody td:nth-child(3) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(4){
+
+        table.dataTable tbody td:nth-child(4) {
             text-align: center !important;
             width: 180px;
         }
-        table.dataTable tbody td:nth-child(5){
+
+        table.dataTable tbody td:nth-child(5) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(6){
+
+        table.dataTable tbody td:nth-child(6) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(7){
+
+        table.dataTable tbody td:nth-child(7) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(8){
+
+        table.dataTable tbody td:nth-child(8) {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
     </style>
@@ -59,7 +69,8 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <a href="{{url('create/sms/template')}}" class="btn btn-success btn-sm" style="margin-left: 5px"><b><i class="feather-plus"></i> Create New Template</b></a>
+                            <a href="{{url('create/sms/template')}}" class="btn btn-success btn-sm"
+                                style="margin-left: 5px"><b><i class="feather-plus"></i> Create New Template</b></a>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -83,7 +94,8 @@
     </div>
 
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm" name="productForm" class="form-horizontal">
@@ -101,7 +113,8 @@
                         </div>
                         <div class="form-group">
                             <label>Template Description</label>
-                            <textarea rows="5" id="template_description" class="form-control" name="template_description"></textarea>
+                            <textarea rows="5" id="template_description" class="form-control"
+                                name="template_description"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -140,8 +153,8 @@
                     data: 'description',
                     name: 'description'
                 },
-                {data: 'created_at', name: 'created_at'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'created_at', name: 'created_at' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
         $(".dataTables_filter").append($("#customFilter"));
@@ -155,10 +168,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/sms/template') }}"+'/'+id,
+                    url: "{{ url('delete/sms/template') }}" + '/' + id,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Template has been Deleted", "Deleted Successfully");
@@ -172,7 +188,7 @@
 
         $('body').on('click', '.editBtn', function () {
             var id = $(this).data('id');
-            $.get("{{ url('get/sms/template/info') }}" +'/' + id, function (data) {
+            $.get("{{ url('get/sms/template/info') }}" + '/' + id, function (data) {
                 $('#exampleModal').modal('show');
                 $('#template_id').val(id);
                 $('#template_title').val(data.title);

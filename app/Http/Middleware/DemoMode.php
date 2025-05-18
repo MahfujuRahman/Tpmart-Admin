@@ -17,14 +17,12 @@ class DemoMode
      */
     public function handle(Request $request, Closure $next)
     {
-        // return $next($request);
-        if(env('DEMO_MODE') == true){
-            if($request->method() === 'POST'){
-                Toastr::error('Demo Mode is Enabled', 'You cannot change content');
+        if (env('DEMO_MODE') == true) {
+            if ($request->method() === 'POST') {
+                Toastr::error('You cannot change content', 'Demo Mode is Enabled');
                 return back();
-            } else {
-                return $next($request);
             }
+            return $next($request);
         } else {
             return $next($request);
         }

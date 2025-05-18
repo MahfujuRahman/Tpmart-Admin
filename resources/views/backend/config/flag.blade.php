@@ -4,40 +4,48 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             text-align: center !important;
             font-weight: 600;
         }
-        table.dataTable tbody td:nth-child(2){
+
+        table.dataTable tbody td:nth-child(2) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(3){
+
+        table.dataTable tbody td:nth-child(3) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(4){
+
+        table.dataTable tbody td:nth-child(4) {
             text-align: center !important;
             width: 180px;
         }
-        table.dataTable tbody td:nth-child(5){
+
+        table.dataTable tbody td:nth-child(5) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(6){
+
+        table.dataTable tbody td:nth-child(6) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(7){
+
+        table.dataTable tbody td:nth-child(7) {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -57,7 +65,8 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <button class="btn btn-success btn-sm" id="addNewFlag" style="margin-left: 5px"><i class="feather-plus"></i> Add New Flag</button>
+                            <button class="btn btn-success btn-sm" id="addNewFlag" style="margin-left: 5px"><i
+                                    class="feather-plus"></i> Add New Flag</button>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -93,7 +102,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm2" name="productForm2" class="form-horizontal">
@@ -122,7 +132,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm" name="productForm" class="form-horizontal">
@@ -182,8 +193,8 @@
                 {
                     data: 'icon',
                     name: 'icon',
-                    render: function( data, type, full, meta ) {
-                        if(data){
+                    render: function (data, type, full, meta) {
+                        if (data) {
                             return "<img src=\"/" + data + "\" width=\"60\"/>";
                         } else {
                             return '';
@@ -194,12 +205,12 @@
                     data: 'name',
                     name: 'name'
                 },
-                {data: 'status', name: 'status'},
-                {data: 'featured', name: 'featured'},
-                {data: 'created_at', name: 'created_at'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'status', name: 'status' },
+                { data: 'featured', name: 'featured' },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
-            initComplete: function() {
+            initComplete: function () {
                 // this.api().columns([2]).every(function() {
                 //     var column = this;
                 //     var input = document.createElement("input");
@@ -210,11 +221,11 @@
                 //         });
                 // });
 
-                this.api().columns([3]).every(function() {
+                this.api().columns([3]).every(function () {
                     var column = this;
                     var select = $('<select style="width:100%"><option value="">All</option></select>')
                         .appendTo($(column.footer()).empty())
-                        .on('change', function() {
+                        .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex(
                                 $(this).val()
                             );
@@ -222,7 +233,7 @@
                                 .search(val ? '^' + val + '$' : '', true, false)
                                 .draw();
                         });
-                    column.each(function() {
+                    column.each(function () {
                         select.append('<option value="Active">' + 'Active' + '</option>')
                         select.append('<option value="Inactive">' + 'Inactive' + '</option>')
 
@@ -283,7 +294,7 @@
 
         $('body').on('click', '.editBtn', function () {
             var slug = $(this).data('id');
-            $.get("{{ url('get/flag/info') }}" +'/' + slug, function (data) {
+            $.get("{{ url('get/flag/info') }}" + '/' + slug, function (data) {
                 $('#exampleModal').modal('show');
                 $('#flag_slug').val(slug);
                 $('#flag_name').val(data.name);
@@ -324,10 +335,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/flag') }}"+'/'+slug,
+                    url: "{{ url('delete/flag') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Flag has been Deleted", "Deleted Successfully");
@@ -341,10 +355,10 @@
 
         $('body').on('click', '.featureBtn', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure to Change the Feature Status !")){
+            if (confirm("Are You sure to Change the Feature Status !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('feature/flag') }}"+'/'+id,
+                    url: "{{ url('feature/flag') }}" + '/' + id,
                     success: function (data) {
 
                         table.draw(false);

@@ -4,38 +4,46 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(6){
+
+        table.dataTable tbody td:nth-child(6) {
             min-width: 100px !important;
         }
-        table.dataTable tbody td:nth-child(7){
+
+        table.dataTable tbody td:nth-child(7) {
             min-width: 80px !important;
         }
-        table.dataTable tbody td:nth-child(8){
+
+        table.dataTable tbody td:nth-child(8) {
             min-width: 80px !important;
         }
-        table.dataTable tbody td:nth-child(9){
+
+        table.dataTable tbody td:nth-child(9) {
             min-width: 80px !important;
         }
-        table.dataTable tbody td:nth-child(10){
+
+        table.dataTable tbody td:nth-child(10) {
             min-width: 100px !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -120,10 +128,10 @@
                     data: 'sub_total',
                     name: 'sub_total'
                 },
-                {data: 'discount', name: 'discount'},
-                {data: 'delivery_fee', name: 'delivery_fee'},
-                {data: 'total', name: 'total'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'discount', name: 'discount' },
+                { data: 'delivery_fee', name: 'delivery_fee' },
+                { data: 'total', name: 'total' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
     </script>
@@ -138,10 +146,10 @@
 
         $('body').on('click', '.cancelBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure to Cancel !")){
+            if (confirm("Are You sure to Cancel !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('cancel/order') }}"+'/'+slug,
+                    url: "{{ url('cancel/order') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Order has been Cancelled", "Cancelled Successfully");
@@ -155,10 +163,10 @@
 
         $('body').on('click', '.intransitBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure to In Transit !")){
+            if (confirm("Are You sure to In Transit !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('intransit/order') }}"+'/'+slug,
+                    url: "{{ url('intransit/order') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.success("Order has been Approved", "Approved Successfully");
@@ -172,10 +180,10 @@
 
         $('body').on('click', '.deliveryBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure to Delivered !")){
+            if (confirm("Are You sure to Delivered !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('deliver/order') }}"+'/'+slug,
+                    url: "{{ url('deliver/order') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.success("Order has been Delivered", "Delivered Successfully");
@@ -189,10 +197,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure to Delete Order !")){
+            if (confirm("Are You sure to Delete Order !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/order') }}"+'/'+slug,
+                    url: "{{ url('delete/order') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Order has been Deleted", "Deleted Successfully");

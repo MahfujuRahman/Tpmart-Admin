@@ -111,42 +111,42 @@
             serverSide: true,
             ajax: "{{ url('view/all/product-supplier') }}", // Ensure this URL matches your controller route
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'contact_number', // Contact Number column
-                    name: 'contact_number'
-                },
-                {
-                    data: 'address',
-                    name: 'address'
-                },
-                {
-                    data: 'image',
-                    name: 'image',
-                    render: function(data, type, full, meta) {
-                        if (data) {
-                            return "<img class=\"gridProductImage\" src=\"/" + data + "\" width=\"60\"/>";
-                        } else {
-                            return '';
-                        }
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'contact_number', // Contact Number column
+                name: 'contact_number'
+            },
+            {
+                data: 'address',
+                name: 'address'
+            },
+            {
+                data: 'image',
+                name: 'image',
+                render: function (data, type, full, meta) {
+                    if (data) {
+                        return "<img class=\"gridProductImage\" src=\"/" + data + "\" width=\"60\"/>";
+                    } else {
+                        return '';
                     }
-                },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
                 }
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }
             ]
         });
     </script>
@@ -160,17 +160,19 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var productSupplierSlug = $(this).data("id");
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/product-supplier/') }}" + '/' + productSupplierSlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Product Warehouse room has been Deleted", "Deleted Successfully");
                     },
-                    error: function(data) {
+                    error: function (data) {
                         console.log('Error:', data);
                     }
                 });

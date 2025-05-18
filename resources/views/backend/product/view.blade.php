@@ -4,31 +4,35 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
 
-        table#DataTables_Table_0 img{
+        table#DataTables_Table_0 img {
             transition: all .2s linear;
         }
-        img.gridProductImage:hover{
+
+        img.gridProductImage:hover {
             scale: 2;
             cursor: pointer;
         }
-
     </style>
 @endsection
 
@@ -109,8 +113,8 @@
                 {
                     data: 'image',
                     name: 'image',
-                    render: function( data, type, full, meta ) {
-                        if(data){
+                    render: function (data, type, full, meta) {
+                        if (data) {
                             return "<img class=\"gridProductImage\" src=\"/" + data + "\" width=\"40\"/>";
                         } else {
                             return '';
@@ -136,30 +140,30 @@
                 {
                     data: 'stock',
                     name: 'stock',
-                    render: function(data, type, full, meta) {
+                    render: function (data, type, full, meta) {
                         console.log(full.low_stock);
                         if (data <= full.low_stock ? full.low_stock : 0) {
                             return '<span style="color: red; font-weight: bold;" title="Low Stock: Consider Restocking">' +
-                                   '<i class="fas fa-exclamation-triangle"></i> ' + data + 
-                                   '</span>';
+                                '<i class="fas fa-exclamation-triangle"></i> ' + data +
+                                '</span>';
                         }
                         return data;
                     }
                 },
-                {data: 'unit_name', name: 'unit_name'},
-                {data: 'flag_name', name: 'flag_name'},
+                { data: 'unit_name', name: 'unit_name' },
+                { data: 'flag_name', name: 'flag_name' },
                 {
-                    data: 'status', 
+                    data: 'status',
                     name: 'status',
-                    render: function(data, type, full, meta) {
-                        if(data == 1){
+                    render: function (data, type, full, meta) {
+                        if (data == 1) {
                             return '<span class="btn btn-sm btn-success d-inline-block">Active</span>';
                         } else {
                             return '<span class="btn btn-sm btn-danger d-inline-block">Inactive</span>';
                         }
                     }
                 },
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
     </script>
@@ -174,12 +178,15 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/product') }}"+'/'+slug,
+                    url: "{{ url('delete/product') }}" + '/' + slug,
                     success: function (data) {
-                        if(data.data == 1){
+                        if (data.data == 1) {
                             table.draw(false);
                             toastr.error("Product has been Deleted", "Deleted Successfully");
                         } else {

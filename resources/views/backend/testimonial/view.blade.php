@@ -4,29 +4,32 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
 
-        img.gridProductImage:hover{
+        img.gridProductImage:hover {
             transition: all .2s linear;
             scale: 2;
             cursor: pointer;
         }
-
     </style>
 @endsection
 
@@ -43,7 +46,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title mb-3">Testimonials</h4>
-                
+
                     <div class="table-responsive">
                         <table class="table table-bordered mb-0 data-table">
                             <thead>
@@ -89,8 +92,8 @@
                 {
                     data: 'customer_image',
                     name: 'customer_image',
-                    render: function( data, type, full, meta ) {
-                        if(data){
+                    render: function (data, type, full, meta) {
+                        if (data) {
                             return "<img class=\"gridProductImage\" src=\"/" + data + "\" width=\"40\"/>";
                         } else {
                             return '';
@@ -113,7 +116,7 @@
                     data: 'description',
                     name: 'description'
                 },
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
     </script>
@@ -128,10 +131,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/testimonial') }}"+'/'+slug,
+                    url: "{{ url('delete/testimonial') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Testimonial has been Deleted", "Deleted Successfully");

@@ -4,39 +4,46 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             text-align: center !important;
             font-weight: 600;
         }
-        table.dataTable tbody td:nth-child(2){
-            text-align: center !important;
-        }
-        table.dataTable tbody td:nth-child(3){
-            text-align: center !important;
-        }
-        table.dataTable tbody td:nth-child(4){
-            text-align: center !important;
-        }
-        table.dataTable tbody td:nth-child(5){
-            text-align: center !important;
-        }
-        table.dataTable tbody td:nth-child(6){
-            text-align: center !important;
-        }
-        table.dataTable tbody td:nth-child(7){
-            text-align: center !important;
-        }
-        /* tfoot {
-            display: table-header-group !important;
-        }
-        tfoot th{
-            text-align: center;
-        } */
 
+        table.dataTable tbody td:nth-child(2) {
+            text-align: center !important;
+        }
+
+        table.dataTable tbody td:nth-child(3) {
+            text-align: center !important;
+        }
+
+        table.dataTable tbody td:nth-child(4) {
+            text-align: center !important;
+        }
+
+        table.dataTable tbody td:nth-child(5) {
+            text-align: center !important;
+        }
+
+        table.dataTable tbody td:nth-child(6) {
+            text-align: center !important;
+        }
+
+        table.dataTable tbody td:nth-child(7) {
+            text-align: center !important;
+        }
+
+        /* tfoot {
+                display: table-header-group !important;
+            }
+            tfoot th{
+                text-align: center;
+            } */
     </style>
 @endsection
 
@@ -105,11 +112,11 @@
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
                 },
-                {data: 'ticket_no', name: 'ticket_no'},
-                {data: 'name', name: 'name'},
-                {data: 'subject', name: 'subject'},
-                {data: 'attachment', name: 'attachment'},
-                {data: 'status', name: 'status'},
+                { data: 'ticket_no', name: 'ticket_no' },
+                { data: 'name', name: 'name' },
+                { data: 'subject', name: 'subject' },
+                { data: 'attachment', name: 'attachment' },
+                { data: 'status', name: 'status' },
                 {
                     data: 'action',
                     name: 'action',
@@ -130,10 +137,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/support/ticket') }}"+'/'+slug,
+                    url: "{{ url('delete/support/ticket') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Ticket has been Deleted", "Deleted Successfully");
@@ -147,10 +157,10 @@
 
         $('body').on('click', '.statusBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure want to Change the Status !")){
+            if (confirm("Are You sure want to Change the Status !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('support/status/change') }}"+'/'+slug,
+                    url: "{{ url('support/status/change') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.suucess("Status has been Changed", "Changed Successfully");
@@ -164,10 +174,10 @@
 
         $('body').on('click', '.onHoldBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure want to Hold the Support !")){
+            if (confirm("Are You sure want to Hold the Support !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('support/status/on/hold') }}"+'/'+slug,
+                    url: "{{ url('support/status/on/hold') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.suucess("Status has been Changed", "Changed Successfully");
@@ -181,10 +191,10 @@
 
         $('body').on('click', '.rejectBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure want to Reject the Support !")){
+            if (confirm("Are You sure want to Reject the Support !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('support/status/rejected') }}"+'/'+slug,
+                    url: "{{ url('support/status/rejected') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.suucess("Status has been Changed", "Changed Successfully");

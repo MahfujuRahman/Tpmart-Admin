@@ -115,37 +115,37 @@
             serverSide: true,
             ajax: "{{ route('ViewAllVideoGallery') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'title',
-                    name: 'title'
-                },
-                {
-                    data: 'source',
-                    name: 'source',
-                    render: function(data, type, row) {
-                        if (data) {
-                            // Strip original width and height attributes and apply your own
-                            let updatedIframe = data.replace(/(width|height)="[^"]*"/g, '');
-                            return updatedIframe.replace('<iframe',
-                                '<iframe style="width:200px; height:120px;"');
-                        } else {
-                            return 'No Video';
-                        }
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'title',
+                name: 'title'
+            },
+            {
+                data: 'source',
+                name: 'source',
+                render: function (data, type, row) {
+                    if (data) {
+                        // Strip original width and height attributes and apply your own
+                        let updatedIframe = data.replace(/(width|height)="[^"]*"/g, '');
+                        return updatedIframe.replace('<iframe',
+                            '<iframe style="width:200px; height:120px;"');
+                    } else {
+                        return 'No Video';
                     }
-                },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
+                }
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
             ],
         });
     </script>
@@ -159,19 +159,21 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var outletSlug = $(this).data("id");
             console.log("outletSlug - ", outletSlug);
 
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/video-gallery') }}" + '/' + outletSlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Customer source type has been Deleted", "Deleted Successfully");
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         // Ensure you're handling the error response properly
                         console.log('Error 11:', xhr.responseJSON.error);
                         // Assuming error message is returned as part of the response JSON

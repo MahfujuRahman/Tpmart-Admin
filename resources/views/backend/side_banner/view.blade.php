@@ -4,23 +4,26 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -40,7 +43,8 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <a href="{{url('add/new/side-banner')}}" class="btn btn-success btn-sm" id="addNewFlag" style="margin-left: 5px"><i class="feather-plus"></i> Add New Banner</a>
+                            <a href="{{url('add/new/side-banner')}}" class="btn btn-success btn-sm" id="addNewFlag"
+                                style="margin-left: 5px"><i class="feather-plus"></i> Add New Banner</a>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -86,17 +90,17 @@
                 {
                     data: 'banner_img',
                     name: 'banner_img',
-                    render: function( data, type, full, meta ) {
-                        if(data){
+                    render: function (data, type, full, meta) {
+                        if (data) {
                             return "<img src=\"/" + data + "\" width=\"100\"/>";
                         } else {
                             return '';
                         }
                     }
                 },
-                {data: 'banner_link', name: 'banner_link'},
-                {data: 'status', name: 'status'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'banner_link', name: 'banner_link' },
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
         $(".dataTables_filter").append($("#customFilter"));
@@ -113,10 +117,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/side-banner') }}"+'/'+slug,
+                    url: "{{ url('delete/side-banner') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Page has been Deleted", "Deleted Successfully");

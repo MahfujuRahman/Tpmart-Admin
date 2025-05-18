@@ -4,43 +4,52 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             text-align: center !important;
             font-weight: 600;
         }
-        table.dataTable tbody td:nth-child(2){
+
+        table.dataTable tbody td:nth-child(2) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(3){
+
+        table.dataTable tbody td:nth-child(3) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(4){
+
+        table.dataTable tbody td:nth-child(4) {
             text-align: center !important;
             width: 180px;
         }
-        table.dataTable tbody td:nth-child(5){
+
+        table.dataTable tbody td:nth-child(5) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(6){
+
+        table.dataTable tbody td:nth-child(6) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(7){
+
+        table.dataTable tbody td:nth-child(7) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(8){
+
+        table.dataTable tbody td:nth-child(8) {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -60,7 +69,9 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <a href="{{url('download/subscribed/users/excel')}}" class="btn btn-sm btn-success rounded ml-3"><i class="feather-download"></i> Download As Excel</a>
+                            <a href="{{url('download/subscribed/users/excel')}}"
+                                class="btn btn-sm btn-success rounded ml-3"><i class="feather-download"></i> Download As
+                                Excel</a>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -105,8 +116,8 @@
                     data: 'email',
                     name: 'email'
                 },
-                {data: 'created_at', name: 'created_at'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'created_at', name: 'created_at' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
 
@@ -123,10 +134,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/subcribed/users') }}"+'/'+id,
+                    url: "{{ url('delete/subcribed/users') }}" + '/' + id,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Subscription has been Deleted", "Deleted Successfully");

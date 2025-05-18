@@ -239,22 +239,22 @@ class BrandController extends Controller
         return redirect('/view/all/brands');
     }
 
-    public function deleteBrand($slug){
-        $data = Brand::where('slug', $slug)->first();
-        if($data->logo){
-            if(file_exists(public_path($data->logo))){
-                unlink(public_path($data->logo));
-            }
-        }
-        if($data->banner){
-            if(file_exists(public_path($data->banner))){
-                unlink(public_path($data->banner));
-            }
-        }
+    // public function deleteBrand($slug){
+    //     $data = Brand::where('slug', $slug)->first();
+    //     if($data->logo){
+    //         if(file_exists(public_path($data->logo))){
+    //             unlink(public_path($data->logo));
+    //         }
+    //     }
+    //     if($data->banner){
+    //         if(file_exists(public_path($data->banner))){
+    //             unlink(public_path($data->banner));
+    //         }
+    //     }
 
-        ProductModel::where('brand_id', $data->id)->delete();
-        $data->delete();
-        return response()->json(['success' => 'Brand Deleted Successfully.']);
-    }
+    //     ProductModel::where('brand_id', $data->id)->delete();
+    //     $data->delete();
+    //     return response()->json(['success' => 'Brand Deleted Successfully.']);
+    // }
 
 }

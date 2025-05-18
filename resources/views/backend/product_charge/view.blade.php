@@ -74,10 +74,10 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="card-title mb-3"  style="display: inline-block;">View All Other Charges</h4>
+                        <h4 class="card-title mb-3" style="display: inline-block;">View All Other Charges</h4>
                         <a href="{{ route('AddNewPurchaseProductCharge') }}" class="btn btn-primary">Add Other Charge</a>
-                     </div>
-                    
+                    </div>
+
                     <div class="table-responsive">
 
                         <table class="table table-bordered mb-0 data-table">
@@ -113,23 +113,23 @@
             serverSide: true,
             ajax: "{{ url('view/all/purchase-product/charge') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'title',
-                    name: 'title'
-                },
-                {
-                    data: 'type',
-                    name: 'type'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'title',
+                name: 'title'
+            },
+            {
+                data: 'type',
+                name: 'type'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
             ],
         });
     </script>
@@ -143,19 +143,21 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var productOtherChargeSlug = $(this).data("id");
             console.log("productOtherChargeSlug - ", productOtherChargeSlug);
-            
+
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/purchase-product/charge') }}" + '/' + productOtherChargeSlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Other Charge has been Deleted", "Deleted Successfully");
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         // Ensure you're handling the error response properly
                         console.log('Error 11:', xhr.responseJSON.error);
                         // Assuming error message is returned as part of the response JSON

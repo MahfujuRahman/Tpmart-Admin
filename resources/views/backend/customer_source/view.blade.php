@@ -110,49 +110,49 @@
             serverSide: true,
             ajax: "{{ route('ViewAllCustomerSource') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'title',
-                    name: 'title'
-                },
-                {
-                    data: 'description',
-                    name: 'description',
-                    render: function(data, type, full, meta) {
-                        if (data) {
-                            // Decode HTML entities first, then remove HTML tags
-                            var decodedData = $('<div>').html(data).text();
-                            var cleanText = decodedData.replace(/(<([^>]+)>)/gi, "");
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'title',
+                name: 'title'
+            },
+            {
+                data: 'description',
+                name: 'description',
+                render: function (data, type, full, meta) {
+                    if (data) {
+                        // Decode HTML entities first, then remove HTML tags
+                        var decodedData = $('<div>').html(data).text();
+                        var cleanText = decodedData.replace(/(<([^>]+)>)/gi, "");
 
-                            // Limit to 20 characters and append "..." if text is longer
-                            return cleanText.length > 20 ? cleanText.substring(0, 10) + '...' : cleanText;
-                        }
-                        return '';
+                        // Limit to 20 characters and append "..." if text is longer
+                        return cleanText.length > 20 ? cleanText.substring(0, 10) + '...' : cleanText;
                     }
-                },
-                // {
-                //     data: 'image',
-                //     name: 'image',
-                //     render: function(data, type, full, meta) {
-                //         if (data) {
-                //             return "<img class=\"gridProductImage\" src=\"/" + data + "\" width=\"60\"/>";
-                //         } else {
-                //             return '';
-                //         }
-                //     }
-                // },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
+                    return '';
+                }
+            },
+            // {
+            //     data: 'image',
+            //     name: 'image',
+            //     render: function(data, type, full, meta) {
+            //         if (data) {
+            //             return "<img class=\"gridProductImage\" src=\"/" + data + "\" width=\"60\"/>";
+            //         } else {
+            //             return '';
+            //         }
+            //     }
+            // },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
             ],
         });
     </script>
@@ -166,19 +166,21 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var customerSourceSlug = $(this).data("id");
             console.log("customerSourceSlug - ", customerSourceSlug);
 
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/customer-source') }}" + '/' + customerSourceSlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Customer source type has been Deleted", "Deleted Successfully");
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         // Ensure you're handling the error response properly
                         console.log('Error 11:', xhr.responseJSON.error);
                         // Assuming error message is returned as part of the response JSON

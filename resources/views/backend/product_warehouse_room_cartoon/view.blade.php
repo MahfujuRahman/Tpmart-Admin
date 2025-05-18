@@ -113,47 +113,47 @@
             serverSide: true,
             ajax: "{{ url('view/all/product-warehouse-room-cartoon') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'warehouse_title',
-                    name: 'warehouse_title'
-                },
-                {
-                    data: 'room_title',
-                    name: 'room_title'
-                },
-                {
-                    data: 'cartoon_title',
-                    name: 'cartoon_title'
-                },
-                {
-                    data: 'cartoon_code',
-                    name: 'cartoon_code'
-                },
-                {
-                    data: 'description',
-                    name: 'description',
-                    render: function(data, type, full, meta) {
-                        if (data) {
-                            var decodedData = $('<div>').html(data).text(); // Decode any HTML entities
-                            var cleanText = decodedData.replace(/(<([^>]+)>)/gi, ""); // Strip any HTML tags
-                            return cleanText.substring(0, 20); // Show only the first 20 characters
-                        }
-                        return '';
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'warehouse_title',
+                name: 'warehouse_title'
+            },
+            {
+                data: 'room_title',
+                name: 'room_title'
+            },
+            {
+                data: 'cartoon_title',
+                name: 'cartoon_title'
+            },
+            {
+                data: 'cartoon_code',
+                name: 'cartoon_code'
+            },
+            {
+                data: 'description',
+                name: 'description',
+                render: function (data, type, full, meta) {
+                    if (data) {
+                        var decodedData = $('<div>').html(data).text(); // Decode any HTML entities
+                        var cleanText = decodedData.replace(/(<([^>]+)>)/gi, ""); // Strip any HTML tags
+                        return cleanText.substring(0, 20); // Show only the first 20 characters
                     }
-                },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
+                    return '';
                 }
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }
             ]
 
 
@@ -169,19 +169,21 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var productWarehouseRoomcartoonSlug = $(this).data("id");
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/product-warehouse-room-cartoon') }}" + '/' +
                         productWarehouseRoomcartoonSlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Product Warehouse room cartoon has been Deleted",
                             "Deleted Successfully");
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         // Ensure you're handling the error response properly
                         console.log('Error 11:', xhr.responseJSON.error);
                         // Assuming error message is returned as part of the response JSON

@@ -4,26 +4,30 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
-        table.dataTable tbody td:nth-child(4){
+
+        table.dataTable tbody td:nth-child(4) {
             width: 180px;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -107,22 +111,25 @@
                     data: 'expire_date',
                     name: 'expire_date'
                 },
-                {data: 'type', name: 'type'},
-                {data: 'value', name: 'value'},
-                {data: 'minimum_order_amount', name: 'minimum_order_amount'},
-                {data: 'code', name: 'code'},
-                {data: 'status', name: 'status'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'type', name: 'type' },
+                { data: 'value', name: 'value' },
+                { data: 'minimum_order_amount', name: 'minimum_order_amount' },
+                { data: 'code', name: 'code' },
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
 
 
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('remove/promo/code') }}"+'/'+slug,
+                    url: "{{ url('remove/promo/code') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Data has been Deleted", "Deleted Successfully");

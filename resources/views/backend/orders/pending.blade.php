@@ -105,47 +105,47 @@
             lengthMenu: [15, 25, 50, 100],
             ajax: "{{ url('view/pending/orders') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'order_no',
-                    name: 'order_no'
-                }, //orderable: true, searchable: true
-                {
-                    data: 'order_date',
-                    name: 'order_date'
-                },
-                {
-                    data: 'customer_name',
-                    name: 'customer_name'
-                },
-                {
-                    data: 'customer_email',
-                    name: 'customer_email'
-                },
-                {
-                    data: 'customer_phone',
-                    name: 'customer_phone'
-                },
-                {
-                    data: 'order_status',
-                    name: 'order_status'
-                },
-                {
-                    data: 'payment_status',
-                    name: 'payment_status'
-                },
-                {
-                    data: 'total',
-                    name: 'total'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'order_no',
+                name: 'order_no'
+            }, //orderable: true, searchable: true
+            {
+                data: 'order_date',
+                name: 'order_date'
+            },
+            {
+                data: 'customer_name',
+                name: 'customer_name'
+            },
+            {
+                data: 'customer_email',
+                name: 'customer_email'
+            },
+            {
+                data: 'customer_phone',
+                name: 'customer_phone'
+            },
+            {
+                data: 'order_status',
+                name: 'order_status'
+            },
+            {
+                data: 'payment_status',
+                name: 'payment_status'
+            },
+            {
+                data: 'total',
+                name: 'total'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
             ],
         });
     </script>
@@ -164,34 +164,34 @@
             }
         });
 
-        $('body').on('click', '.cancelBtn', function() {
+        $('body').on('click', '.cancelBtn', function () {
             var slug = $(this).data("id");
             if (confirm("Are You sure to Cancel !")) {
                 $.ajax({
                     type: "GET",
                     url: "{{ url('cancel/order') }}" + '/' + slug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Order has been Cancelled", "Cancelled Successfully");
                     },
-                    error: function(data) {
+                    error: function (data) {
                         console.log('Error:', data);
                     }
                 });
             }
         });
 
-        $('body').on('click', '.approveBtn', function() {
+        $('body').on('click', '.approveBtn', function () {
             var slug = $(this).data("id");
             if (confirm("Are You sure to Approve !")) {
                 $.ajax({
                     type: "GET",
                     url: "{{ url('approve/order') }}" + '/' + slug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.success("Order has been Approved", "Approved Successfully");
                     },
-                    error: function(data) {
+                    error: function (data) {
                         console.log('Error:', data);
                     }
                 });
@@ -200,10 +200,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure to Delete Order !")){
+            if (confirm("Are You sure to Delete Order !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/order') }}"+'/'+slug,
+                    url: "{{ url('delete/order') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Order has been Deleted", "Deleted Successfully");

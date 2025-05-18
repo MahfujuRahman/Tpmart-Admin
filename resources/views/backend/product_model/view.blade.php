@@ -4,23 +4,26 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -40,7 +43,8 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <a href="{{url('add/new/model')}}" class="btn btn-success btn-sm" id="addNewFlag" style="margin-left: 5px"><i class="feather-plus"></i> Add New Model</a>
+                            <a href="{{url('add/new/model')}}" class="btn btn-success btn-sm" id="addNewFlag"
+                                style="margin-left: 5px"><i class="feather-plus"></i> Add New Model</a>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -85,16 +89,17 @@
             columns: [
                 {
                     data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'},
+                    name: 'DT_RowIndex'
+                },
                 {
                     data: 'brand_name',
                     name: 'brand_name'
                 }, //orderable: true, searchable: true
-                {data: 'name', name: 'name'},
-                {data: 'code', name: 'code'},
-                {data: 'slug', name: 'slug'},
-                {data: 'status', name: 'status'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'name', name: 'name' },
+                { data: 'code', name: 'code' },
+                { data: 'slug', name: 'slug' },
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
 
@@ -111,10 +116,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure to Delete !")){
+            if (confirm("Are You sure to Delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/model') }}"+'/'+id,
+                    url: "{{ url('delete/model') }}" + '/' + id,
                     success: function (data) {
 
                         table.draw(false);

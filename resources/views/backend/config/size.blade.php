@@ -4,23 +4,26 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -40,8 +43,10 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <button class="btn btn-success btn-sm" id="addNewSize" style="margin-left: 5px"><i class="feather-plus"></i> Add New Size</button>
-                            <a href="{{url('rearrange/size')}}" class="btn btn-success btn-sm" style="margin-left: 5px"><b><i class="fas fa-sort-amount-up"></i> Rearrange Size</b></a>
+                            <button class="btn btn-success btn-sm" id="addNewSize" style="margin-left: 5px"><i
+                                    class="feather-plus"></i> Add New Size</button>
+                            <a href="{{url('rearrange/size')}}" class="btn btn-success btn-sm"
+                                style="margin-left: 5px"><b><i class="fas fa-sort-amount-up"></i> Rearrange Size</b></a>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -73,7 +78,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm2" name="productForm2" class="form-horizontal">
@@ -98,7 +104,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm" name="productForm" class="form-horizontal">
@@ -155,11 +162,11 @@
                     data: 'name',
                     name: 'name'
                 },
-                {data: 'status', name: 'status'},
-                {data: 'created_at', name: 'created_at'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'status', name: 'status' },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
-            initComplete: function() {
+            initComplete: function () {
                 // this.api().columns([1]).every(function() {
                 //     var column = this;
                 //     var input = document.createElement("input");
@@ -233,7 +240,7 @@
 
         $('body').on('click', '.editBtn', function () {
             var id = $(this).data('id');
-            $.get("{{ url('get/size/info') }}" +'/' + id, function (data) {
+            $.get("{{ url('get/size/info') }}" + '/' + id, function (data) {
                 $('#exampleModal').modal('show');
                 $('#flag_slug').val(id);
                 $('#flag_name').val(data.name);
@@ -265,10 +272,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/size') }}"+'/'+id,
+                    url: "{{ url('delete/size') }}" + '/' + id,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Size has been Deleted", "Deleted Successfully");

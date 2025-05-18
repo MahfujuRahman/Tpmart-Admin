@@ -5,34 +5,40 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             text-align: center !important;
             font-weight: 600;
         }
-        table.dataTable tbody td:nth-child(2){
+
+        table.dataTable tbody td:nth-child(2) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(3){
+
+        table.dataTable tbody td:nth-child(3) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(4){
+
+        table.dataTable tbody td:nth-child(4) {
             text-align: center !important;
             width: 180px;
         }
-        table.dataTable tbody td:nth-child(5){
+
+        table.dataTable tbody td:nth-child(5) {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -52,7 +58,8 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <button class="btn btn-success btn-sm" id="addNewColor" style="margin-left: 5px"><b><i class="feather-plus"></i> Add New Color</b></button>
+                            <button class="btn btn-success btn-sm" id="addNewColor" style="margin-left: 5px"><b><i
+                                        class="feather-plus"></i> Add New Color</b></button>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -75,7 +82,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm2" name="productForm2" class="form-horizontal">
@@ -104,7 +112,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm" name="productForm" class="form-horizontal">
@@ -122,7 +131,8 @@
                         </div>
                         <div class="form-group">
                             <label>Color Code</label>
-                            <input type="text" class="form-control colorpicker-default-update" id="color_code" name="code" required>
+                            <input type="text" class="form-control colorpicker-default-update" id="color_code" name="code"
+                                required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -160,9 +170,9 @@
                     data: 'color',
                     name: 'color'
                 },
-                {data: 'name', name: 'name'},
-                {data: 'code', name: 'code'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'name', name: 'name' },
+                { data: 'code', name: 'code' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
 
@@ -210,7 +220,7 @@
 
         $('body').on('click', '.editBtn', function () {
             var id = $(this).data('id');
-            $.get("{{ url('get/color/info') }}" +'/' + id, function (data) {
+            $.get("{{ url('get/color/info') }}" + '/' + id, function (data) {
                 $('#exampleModal').modal('show');
                 $('#color_id').val(id);
                 $('#color_name').val(data.name);
@@ -243,10 +253,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/color') }}"+'/'+id,
+                    url: "{{ url('delete/color') }}" + '/' + id,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Color has been Deleted", "Deleted Successfully");

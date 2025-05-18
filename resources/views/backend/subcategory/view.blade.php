@@ -4,23 +4,26 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -106,8 +109,8 @@
                 {
                     data: 'icon',
                     name: 'icon',
-                    render: function( data, type, full, meta ) {
-                        if(data){
+                    render: function (data, type, full, meta) {
+                        if (data) {
                             return "<img src=\"/" + data + "\" width=\"60\"/>";
                         } else {
                             return '';
@@ -117,20 +120,20 @@
                 {
                     data: 'image',
                     name: 'image',
-                    render: function( data, type, full, meta ) {
-                        if(data){
+                    render: function (data, type, full, meta) {
+                        if (data) {
                             return "<img src=\"/" + data + "\" width=\"60\"/>";
                         } else {
                             return '';
                         }
                     }
                 },
-                {data: 'slug', name: 'slug'},
-                {data: 'featured', name: 'featured'},
-                {data: 'status', name: 'status'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'slug', name: 'slug' },
+                { data: 'featured', name: 'featured' },
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
-            initComplete: function() {
+            initComplete: function () {
                 // this.api().columns([2,5]).every(function() {
                 //     var column = this;
                 //     var input = document.createElement("input");
@@ -172,10 +175,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var subcategorySlug = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/subcategory') }}"+'/'+subcategorySlug,
+                    url: "{{ url('delete/subcategory') }}" + '/' + subcategorySlug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Subcategory has been Deleted", "Deleted Successfully");
@@ -189,10 +195,10 @@
 
         $('body').on('click', '.featureBtn', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure to Change the Feature Status !")){
+            if (confirm("Are You sure to Change the Feature Status !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('feature/subcategory') }}"+'/'+id,
+                    url: "{{ url('feature/subcategory') }}" + '/' + id,
                     success: function (data) {
 
                         table.draw(false);

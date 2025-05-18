@@ -4,50 +4,60 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             text-align: center !important;
             font-weight: 600;
         }
-        table.dataTable tbody td:nth-child(2){
+
+        table.dataTable tbody td:nth-child(2) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(3){
+
+        table.dataTable tbody td:nth-child(3) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(4){
+
+        table.dataTable tbody td:nth-child(4) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(5){
+
+        table.dataTable tbody td:nth-child(5) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(6){
+
+        table.dataTable tbody td:nth-child(6) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(7){
+
+        table.dataTable tbody td:nth-child(7) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(8){
+
+        table.dataTable tbody td:nth-child(8) {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
 
-        table#DataTables_Table_0 img{
+        table#DataTables_Table_0 img {
             transition: all .2s linear;
         }
-        img.gridProductImage:hover{
+
+        img.gridProductImage:hover {
             scale: 2;
             cursor: pointer;
         }
-
     </style>
 @endsection
 
@@ -106,27 +116,28 @@
             columns: [
                 {
                     data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'},
+                    name: 'DT_RowIndex'
+                },
                 {
                     data: 'title',
                     name: 'title'
                 }, //orderable: true, searchable: true
-                {data: 'short_description', name: 'short_description'},
+                { data: 'short_description', name: 'short_description' },
                 {
                     data: 'image',
                     name: 'image',
-                    render: function( data, type, full, meta ) {
-                        if(data){
+                    render: function (data, type, full, meta) {
+                        if (data) {
                             return "<img class=\"gridProductImage\" src=\"/" + data + "\" width=\"60\"/>";
                         } else {
                             return '';
                         }
                     }
                 },
-                {data: 'blog_category_name', name: 'blog_category_name'},
-                {data: 'status', name: 'status'},
-                {data: 'created_at', name: 'created_at'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'blog_category_name', name: 'blog_category_name' },
+                { data: 'status', name: 'status' },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
     </script>
@@ -141,10 +152,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var categorySlug = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/blog') }}"+'/'+categorySlug,
+                    url: "{{ url('delete/blog') }}" + '/' + categorySlug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Blog has been Deleted", "Deleted Successfully");

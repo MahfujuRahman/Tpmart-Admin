@@ -62,7 +62,7 @@
 @endsection
 
 @section('page_title')
-Payment Type
+    Payment Type
 @endsection
 @section('page_heading')
     View All Payment Types
@@ -74,7 +74,7 @@ Payment Type
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="card-title mb-0">View All Payment Types</h4>                       
+                        <h4 class="card-title mb-0">View All Payment Types</h4>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-bordered mb-0 data-table">
@@ -112,23 +112,23 @@ Payment Type
             serverSide: true,
             ajax: "{{ url('view/all/payment-type') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'payment_type',
-                    name: 'payment_type'
-                },
-                {
-                    data: 'user',
-                    name: 'user'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'payment_type',
+                name: 'payment_type'
+            },
+            {
+                data: 'user',
+                name: 'user'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }
             ]
 
 
@@ -144,20 +144,22 @@ Payment Type
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var paymentTypeSlug = $(this).data("id");
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/payment-type') }}" + '/' +
                         paymentTypeSlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Payment Type Deleted",
                             "Deleted Successfully");
                     },
-                    error: function(xhr) {                
-                        console.log('Error 11:', xhr.responseJSON.error);                
+                    error: function (xhr) {
+                        console.log('Error 11:', xhr.responseJSON.error);
                         if (xhr.responseJSON && xhr.responseJSON.error) {
                             toastr.error(xhr.responseJSON.error, "Error");
                         } else {

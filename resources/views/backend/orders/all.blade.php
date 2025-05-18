@@ -4,42 +4,52 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(6){
+
+        table.dataTable tbody td:nth-child(6) {
             min-width: 100px !important;
         }
-        table.dataTable tbody td:nth-child(7){
+
+        table.dataTable tbody td:nth-child(7) {
             min-width: 80px !important;
         }
-        table.dataTable tbody td:nth-child(8){
+
+        table.dataTable tbody td:nth-child(8) {
             min-width: 80px !important;
         }
-        table.dataTable tbody td:nth-child(9){
+
+        table.dataTable tbody td:nth-child(9) {
             min-width: 80px !important;
         }
-        table.dataTable tbody td:nth-child(10){
+
+        table.dataTable tbody td:nth-child(10) {
             min-width: 100px !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
 
-        .graph_card{
+        .graph_card {
             position: relative
         }
-        .graph_card i{
+
+        .graph_card i {
             position: absolute;
             top: 18px;
             right: 18px;
@@ -51,7 +61,6 @@
             border-radius: 50%;
             font-weight: 300;
         }
-
     </style>
 @endsection
 
@@ -90,7 +99,8 @@
                         <div class="col">
                             <h6 class="text-uppercase font-size-12 text-muted mb-3">Total Approved Orders</h6>
                             <span class="h3 mb-0">
-                                ৳ {{ number_format(DB::table('orders')->where('order_status', 1)->orWhere('order_status', 2)->sum('total'), 2) }}
+                                ৳
+                                {{ number_format(DB::table('orders')->where('order_status', 1)->orWhere('order_status', 2)->sum('total'), 2) }}
                             </span>
                         </div>
                     </div> <!-- end row -->
@@ -197,9 +207,9 @@
                     data: 'order_date',
                     name: 'order_date'
                 },
-                {data: 'customer_name', name: 'customer_name'},
-                {data: 'customer_email', name: 'customer_email'},
-                {data: 'customer_phone', name: 'customer_phone'},
+                { data: 'customer_name', name: 'customer_name' },
+                { data: 'customer_email', name: 'customer_email' },
+                { data: 'customer_phone', name: 'customer_phone' },
                 {
                     data: 'order_status',
                     name: 'order_status'
@@ -208,8 +218,8 @@
                     data: 'payment_status',
                     name: 'payment_status'
                 },
-                {data: 'total', name: 'total'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'total', name: 'total' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
     </script>
@@ -224,10 +234,10 @@
 
         $('body').on('click', '.cancelBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure to Cancel !")){
+            if (confirm("Are You sure to Cancel !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('cancel/order') }}"+'/'+slug,
+                    url: "{{ url('cancel/order') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Order has been Cancelled", "Cancelled Successfully");
@@ -241,10 +251,10 @@
 
         $('body').on('click', '.approveBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure to Approve !")){
+            if (confirm("Are You sure to Approve !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('approve/order') }}"+'/'+slug,
+                    url: "{{ url('approve/order') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.success("Order has been Approved", "Approved Successfully");
@@ -258,10 +268,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure to Delete Order !")){
+            if (confirm("Are You sure to Delete Order !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/order') }}"+'/'+slug,
+                    url: "{{ url('delete/order') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Order has been Deleted", "Deleted Successfully");

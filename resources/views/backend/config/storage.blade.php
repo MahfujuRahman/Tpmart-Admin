@@ -4,23 +4,26 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -40,8 +43,10 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <button class="btn btn-success btn-sm" id="addNewFlag" style="margin-left: 5px"><b><i class="feather-plus"></i> Add New Storage Type</b></button>
-                            <a href="{{url('rearrange/storage/types')}}" class="btn btn-info btn-sm" style="margin-left: 5px"><b><i class="fas fa-sort-amount-up"></i> Rearrange</b></a>
+                            <button class="btn btn-success btn-sm" id="addNewFlag" style="margin-left: 5px"><b><i
+                                        class="feather-plus"></i> Add New Storage Type</b></button>
+                            <a href="{{url('rearrange/storage/types')}}" class="btn btn-info btn-sm"
+                                style="margin-left: 5px"><b><i class="fas fa-sort-amount-up"></i> Rearrange</b></a>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -64,7 +69,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm2" name="productForm2" class="form-horizontal">
@@ -93,7 +99,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm" name="productForm" class="form-horizontal">
@@ -158,8 +165,8 @@
                     data: 'rom',
                     name: 'rom'
                 },
-                {data: 'status', name: 'status'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
 
@@ -205,7 +212,7 @@
 
         $('body').on('click', '.editBtn', function () {
             var id = $(this).data('id');
-            $.get("{{ url('get/storage/info') }}" +'/' + id, function (data) {
+            $.get("{{ url('get/storage/info') }}" + '/' + id, function (data) {
                 $('#exampleModal').modal('show');
                 $('#storage_type_id').val(id);
                 $('#storage_type_ram').val(data.ram);
@@ -238,10 +245,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/storage') }}"+'/'+id,
+                    url: "{{ url('delete/storage') }}" + '/' + id,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Unit has been Deleted", "Deleted Successfully");

@@ -4,23 +4,26 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -40,7 +43,8 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <a href="{{url('rearrange/category')}}" class="btn btn-success btn-sm" style="margin-left: 5px"><b><i class="fas fa-sort-amount-up"></i> Rearrange Category</b></a>
+                            <a href="{{url('rearrange/category')}}" class="btn btn-success btn-sm"
+                                style="margin-left: 5px"><b><i class="fas fa-sort-amount-up"></i> Rearrange Category</b></a>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -85,7 +89,8 @@
             columns: [
                 {
                     data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'},
+                    name: 'DT_RowIndex'
+                },
                 {
                     data: 'name',
                     name: 'name'
@@ -93,8 +98,8 @@
                 {
                     data: 'icon',
                     name: 'icon',
-                    render: function( data, type, full, meta ) {
-                        if(data){
+                    render: function (data, type, full, meta) {
+                        if (data) {
                             return "<img src=\"/" + data + "\" width=\"50\"/>";
                         } else {
                             return '';
@@ -104,19 +109,19 @@
                 {
                     data: 'banner_image',
                     name: 'banner_image',
-                    render: function( data, type, full, meta ) {
-                        if(data){
+                    render: function (data, type, full, meta) {
+                        if (data) {
                             return "<img src=\"/" + data + "\" width=\"50\"/>";
                         } else {
                             return '';
                         }
                     }
                 },
-                {data: 'slug', name: 'slug'},
-                {data: 'featured', name: 'featured'},
-                {data: 'show_on_navbar', name: 'show_on_navbar'},
-                {data: 'status', name: 'status'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'slug', name: 'slug' },
+                { data: 'featured', name: 'featured' },
+                { data: 'show_on_navbar', name: 'show_on_navbar' },
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
             // initComplete: function() {
             //     this.api().columns([1]).every(function() {
@@ -163,10 +168,14 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var categorySlug = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
+
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/category') }}"+'/'+categorySlug,
+                    url: "{{ url('delete/category') }}" + '/' + categorySlug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Category has been Deleted", "Deleted Successfully");
@@ -180,10 +189,10 @@
 
         $('body').on('click', '.featureBtn', function () {
             var categorySlug = $(this).data("id");
-            if(confirm("Are You sure to Change the Feature Status !")){
+            if (confirm("Are You sure to Change the Feature Status !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('feature/category') }}"+'/'+categorySlug,
+                    url: "{{ url('feature/category') }}" + '/' + categorySlug,
                     success: function (data) {
 
                         table.draw(false);

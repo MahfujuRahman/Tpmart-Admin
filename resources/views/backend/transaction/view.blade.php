@@ -78,7 +78,7 @@
 @endsection
 
 @section('page_title')
-Transaction
+    Transaction
 @endsection
 @section('page_heading')
     View All Payment Types
@@ -90,7 +90,7 @@ Transaction
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="card-title mb-0">View All Payment Types</h4>                       
+                        <h4 class="card-title mb-0">View All Payment Types</h4>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-bordered mb-0 data-table">
@@ -136,68 +136,68 @@ Transaction
             serverSide: true,
             ajax: "{{ url('view/all/deposit') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'transactionDate',
-                    name: 'transactionDate'
-                },
-                {
-                    data: 'transactionType',
-                    name: 'transactionType'
-                },
-                {
-                    data: 'payment_code',
-                    name: 'payment_code'
-                },
-                {
-                    data: 'debit',
-                    name: 'debit'
-                },
-                {
-                    data: 'debitAmount',
-                    name: 'debitAmount'
-                },
-                {
-                    data: 'credit',
-                    name: 'credit'
-                },
-                {
-                    data: 'creditAmount',
-                    name: 'creditAmount'
-                },
-                // {
-                //     data: 'note',
-                //     name: 'note',
-                //     render: function(data, type, full, meta) {
-                //         if (data) {
-                //             // Decode HTML entities first, then remove HTML tags
-                //             var decodedData = $('<div>').html(data).text();
-                //             var cleanText = decodedData.replace(/(<([^>]+)>)/gi, "");
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'transactionDate',
+                name: 'transactionDate'
+            },
+            {
+                data: 'transactionType',
+                name: 'transactionType'
+            },
+            {
+                data: 'payment_code',
+                name: 'payment_code'
+            },
+            {
+                data: 'debit',
+                name: 'debit'
+            },
+            {
+                data: 'debitAmount',
+                name: 'debitAmount'
+            },
+            {
+                data: 'credit',
+                name: 'credit'
+            },
+            {
+                data: 'creditAmount',
+                name: 'creditAmount'
+            },
+            // {
+            //     data: 'note',
+            //     name: 'note',
+            //     render: function(data, type, full, meta) {
+            //         if (data) {
+            //             // Decode HTML entities first, then remove HTML tags
+            //             var decodedData = $('<div>').html(data).text();
+            //             var cleanText = decodedData.replace(/(<([^>]+)>)/gi, "");
 
-                //             // Limit to 20 characters and append "..." if text is longer
-                //             return cleanText.length > 10 ? cleanText.substring(0, 10) + '...' : cleanText;
-                //         }
-                //         return '';
-                //     }
-                // },
-                {
-                    data: 'user',
-                    name: 'user'
-                },
-                
-                {
-                    data: 'created_at',
-                    name: 'created_at'
-                },
-                
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
+            //             // Limit to 20 characters and append "..." if text is longer
+            //             return cleanText.length > 10 ? cleanText.substring(0, 10) + '...' : cleanText;
+            //         }
+            //         return '';
+            //     }
+            // },
+            {
+                data: 'user',
+                name: 'user'
+            },
+
+            {
+                data: 'created_at',
+                name: 'created_at'
+            },
+
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }
             ]
 
 
@@ -213,20 +213,22 @@ Transaction
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var transactionSlug = $(this).data("id");
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/deposit') }}" + '/' +
                         transactionSlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Deleted",
                             "Deleted Successfully");
                     },
-                    error: function(xhr) {                
-                        console.log('Error 11:', xhr.responseJSON.error);                
+                    error: function (xhr) {
+                        console.log('Error 11:', xhr.responseJSON.error);
                         if (xhr.responseJSON && xhr.responseJSON.error) {
                             toastr.error(xhr.responseJSON.error, "Error");
                         } else {

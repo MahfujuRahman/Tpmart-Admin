@@ -4,23 +4,26 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
-        table.dataTable tbody td{
-            text-align: center;
-        }
-        tfoot {
-            display: table-header-group !important;
-        }
-        tfoot th{
+
+        table.dataTable tbody td {
             text-align: center;
         }
 
+        tfoot {
+            display: table-header-group !important;
+        }
+
+        tfoot th {
+            text-align: center;
+        }
     </style>
 @endsection
 
@@ -40,8 +43,10 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <a href="{{url('add/new/banner')}}" class="btn btn-success btn-sm" id="addNewFlag" style="margin-left: 5px"><i class="feather-plus"></i> Add New Banner</a>
-                            <a href="{{url('rearrange/banners')}}" class="btn btn-info btn-sm" style="margin-left: 5px"><i class="fas fa-sort-amount-up"></i> Rearrange Banners</a>
+                            <a href="{{url('add/new/banner')}}" class="btn btn-success btn-sm" id="addNewFlag"
+                                style="margin-left: 5px"><i class="feather-plus"></i> Add New Banner</a>
+                            <a href="{{url('rearrange/banners')}}" class="btn btn-info btn-sm" style="margin-left: 5px"><i
+                                    class="fas fa-sort-amount-up"></i> Rearrange Banners</a>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -99,8 +104,8 @@
                 {
                     data: 'image',
                     name: 'image',
-                    render: function( data, type, full, meta ) {
-                        if(data){
+                    render: function (data, type, full, meta) {
+                        if (data) {
                             return "<img src=\"/" + data + "\" width=\"60\"/>";
                         } else {
                             return '';
@@ -127,8 +132,8 @@
                     data: 'position',
                     name: 'position'
                 },
-                {data: 'status', name: 'status'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
 
@@ -145,10 +150,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/data') }}"+'/'+slug,
+                    url: "{{ url('delete/data') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Data has been Deleted", "Deleted Successfully");

@@ -62,7 +62,7 @@
 @endsection
 
 @section('page_title')
-    Customer Next Date Contact 
+    Customer Next Date Contact
 @endsection
 @section('page_heading')
     View All Customer Next Date Contact
@@ -81,7 +81,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">SL</th>
-                                    <th class="text-center">Customer</th>   
+                                    <th class="text-center">Customer</th>
                                     <th class="text-center">Next Date</th>
                                     <th class="text-center">Customer Status</th>
                                     <th class="text-center">Action</th>
@@ -111,27 +111,27 @@
             serverSide: true,
             ajax: "{{ url('view/all/customer-next-contact-date') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'customer',
-                    name: 'customer'
-                },
-                {
-                    data: 'next_date',
-                    name: 'next_date'
-                },
-                {
-                    data: 'contact_status',
-                    name: 'contact_status'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'customer',
+                name: 'customer'
+            },
+            {
+                data: 'next_date',
+                name: 'next_date'
+            },
+            {
+                data: 'contact_status',
+                name: 'contact_status'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }
             ]
 
 
@@ -147,20 +147,22 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var customerSlug = $(this).data("id");
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/customer-next-contact-date') }}" + '/' +
                         customerSlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Customer Contact History has been Deleted",
                             "Deleted Successfully");
                     },
-                    error: function(xhr) {                
-                        console.log('Error 11:', xhr.responseJSON.error);                
+                    error: function (xhr) {
+                        console.log('Error 11:', xhr.responseJSON.error);
                         if (xhr.responseJSON && xhr.responseJSON.error) {
                             toastr.error(xhr.responseJSON.error, "Error");
                         } else {

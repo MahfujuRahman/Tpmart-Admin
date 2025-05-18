@@ -113,46 +113,46 @@
             serverSide: true,
             ajax: "{{ route('ViewAllCustomerEcommerce') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'image',
-                    name: 'image',
-                    render: function( data, type, full, meta ) {
-                        if(data){
-                            return "<img src=\"/" + data + "\" width=\"50\"/>";
-                        } else {
-                            return '';
-                        }
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'image',
+                name: 'image',
+                render: function (data, type, full, meta) {
+                    if (data) {
+                        return "<img src=\"/" + data + "\" width=\"50\"/>";
+                    } else {
+                        return '';
                     }
-                },
-                {
-                    data: 'phone',
-                    name: 'phone'
-                },
-                {
-                    data: 'email',
-                    name: 'email'
-                },
-                {
-                    data: 'address',
-                    name: 'address'
-                },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
+                }
+            },
+            {
+                data: 'phone',
+                name: 'phone'
+            },
+            {
+                data: 'email',
+                name: 'email'
+            },
+            {
+                data: 'address',
+                name: 'address'
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
             ],
         });
     </script>
@@ -166,19 +166,22 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var customerCategorySlug = $(this).data("id");
-           
+
             if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
                     url: "{{ url('delete/customer-ecommerce') }}" + '/' + customerCategorySlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Customer category has been Deleted", "Deleted Successfully");
                     },
-                    error: function(xhr) {                        
-                        console.log('Error 11:', xhr.responseJSON.error);                    
+                    error: function (xhr) {
+                        console.log('Error 11:', xhr.responseJSON.error);
                         if (xhr.responseJSON && xhr.responseJSON.error) {
                             toastr.error(xhr.responseJSON.error, "Error");
                         } else {

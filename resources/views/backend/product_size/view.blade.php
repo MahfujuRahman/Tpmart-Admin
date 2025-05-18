@@ -108,22 +108,22 @@
             serverSide: true,
             ajax: "{{ route('ViewAllProductSize') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
             ],
             dom: 'lfrtip',
-            initComplete: function() {
+            initComplete: function () {
                 // Append the Rearrange Category button to the search input area
                 var searchBox = this.api().table().container().querySelector('.dataTables_filter');
                 var rearrangeButton = $('<a href="{{url('/add/new/product-size')}}" class="btn btn-success btn-sm" style="margin-left: 5px;"><b><i class="fas fa-plus"></i> Add Attribute</b></a>');
@@ -141,19 +141,21 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var productSizeId = $(this).data("id");
-           
+
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/product-size') }}" + '/' + productSizeId,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Customer category has been Deleted", "Deleted Successfully");
                     },
-                    error: function(xhr) {                        
-                        console.log('Error 11:', xhr.responseJSON.error);                    
+                    error: function (xhr) {
+                        console.log('Error 11:', xhr.responseJSON.error);
                         if (xhr.responseJSON && xhr.responseJSON.error) {
                             toastr.error(xhr.responseJSON.error, "Error");
                         } else {

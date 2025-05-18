@@ -5,45 +5,55 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             text-align: center !important;
             font-weight: 600;
         }
-        table.dataTable tbody td:nth-child(2){
+
+        table.dataTable tbody td:nth-child(2) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(3){
+
+        table.dataTable tbody td:nth-child(3) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(4){
+
+        table.dataTable tbody td:nth-child(4) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(5){
+
+        table.dataTable tbody td:nth-child(5) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(6){
+
+        table.dataTable tbody td:nth-child(6) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(7){
+
+        table.dataTable tbody td:nth-child(7) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(8){
+
+        table.dataTable tbody td:nth-child(8) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(9){
+
+        table.dataTable tbody td:nth-child(9) {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -62,7 +72,8 @@
                     <h4 class="card-title mb-3">System Users List</h4>
                     <div class="table-responsive">
                         <label id="customFilter">
-                            <a href="{{url('add/new/system/user')}}" class="btn btn-success btn-sm" id="addNewFlag" style="margin-left: 5px"><i class="feather-plus"></i> Add New User</a>
+                            <a href="{{url('add/new/system/user')}}" class="btn btn-success btn-sm" id="addNewFlag"
+                                style="margin-left: 5px"><i class="feather-plus"></i> Add New User</a>
                         </label>
                         <table class="table table-bordered mb-0 data-table">
                             <thead>
@@ -123,21 +134,21 @@
                     data: 'name',
                     name: 'name'
                 }, //orderable: true, searchable: true
-                {data: 'email', name: 'email'},
-                {data: 'phone', name: 'phone'},
-                {data: 'address', name: 'address'},
-                {data: 'created_at', name: 'created_at'},
-                {data: 'user_type', name: 'user_type'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'email', name: 'email' },
+                { data: 'phone', name: 'phone' },
+                { data: 'address', name: 'address' },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'user_type', name: 'user_type' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
-            initComplete: function() {
+            initComplete: function () {
                 $('[data-toggle="switchery"]').each(function (idx, obj) {
                     if (!$(this).data('switchery')) {
                         new Switchery($(this)[0], $(this).data());
                     }
                 });
             },
-            drawCallback: function() {
+            drawCallback: function () {
                 $('[data-toggle="switchery"]').each(function (idx, obj) {
                     if (!$(this).data('switchery')) {
                         new Switchery($(this)[0], $(this).data());
@@ -159,10 +170,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/system/user') }}"+'/'+id,
+                    url: "{{ url('delete/system/user') }}" + '/' + id,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("User has been Deleted", "Deleted Successfully");
@@ -176,10 +190,10 @@
 
         $('body').on('click', '.makeSuperAdmin', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure want to Make this SuperAdmin !")){
+            if (confirm("Are You sure want to Make this SuperAdmin !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('make/user/superadmin') }}"+'/'+id,
+                    url: "{{ url('make/user/superadmin') }}" + '/' + id,
                     success: function (data) {
                         toastr.success("User is SuperAdmin Now", "Successfull");
                         location.reload(true);
@@ -193,10 +207,10 @@
 
         $('body').on('click', '.revokeSuperAdmin', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure want to Revoke SuperAdmin !")){
+            if (confirm("Are You sure want to Revoke SuperAdmin !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('revoke/user/superadmin') }}"+'/'+id,
+                    url: "{{ url('revoke/user/superadmin') }}" + '/' + id,
                     success: function (data) {
                         toastr.success("User is Not SuperAdmin Now", "Successfull");
                         location.reload(true);
@@ -208,11 +222,11 @@
             }
         });
 
-        function changeUserStatus(id){
+        function changeUserStatus(id) {
             var userId = id;
             $.ajax({
                 type: "GET",
-                url: "{{ url('change/user/status') }}"+'/'+userId,
+                url: "{{ url('change/user/status') }}" + '/' + userId,
                 success: function (data) {
                     toastr.success("User Status has been Changed", "Changed Successfully");
                 },

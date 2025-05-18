@@ -113,55 +113,55 @@
             serverSide: true,
             ajax: "{{ url('view/all/product-warehouse') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'title',
-                    name: 'title'
-                },
-                {
-                    data: 'code',
-                    name: 'code'
-                },
-                {
-                    data: 'address',
-                    name: 'address'
-                },
-                {
-                    data: 'description',
-                    name: 'description',
-                    render: function(data, type, full, meta) {
-                        if (data) {
-                            // Decode HTML entities first, then remove HTML tags
-                            var decodedData = $('<div>').html(data).text();
-                            var cleanText = decodedData.replace(/(<([^>]+)>)/gi, "");
-                            return cleanText;
-                        }
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'title',
+                name: 'title'
+            },
+            {
+                data: 'code',
+                name: 'code'
+            },
+            {
+                data: 'address',
+                name: 'address'
+            },
+            {
+                data: 'description',
+                name: 'description',
+                render: function (data, type, full, meta) {
+                    if (data) {
+                        // Decode HTML entities first, then remove HTML tags
+                        var decodedData = $('<div>').html(data).text();
+                        var cleanText = decodedData.replace(/(<([^>]+)>)/gi, "");
+                        return cleanText;
+                    }
+                    return '';
+                }
+            },
+            {
+                data: 'image',
+                name: 'image',
+                render: function (data, type, full, meta) {
+                    if (data) {
+                        return "<img class=\"gridProductImage\" src=\"/" + data + "\" width=\"60\"/>";
+                    } else {
                         return '';
                     }
-                },
-                {
-                    data: 'image',
-                    name: 'image',
-                    render: function(data, type, full, meta) {
-                        if (data) {
-                            return "<img class=\"gridProductImage\" src=\"/" + data + "\" width=\"60\"/>";
-                        } else {
-                            return '';
-                        }
-                    }
-                },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
+                }
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
             ],
         });
     </script>
@@ -175,19 +175,21 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var productWarehouseSlug = $(this).data("id");
             console.log("productWarehouseSlug - ", productWarehouseSlug);
-            
+
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/product-warehouse') }}" + '/' + productWarehouseSlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Product Warehouse has been Deleted", "Deleted Successfully");
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         // Ensure you're handling the error response properly
                         console.log('Error 11:', xhr.responseJSON.error);
                         // Assuming error message is returned as part of the response JSON

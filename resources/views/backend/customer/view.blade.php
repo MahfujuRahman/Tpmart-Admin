@@ -90,7 +90,7 @@
                                 <tr>
                                     <th class="text-center">SL</th>
                                     <th class="text-center">Customer Category Title</th>
-                                    <th class="text-center">Customer Source Type</th>                                                                        
+                                    <th class="text-center">Customer Source Type</th>
                                     <th class="text-center">Reference By</th>
                                     <th class="text-center">Name</th>
                                     <th class="text-center">Phone</th>
@@ -124,47 +124,47 @@
             serverSide: true,
             ajax: "{{ url('view/all/customer') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'customer_category',
-                    name: 'customer_category'
-                },
-                {
-                    data: 'customer_source_type',
-                    name: 'customer_source_type'
-                },
-                {
-                    data: 'reference_by',
-                    name: 'reference_by'
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'phone',
-                    name: 'name'
-                },
-                {
-                    data: 'address',
-                    name: 'address',
-                    render: function(data, type, full, meta) {
-                        if (data) {
-                            var decodedData = $('<div>').html(data).text(); // Decode any HTML entities
-                            var cleanText = decodedData.replace(/(<([^>]+)>)/gi, ""); // Strip any HTML tags
-                            return cleanText.substring(0, 20); // Show only the first 20 characters
-                        }
-                        return '';
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'customer_category',
+                name: 'customer_category'
+            },
+            {
+                data: 'customer_source_type',
+                name: 'customer_source_type'
+            },
+            {
+                data: 'reference_by',
+                name: 'reference_by'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'phone',
+                name: 'name'
+            },
+            {
+                data: 'address',
+                name: 'address',
+                render: function (data, type, full, meta) {
+                    if (data) {
+                        var decodedData = $('<div>').html(data).text(); // Decode any HTML entities
+                        var cleanText = decodedData.replace(/(<([^>]+)>)/gi, ""); // Strip any HTML tags
+                        return cleanText.substring(0, 20); // Show only the first 20 characters
                     }
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
+                    return '';
                 }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }
             ]
 
 
@@ -180,20 +180,22 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var customerSlug = $(this).data("id");
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/customers') }}" + '/' +
                         customerSlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Customer has been Deleted",
                             "Deleted Successfully");
                     },
-                    error: function(xhr) {                
-                        console.log('Error 11:', xhr.responseJSON.error);                
+                    error: function (xhr) {
+                        console.log('Error 11:', xhr.responseJSON.error);
                         if (xhr.responseJSON && xhr.responseJSON.error) {
                             toastr.error(xhr.responseJSON.error, "Error");
                         } else {

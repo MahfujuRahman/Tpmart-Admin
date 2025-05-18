@@ -4,28 +4,32 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             text-align: center !important;
             font-weight: 600;
         }
-        table.dataTable tbody td:nth-child(4){
+
+        table.dataTable tbody td:nth-child(4) {
             text-align: center !important;
             width: 180px;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -103,11 +107,11 @@
                     data: 'email',
                     name: 'email'
                 },
-                {data: 'phone', name: 'phone'},
-                {data: 'company_name', name: 'company_name'},
-                {data: 'message', name: 'message'},
-                {data: 'status', name: 'status'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'phone', name: 'phone' },
+                { data: 'company_name', name: 'company_name' },
+                { data: 'message', name: 'message' },
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
 
@@ -123,10 +127,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/contact/request') }}"+'/'+id,
+                    url: "{{ url('delete/contact/request') }}" + '/' + id,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Request has been Deleted", "Deleted Successfully");
@@ -140,10 +147,10 @@
 
         $('body').on('click', '.changeStatus', function () {
             var id = $(this).data("id");
-            if(confirm("Are You sure want to Change the Status ?")){
+            if (confirm("Are You sure want to Change the Status ?")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('change/request/status') }}"+'/'+id,
+                    url: "{{ url('change/request/status') }}" + '/' + id,
                     success: function (data) {
                         table.draw(false);
                         toastr.success("Status has been Changed", "Changed Successfully");

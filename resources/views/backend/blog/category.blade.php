@@ -4,23 +4,26 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             font-weight: 600;
         }
-        table.dataTable tbody td{
+
+        table.dataTable tbody td {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -40,8 +43,10 @@
                     <div class="table-responsive">
 
                         <label id="customFilter">
-                            <a href="{{url('rearrange/blog/category')}}" class="btn btn-warning btn-sm" style="margin-left: 5px"><b><i class="fas fa-sort-amount-up"></i> Rearrange Category</b></a>
-                            <button class="btn btn-success btn-sm" id="addNewBlogCategory" style="margin-left: 5px"><b><i class="feather-plus"></i> Add New Category</b></button>
+                            <a href="{{url('rearrange/blog/category')}}" class="btn btn-warning btn-sm"
+                                style="margin-left: 5px"><b><i class="fas fa-sort-amount-up"></i> Rearrange Category</b></a>
+                            <button class="btn btn-success btn-sm" id="addNewBlogCategory" style="margin-left: 5px"><b><i
+                                        class="feather-plus"></i> Add New Category</b></button>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
@@ -65,7 +70,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm2" name="productForm2" class="form-horizontal">
@@ -91,7 +97,8 @@
     </div>
 
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm" name="productForm" class="form-horizontal">
@@ -142,15 +149,16 @@
             columns: [
                 {
                     data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'},
+                    name: 'DT_RowIndex'
+                },
                 {
                     data: 'name',
                     name: 'name'
                 }, //orderable: true, searchable: true
-                {data: 'slug', name: 'slug'},
-                {data: 'featured', name: 'featured'},
-                {data: 'status', name: 'status'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'slug', name: 'slug' },
+                { data: 'featured', name: 'featured' },
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
 
@@ -196,13 +204,16 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var categorySlug = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/blog/category') }}"+'/'+categorySlug,
+                    url: "{{ url('delete/blog/category') }}" + '/' + categorySlug,
                     success: function (data) {
 
-                        if(data.data == 1){
+                        if (data.data == 1) {
                             table.draw(false);
                             toastr.error("Category has been Deleted", "Deleted Successfully");
                         } else {
@@ -219,10 +230,10 @@
 
         $('body').on('click', '.featureBtn', function () {
             var categorySlug = $(this).data("id");
-            if(confirm("Are You sure to Change the Feature Status !")){
+            if (confirm("Are You sure to Change the Feature Status !")) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('feature/blog/category') }}"+'/'+categorySlug,
+                    url: "{{ url('feature/blog/category') }}" + '/' + categorySlug,
                     success: function (data) {
 
                         table.draw(false);
@@ -238,7 +249,7 @@
 
         $('body').on('click', '.editBtn', function () {
             var slug = $(this).data('id');
-            $.get("{{ url('get/blog/category/info') }}" +'/' + slug, function (data) {
+            $.get("{{ url('get/blog/category/info') }}" + '/' + slug, function (data) {
                 $('#exampleModal').modal('show');
                 $('#category_slug').val(slug);
                 $('#category_name').val(data.name);

@@ -4,51 +4,61 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             text-align: center !important;
             font-weight: 600;
         }
-        table.dataTable tbody td:nth-child(2){
+
+        table.dataTable tbody td:nth-child(2) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(3){
+
+        table.dataTable tbody td:nth-child(3) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(4){
+
+        table.dataTable tbody td:nth-child(4) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(5){
+
+        table.dataTable tbody td:nth-child(5) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(6){
+
+        table.dataTable tbody td:nth-child(6) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(7){
+
+        table.dataTable tbody td:nth-child(7) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(8){
+
+        table.dataTable tbody td:nth-child(8) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(9){
+
+        table.dataTable tbody td:nth-child(9) {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
 
-        img.gridProductImage:hover{
+        img.gridProductImage:hover {
             transition: all .2s linear;
             scale: 2;
             cursor: pointer;
         }
-
     </style>
 @endsection
 
@@ -89,7 +99,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productForm" name="productForm" class="form-horizontal">
@@ -143,8 +154,8 @@
                 {
                     data: 'product_image',
                     name: 'product_image',
-                    render: function( data, type, full, meta ) {
-                        if(data){
+                    render: function (data, type, full, meta) {
+                        if (data) {
                             return "<img class=\"gridProductImage\" src=\"/" + data + "\" width=\"40\"/>";
                         } else {
                             return '';
@@ -163,9 +174,9 @@
                     data: 'email',
                     name: 'email'
                 },
-                {data: 'question', name: 'question'},
-                {data: 'answer', name: 'answer'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'question', name: 'question' },
+                { data: 'answer', name: 'answer' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
     </script>
@@ -180,10 +191,13 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/question/answer/') }}"+'/'+slug,
+                    url: "{{ url('delete/question/answer/') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
                         toastr.error("Question has been Deleted", "Deleted Successfully");
@@ -198,7 +212,7 @@
 
         $('body').on('click', '.replyBtn', function () {
             var id = $(this).data('id');
-            $.get("{{ url('get/question/answer/info') }}" +'/' + id, function (data) {
+            $.get("{{ url('get/question/answer/info') }}" + '/' + id, function (data) {
                 $('#question_answer_id').val(data.id);
                 $('#customers_question').text(data.question);
                 $('#question_answer').text(data.answer);

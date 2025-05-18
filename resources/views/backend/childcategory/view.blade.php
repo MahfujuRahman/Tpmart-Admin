@@ -4,39 +4,47 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <style>
-        .dataTables_wrapper .dataTables_paginate .paginate_button{
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
             border-radius: 4px;
         }
-        table.dataTable tbody td:nth-child(1){
+
+        table.dataTable tbody td:nth-child(1) {
             text-align: center !important;
             font-weight: 600;
         }
-        table.dataTable tbody td:nth-child(2){
+
+        table.dataTable tbody td:nth-child(2) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(3){
+
+        table.dataTable tbody td:nth-child(3) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(4){
+
+        table.dataTable tbody td:nth-child(4) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(5){
+
+        table.dataTable tbody td:nth-child(5) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(6){
+
+        table.dataTable tbody td:nth-child(6) {
             text-align: center !important;
         }
-        table.dataTable tbody td:nth-child(7){
+
+        table.dataTable tbody td:nth-child(7) {
             text-align: center !important;
         }
+
         tfoot {
             display: table-header-group !important;
         }
-        tfoot th{
+
+        tfoot th {
             text-align: center;
         }
-
     </style>
 @endsection
 
@@ -118,26 +126,26 @@
                     data: 'name',
                     name: 'name'
                 },
-                {data: 'slug', name: 'slug'},
-                {data: 'status', name: 'status'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                { data: 'slug', name: 'slug' },
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
-            initComplete: function() {
-                this.api().columns([2,3,4]).every(function() {
+            initComplete: function () {
+                this.api().columns([2, 3, 4]).every(function () {
                     var column = this;
                     var input = document.createElement("input");
                     $(input).appendTo($(column.footer()).empty())
-                        .on('change', function() {
+                        .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
                             column.search(val ? val : '', true, false).draw();
                         });
                 });
 
-                this.api().columns([5]).every(function() {
+                this.api().columns([5]).every(function () {
                     var column = this;
                     var select = $('<select style="width:100%"><option value="">All</option></select>')
                         .appendTo($(column.footer()).empty())
-                        .on('change', function() {
+                        .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex(
                                 $(this).val()
                             );
@@ -145,7 +153,7 @@
                                 .search(val ? '^' + val + '$' : '', true, false)
                                 .draw();
                         });
-                    column.each(function() {
+                    column.each(function () {
                         select.append('<option value="Active">' + 'Active' + '</option>')
                         select.append('<option value="Inactive">' + 'Inactive' + '</option>')
 
@@ -165,13 +173,16 @@
 
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if(confirm("Are You sure want to delete !")){
+            if (confirm("Are You sure want to delete !")) {
+                if (check_demo_user()) {
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/childcategory') }}"+'/'+slug,
+                    url: "{{ url('delete/childcategory') }}" + '/' + slug,
                     success: function (data) {
 
-                        if(data.data == 1){
+                        if (data.data == 1) {
                             table.draw(false);
                             toastr.error("Child Category has been Deleted", "Deleted Successfully");
                         } else {

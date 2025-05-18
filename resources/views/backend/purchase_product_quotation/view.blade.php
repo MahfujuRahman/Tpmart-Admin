@@ -115,43 +115,43 @@
             serverSide: true,
             ajax: "{{ url('view/all/purchase-product/quotation') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'date',
-                    name: 'date'
-                },
-                {
-                    data: 'code',
-                    name: 'code'
-                },
-                {
-                    data: 'reference',
-                    name: 'reference'
-                },
-                // {
-                //     data: 'creator',
-                //     name: 'creator'
-                // },
-                {
-                    data: 'total',
-                    name: 'total'
-                },
-                {
-                    data: 'is_ordered',
-                    name: 'is_ordered'
-                },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'date',
+                name: 'date'
+            },
+            {
+                data: 'code',
+                name: 'code'
+            },
+            {
+                data: 'reference',
+                name: 'reference'
+            },
+            // {
+            //     data: 'creator',
+            //     name: 'creator'
+            // },
+            {
+                data: 'total',
+                name: 'total'
+            },
+            {
+                data: 'is_ordered',
+                name: 'is_ordered'
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }
             ]
 
 
@@ -167,19 +167,21 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var productProductQuotationSlug = $(this).data("id");
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/product-purchase/quotation') }}" + '/' +
                         productProductQuotationSlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Product Warehouse room cartoon has been Deleted",
                             "Deleted Successfully");
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         // Ensure you're handling the error response properly
                         console.log('Error 11:', xhr.responseJSON.error);
                         // Assuming error message is returned as part of the response JSON

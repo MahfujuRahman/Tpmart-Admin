@@ -13,9 +13,9 @@
     {{-- to stop indexing --}}
     <meta name="robots" content="noindex, nofollow">
 
-    <meta content="Admin Panel" name="description"/>
-    <meta content="Getup Ltd." name="author"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="Admin Panel" name="description" />
+    <meta content="Getup Ltd." name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- App favicon -->
@@ -30,12 +30,12 @@
     <link href="{{ url('assets') }}/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="{{ url('assets') }}/css/theme.min.css" rel="stylesheet" type="text/css" />
     <link href="{{ url('assets') }}/css/toastr.min.css" rel="stylesheet" type="text/css" />
-    
+
 
     @yield('header_css')
     @yield('header_js')
 
-    
+
 
     <link href="{{ url('assets') }}/css/custom.css" rel="stylesheet" type="text/css" />
 
@@ -55,9 +55,10 @@
                 <div class="navbar-brand-box">
                     <a href="{{ url('/home') }}" class="logo mt-2" style="display: inline-block;">
                         @if($generalInfo->logo != '' && $generalInfo->logo != Null && file_exists(public_path($generalInfo->logo)))
-                        <span>
-                            <img src="{{url($generalInfo->logo)}}" alt="" class="img-fluid" style="max-height: 100px; max-width: 150px;">
-                        </span>
+                            <span>
+                                <img src="{{url($generalInfo->logo)}}" alt="" class="img-fluid"
+                                    style="max-height: 100px; max-width: 150px;">
+                            </span>
                         @else
                             <h3 style="color: white; margin-top: 20px">{{$generalInfo->company_name}}</h3>
                         @endif
@@ -100,8 +101,9 @@
                     <div class="d-flex align-items-center">
 
                         {{-- <div class="dropdown d-inline-block ml-2">
-                            <button type="button" class="btn header-item noti-icon" id="page-header-notifications-dropdown"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn header-item noti-icon"
+                                id="page-header-notifications-dropdown" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
                                 <i class="mdi mdi-bell-outline"></i>
                                 <span class="badge badge-danger badge-pill">6</span>
                             </button>
@@ -122,7 +124,8 @@
                                             <div class="media-body">
                                                 <h6 class="mt-0 mb-1">Samuel Coverdale</h6>
                                                 <p class="font-size-12 mb-1">You have new follower on Instagram</p>
-                                                <p class="font-size-12 mb-0 text-muted"><i class="mdi mdi-clock-outline"></i> 2 min ago</p>
+                                                <p class="font-size-12 mb-0 text-muted"><i
+                                                        class="mdi mdi-clock-outline"></i> 2 min ago</p>
                                             </div>
                                         </div>
                                     </a>
@@ -135,8 +138,10 @@
                                             </div>
                                             <div class="media-body">
                                                 <h6 class="mt-0 mb-1">Download Available !</h6>
-                                                <p class="font-size-12 mb-1">Latest version of admin is now available. Please download here.</p>
-                                                <p class="font-size-12 mb-0 text-muted"><i class="mdi mdi-clock-outline"></i> 4 hours ago</p>
+                                                <p class="font-size-12 mb-1">Latest version of admin is now available.
+                                                    Please download here.</p>
+                                                <p class="font-size-12 mb-0 text-muted"><i
+                                                        class="mdi mdi-clock-outline"></i> 4 hours ago</p>
                                             </div>
                                         </div>
                                     </a>
@@ -146,31 +151,43 @@
 
 
                         <div class="dropdown d-inline-block ml-2">
-                            <label class="btn text-white rounded mr-2 mb-0" style="cursor:pointer; background: linear-gradient(to right, #17263ADE, #2c3e50f5, #17263A);">
-                                <input type="checkbox" id="guest_checkout" onchange="guestCheckout()" @if($generalInfo->guest_checkout == 1) checked @endif> Guest Checkout
+                            <label class="btn text-white rounded mr-2 mb-0"
+                                style="cursor:pointer; background: linear-gradient(to right, #17263ADE, #2c3e50f5, #17263A);">
+                                <input type="checkbox" id="guest_checkout" onchange="guestCheckout()"
+                                    @if($generalInfo->guest_checkout == 1) checked @endif> Guest Checkout
                             </label>
-                            <a href="{{env('APP_FRONTEND_URL')}}" target="_blank" class="btn text-white rounded" style="background: linear-gradient(to right, #17263ADE, #2c3e50f5, #17263A);"><i class="fas fa-paper-plane"></i> Visit Website</a>
+                            <a href="{{env('APP_FRONTEND_URL')}}" target="_blank" class="btn text-white rounded"
+                                style="background: linear-gradient(to right, #17263ADE, #2c3e50f5, #17263A);"><i
+                                    class="fas fa-paper-plane"></i> Visit Website</a>
                         </div>
 
                         <div class="dropdown d-inline-block ml-2">
-                            <button type="button" class="btn header-item" id="page-header-user-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="rounded-circle header-profile-user" src="{{ url('assets') }}/images/users/avatar-1.jpg" alt="Header Avatar">
-                                <span class="d-none d-sm-inline-block ml-1">@auth {{ Auth::user()->name }} @endauth</span>
+                            <button type="button" class="btn header-item" id="page-header-user-dropdown"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="rounded-circle header-profile-user"
+                                    src="{{ url('assets') }}/images/users/avatar-1.jpg" alt="Header Avatar">
+                                <span class="d-none d-sm-inline-block ml-1">@auth {{ Auth::user()->name }}
+                                @endauth</span>
                                 <i class="mdi mdi-chevron-down d-none d-sm-inline-block"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                {{-- <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
+                                {{-- <a class="dropdown-item d-flex align-items-center justify-content-between"
+                                    href="javascript:void(0)">
                                     Profile
                                 </a> --}}
-                                <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ url('/change/password/page') }}">
-                                    <span class="d-none d-sm-inline-block"><i class="fas fa-key"></i> Change Password</span>
+                                <a class="dropdown-item d-flex align-items-center justify-content-between"
+                                    href="{{ url('/change/password/page') }}">
+                                    <span class="d-none d-sm-inline-block"><i class="fas fa-key"></i> Change
+                                        Password</span>
                                 </a>
-                                <a href="{{ route('logout') }}" class="dropdown-item d-flex align-items-center justify-content-between logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <span class="d-none d-sm-inline-block"><i class="fas fa-sign-out-alt"></i> Logout</span>
+                                <a href="{{ route('logout') }}"
+                                    class="dropdown-item d-flex align-items-center justify-content-between logout"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <span class="d-none d-sm-inline-block"><i class="fas fa-sign-out-alt"></i>
+                                        Logout</span>
                                 </a>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    class="d-none">
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
                             </div>
@@ -235,7 +252,7 @@
             var scrollPosition = Sidebar.scrollTop;
             localStorage.setItem('scroll_nav', scrollPosition);
         }
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var Sidebar = document.querySelector('.simplebar-content-wrapper');
             const Location = window.location.pathname;
             Sidebar.onscroll = handleScroll;
@@ -248,8 +265,8 @@
                 localStorage.setItem('scroll_nav', 0);
             }
         });
-        
-        function guestCheckout(){
+
+        function guestCheckout() {
             $.get("{{ url('change/guest/checkout/status') }}", function (data) {
                 const checkbox = document.getElementById("guest_checkout");
                 if (checkbox.checked) {
@@ -259,6 +276,14 @@
                     toastr.error("Guest Checkout has Disabled");
                 }
             })
+        }
+        //for demo user checking
+        function check_demo_user() {
+            const authUser = @json(Auth::user());
+            if (authUser.email === 'demo@example.com') {
+                toastr.error("You are using the demo account", "Demo User");
+                return true;
+            }
         }
     </script>
 

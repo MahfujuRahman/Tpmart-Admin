@@ -80,10 +80,10 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">SL</th>
-                                    <th class="text-center">Customer</th>     
-                                    <th class="text-center">Employee</th>     
-                                    <th class="text-center">Customer History Status</th>     
-                                    <th class="text-center">Priority</th>      
+                                    <th class="text-center">Customer</th>
+                                    <th class="text-center">Employee</th>
+                                    <th class="text-center">Customer History Status</th>
+                                    <th class="text-center">Priority</th>
                                     <th class="text-center">Date</th>
                                     <th class="text-center">Action</th>
                                 </tr>
@@ -112,35 +112,35 @@
             serverSide: true,
             ajax: "{{ url('view/all/customer-contact-history') }}",
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'customer',
-                    name: 'customer'
-                },
-                {
-                    data: 'employee',
-                    name: 'employee'
-                },
-                {
-                    data: 'contact_history_status',
-                    name: 'contact_history_status'
-                },
-                {
-                    data: 'priority',
-                    name: 'priority'
-                },
-                {
-                    data: 'date',
-                    name: 'date'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                }
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex'
+            },
+            {
+                data: 'customer',
+                name: 'customer'
+            },
+            {
+                data: 'employee',
+                name: 'employee'
+            },
+            {
+                data: 'contact_history_status',
+                name: 'contact_history_status'
+            },
+            {
+                data: 'priority',
+                name: 'priority'
+            },
+            {
+                data: 'date',
+                name: 'date'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            }
             ]
 
 
@@ -156,20 +156,22 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function() {
+        $('body').on('click', '.deleteBtn', function () {
             var customerNextDaetSlug = $(this).data("id");
             if (confirm("Are You sure want to delete !")) {
-                $.ajax({
+                if (check_demo_user()) {
+                    return false;
+                } $.ajax({
                     type: "GET",
                     url: "{{ url('delete/customer-next-contact-date') }}" + '/' +
                         customerNextDaetSlug,
-                    success: function(data) {
+                    success: function (data) {
                         table.draw(false);
                         toastr.error("Customer Next Date Contact has been Deleted",
                             "Deleted Successfully");
                     },
-                    error: function(xhr) {                
-                        console.log('Error 11:', xhr.responseJSON.error);                
+                    error: function (xhr) {
+                        console.log('Error 11:', xhr.responseJSON.error);
                         if (xhr.responseJSON && xhr.responseJSON.error) {
                             toastr.error(xhr.responseJSON.error, "Error");
                         } else {
