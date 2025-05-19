@@ -277,10 +277,12 @@
                 }
             })
         }
+
         //for demo user checking
         function check_demo_user() {
-            if (env('DEMO_MODE') == true) {
-                toastr.error("You cannot change content.","You're using Demo Mode!");
+            const DEMO_MODE = @json(env('DEMO_MODE'));
+            if (DEMO_MODE) {
+                toastr.error("You cannot change content.", "You're using Demo Mode!");
                 return true;
             }
         }
