@@ -19,7 +19,7 @@ class DemoMode
     {
         if (env('DEMO_MODE') == true) {
             if ($request->method() === 'POST') {
-                Toastr::error('You cannot change content', 'Demo Mode is Enabled');
+                Toastr::error("You're using Demo Mode","You cannot change content");
                 return back();
             }
             return $next($request);

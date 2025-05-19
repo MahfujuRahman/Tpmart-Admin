@@ -281,7 +281,8 @@
         function check_demo_user() {
             const authUser = @json(Auth::user());
             if (authUser.email === 'demo@example.com') {
-                toastr.error("You are using the demo account", "Demo User");
+                // toastr.error("You are using the demo account", "Demo User");
+                toastr.error("You cannot change content.","You're using Demo Mode!");
                 return true;
             }
         }
