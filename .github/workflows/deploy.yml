@@ -17,6 +17,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
+            sudo systemctl restart ssh
             cd ${{ secrets.PROJECT_PATH }}
             git reset --hard HEAD
             git clean -fd

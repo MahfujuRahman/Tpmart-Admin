@@ -28,13 +28,8 @@
 
             <li><a href="{{ url('/config/setup') }}">Setup Your Config</a></li>
 
-            {{-- Fshion Insdustry --}}
-            @if(DB::table('config_setups')->where('code', 'product_size')->first())
-                <li><a href="{{ url('/view/all/sizes') }}">Product Sizes</a></li>
-            @endif
-
             {{-- tech industry --}}
-            @if(DB::table('config_setups')->where('code', 'storage')->first())
+            {{-- @if(DB::table('config_setups')->where('code', 'storage')->first())
                 <li><a href="{{ url('/view/all/storages') }}">Storage</a></li>
             @endif
             @if(DB::table('config_setups')->where('code', 'sim')->first())
@@ -42,15 +37,38 @@
             @endif
             @if(DB::table('config_setups')->where('code', 'device_condition')->first())
                 <li><a href="{{ url('/view/all/device/conditions') }}">Device Condition</a></li>
-            @endif
-            @if(DB::table('config_setups')->where('code', 'product_warranty')->first())
-                <li><a href="{{ url('/view/all/warrenties') }}">Product Warrenty</a></li>
+            @endif --}}
+            
+            {{-- <li>
+                <a href="javascript: void(0);" class="has-arrow"><i class="fas fa-sms"></i><span>SMS Service</span></a>
+                <ul class="sub-menu" aria-expanded="false">
+                    <li><a href="{{ url('/view/sms/templates') }}">SMS Templates</a></li>
+                    <li><a href="{{ url('/send/sms/page') }}">Send SMS</a></li>
+                    <li><a href="{{ url('/view/sms/history') }}">SMS History</a></li>
+                </ul>
+            </li> --}}
+
+            <li><a href="{{ url('/view/email/credential') }}">Email Configure (SMTP)</a></li>
+            {{-- <li><a href="{{ url('/view/email/templates') }}">Email Templates</a></li> --}}
+            {{-- <li><a href="{{ url('/setup/sms/gateways') }}">SMS Gateway</a></li> --}}
+            <li><a href="{{ url('/setup/payment/gateways') }}">Payment Gateway</a></li>
+
+        </ul>
+    </li>
+    <li>
+        <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>Product Attributes</span></a>
+        <ul class="sub-menu" aria-expanded="false">
+
+            {{-- Fshion Insdustry --}}
+            @if(DB::table('config_setups')->where('code', 'product_size')->first())
+                <li><a href="{{ url('/view/all/sizes') }}">Product Sizes</a></li>
             @endif
 
             {{-- common --}}
             @if(DB::table('config_setups')->where('code', 'color')->first())
                 <li><a href="{{ url('/view/all/colors') }}">Product Colors</a></li>
             @endif
+
             @if(DB::table('config_setups')->where('code', 'measurement_unit')->first())
                 <li><a href="{{ url('/view/all/units') }}">Measurement Units</a></li>
             @endif
@@ -231,6 +249,7 @@
 
     {{-- <li><a href="{{ url('/file-manager') }}"><i class="fas fa-folder-open"></i><span>File Manager</span></a></li>
     --}}
+
     <li>
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-bell"></i><span>Push Notification</span></a>
         <ul class="sub-menu" aria-expanded="false">
@@ -238,24 +257,6 @@
             <li><a href="{{ url('/view/all/notifications') }}">Prevoious Notifications</a></li>
         </ul>
     </li>
-    {{-- <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="fas fa-sms"></i><span>SMS Service</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/view/sms/templates') }}">SMS Templates</a></li>
-            <li><a href="{{ url('/send/sms/page') }}">Send SMS</a></li>
-            <li><a href="{{ url('/view/sms/history') }}">SMS History</a></li>
-        </ul>
-    </li> --}}
-    <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>System</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/view/email/credential') }}">Email Configure (SMTP)</a></li>
-            <li><a href="{{ url('/view/email/templates') }}">Email Templates</a></li>
-            {{-- <li><a href="{{ url('/setup/sms/gateways') }}">SMS Gateway</a></li> --}}
-            <li><a href="{{ url('/setup/payment/gateways') }}">Payment Gateway</a></li>
-        </ul>
-    </li>
-
 
     <li><a href="{{ url('/view/customers/wishlist') }}"><i class="feather-heart"></i><span>Customer's
                 Wishlist</span></a></li>
@@ -699,7 +700,7 @@
             <li><a href="{{ url('/view/all/pages') }}">View All Pages</a></li>
         </ul>
     </li>
-     <li>
+    <li>
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Outlet</span></a>
         <ul class="sub-menu" aria-expanded="false">
             <li><a href="{{ url('/add/new/outlet') }}">Add New </a></li>
