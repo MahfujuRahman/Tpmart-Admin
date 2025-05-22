@@ -45,6 +45,8 @@
                         <label id="customFilter">
                             <a href="{{url('rearrange/category')}}" class="btn btn-success btn-sm"
                                 style="margin-left: 5px"><b><i class="fas fa-sort-amount-up"></i> Rearrange Category</b></a>
+                            <a href="{{url('/add/new/category')}}" class="btn btn-primary btn-sm"
+                                style="margin-left: 5px"><b><i class="fas fa-plus"></i> Add New Category</b></a>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">

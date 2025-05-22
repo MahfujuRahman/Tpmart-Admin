@@ -62,6 +62,10 @@
                 <div class="card-body">
                     <h4 class="card-title mb-3">Child Category List</h4>
                     <div class="table-responsive">
+                        <label id="customFilter">
+                            <a href="{{url('/add/new/childcategory')}}" class="btn btn-primary btn-sm"
+                                style="margin-left: 5px"><b><i class="fas fa-plus"></i> Add New Child Category</b></a>
+                        </label>
                         <table class="table table-bordered mb-0 data-table">
                             <thead>
                                 <tr>
@@ -161,6 +165,7 @@
                 });
             }
         });
+         $(".dataTables_filter").append($("#customFilter"));
     </script>
 
     {{-- js code for user crud --}}

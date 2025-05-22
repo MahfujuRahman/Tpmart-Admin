@@ -30,15 +30,15 @@
 
             {{-- tech industry --}}
             {{-- @if(DB::table('config_setups')->where('code', 'storage')->first())
-                <li><a href="{{ url('/view/all/storages') }}">Storage</a></li>
+            <li><a href="{{ url('/view/all/storages') }}">Storage</a></li>
             @endif
             @if(DB::table('config_setups')->where('code', 'sim')->first())
-                <li><a href="{{ url('/view/all/sims') }}">SIM Type</a></li>
+            <li><a href="{{ url('/view/all/sims') }}">SIM Type</a></li>
             @endif
             @if(DB::table('config_setups')->where('code', 'device_condition')->first())
-                <li><a href="{{ url('/view/all/device/conditions') }}">Device Condition</a></li>
+            <li><a href="{{ url('/view/all/device/conditions') }}">Device Condition</a></li>
             @endif --}}
-            
+
             {{-- <li>
                 <a href="javascript: void(0);" class="has-arrow"><i class="fas fa-sms"></i><span>SMS Service</span></a>
                 <ul class="sub-menu" aria-expanded="false">
@@ -56,7 +56,8 @@
         </ul>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>Product Attributes</span></a>
+        <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>Product
+                Attributes</span></a>
         <ul class="sub-menu" aria-expanded="false">
 
             {{-- Fshion Insdustry --}}
@@ -82,26 +83,18 @@
     </li>
 
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-sliders"></i><span>Category</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/category') }}">Add New Category</a></li>
-            <li><a href="{{ url('/view/all/category') }}">View All Categories</a></li>
-        </ul>
+        <a href="{{ url('/view/all/category') }}"><i class="feather-sliders"></i><span>Category</span></a>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-command"></i><span>Subcategory</span></a>
-        <ul class="sub-menu" aria-expanded="false">
+        <a href="{{ url('/view/all/subcategory') }}"><i class="feather-command"></i><span>Subcategory</span></a>
+        {{-- <ul class="sub-menu" aria-expanded="false">
             <li><a href="{{ url('/add/new/subcategory') }}">Add New Subcategory</a></li>
             <li><a href="{{ url('/view/all/subcategory') }}">View All Subcategories</a></li>
-        </ul>
+        </ul> --}}
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-git-pull-request"></i><span>Child
+        <a href="{{ url('/view/all/childcategory') }}"><i class="feather-git-pull-request"></i><span>Child
                 Category</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/childcategory') }}">Add New Child Category</a></li>
-            <li><a href="{{ url('/view/all/childcategory') }}">View All Child Categories</a></li>
-        </ul>
     </li>
     <li>
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Manage Products</span></a>
@@ -130,7 +123,6 @@
                     </span>
                 </a>
             </li> --}}
-            <li><a href="{{ url('/add/new/product') }}">Add New Product</a></li>
             <li>
                 <a href="{{ url('/view/all/product') }}">
                     View All Products
@@ -172,7 +164,6 @@
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-shopping-cart"></i><span>Manage
                 Orders</span></a>
         <ul class="sub-menu" aria-expanded="false">
-            <li><a style="color: white !important;" href="{{ url('/create/new/order') }}">Create Order</a>
             <li><a style="color: white !important;" href="{{ url('/view/orders') }}">All Orders (@php echo
                     DB::table('orders')->count(); @endphp)</a>
             </li>
@@ -240,11 +231,7 @@
         </ul>
     </li> --}}
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-gift"></i><span>Promo Codes</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/code') }}">Add New Promo Code</a></li>
-            <li><a href="{{ url('/view/all/promo/codes') }}">View All Promo Codes</a></li>
-        </ul>
+        <a href="{{ url('/view/all/promo/codes') }}"><i class="feather-gift"></i><span>Promo Codes</span></a>
     </li>
 
     {{-- <li><a href="{{ url('/file-manager') }}"><i class="fas fa-folder-open"></i><span>File Manager</span></a></li>
@@ -277,100 +264,58 @@
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Inventory Modules</li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Product Warehouse</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/product-warehouse') }}">Add New Warehouse</a></li>
-            <li>
-                <a href="{{ url('/view/all/product-warehouse') }}">
-                    View All Warehouses
-                    <span style="color:lightgreen" title="Total Product Warehouses">
-                        ({{DB::table('product_warehouses')->count()}})
-                    </span>
-                </a>
-            </li>
-
-        </ul>
+        <a href="{{ url('/view/all/product-warehouse') }}"><i class="feather-box"></i>
+            <span>Product Warehouse</span>
+            <span style="color:lightgreen" title="Total Product Warehouses">
+                ({{DB::table('product_warehouses')->count()}})
+            </span>
+        </a>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Warehouse Room</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/product-warehouse-room') }}">Add Warehouse Room</a></li>
-            <li>
-                <a href="{{ url('/view/all/product-warehouse-room') }}">
-                    View All Warehouse Rooms
-                    <span style="color:lightgreen" title="Total Product Warehouse Rooms">
-                        ({{DB::table('product_warehouse_rooms')->count()}})
-                    </span>
-                </a>
-            </li>
-        </ul>
+        <a href="{{ url('/view/all/product-warehouse-room') }}">
+            <i class="feather-box"></i>Warehouse Room
+            <span style="color:lightgreen" title="Total Product Warehouse Rooms">
+                ({{DB::table('product_warehouse_rooms')->count()}})
+            </span>
+        </a>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Room Cartoon</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/product-warehouse-room-cartoon') }}">Add Cartoon</a></li>
-            <li>
-                <a href="{{ url('/view/all/product-warehouse-room-cartoon') }}">
-                    View All Warehouse Room Cartoons
-                    <span style="color:lightgreen" title="Total Product Warehouse Room cartoons">
-                        ({{DB::table('product_warehouse_room_cartoons')->count()}})
-                    </span>
-                </a>
-            </li>
-        </ul>
+        <a href="{{ url('/view/all/product-warehouse-room-cartoon') }}">
+            <i class="feather-box"></i> Room Cartoon
+            <span style="color:lightgreen" title="Total Product Warehouse Room cartoons">
+                ({{DB::table('product_warehouse_room_cartoons')->count()}})
+            </span>
+        </a>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Supplier Src Type</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/supplier-source') }}">Add New Type</a></li>
-            <li>
-                <a href="{{ url('/view/all/supplier-source') }}">
-                    View All Supplier Types
-                    <span style="color:lightgreen" title="Total CS Types">
-                        ({{DB::table('supplier_source_types')->count()}})
-                    </span>
-                </a>
-            </li>
-
-        </ul>
+        <a href="{{ url('/view/all/supplier-source') }}">
+            <i class="feather-box"></i> Supplier Src Type
+            <span style="color:lightgreen" title="Total CS Types">
+                ({{DB::table('supplier_source_types')->count()}})
+            </span>
+        </a>
     </li>
 
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Product Supplier</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/product-supplier') }}">Add New Supplier</a></li>
-            <li>
-                <a href="{{ url('/view/all/product-supplier') }}">
-                    View All Product Suppliers
-                    <span style="color:lightgreen" title="Total Product Suppliers">
-                        ({{DB::table('product_suppliers')->count()}})
-                    </span>
-                </a>
-            </li>
-        </ul>
+        <a href="{{ url('/view/all/product-supplier') }}">
+            <i class="feather-box"></i> Product Suppliers
+            <span style="color:lightgreen" title="Total Product Suppliers">
+                ({{DB::table('product_suppliers')->count()}})
+            </span>
+        </a>
     </li>
-    <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Customer Src Type</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/customer-source') }}">Add New Type</a></li>
-            <li>
-                <a href="{{ url('/view/all/customer-source') }}">
-                    View All CS Types
-                    <span style="color:lightgreen" title="Total CS Types">
-                        ({{DB::table('customer_source_types')->count()}})
-                    </span>
-                </a>
-            </li>
 
-        </ul>
-    </li>
-    <li><a href="{{ url('/view/all/customers') }}"><i class="feather-users"></i><span>Customers</span></a></li>
+    <li><a href="{{ url('/view/all/customers') }}"><i class="feather-users"></i>
+            <span>Customers</span>
+            <span style="color:lightgreen" title="Total CS Types">
+                ({{DB::table('users')->where('user_type', 3)->count()}})
+            </span>
+        </a></li>
 
     <li>
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Product Purchase</span></a>
         <ul class="sub-menu" aria-expanded="false">
             <li><a href="{{ url('/view/all/purchase-product/charge') }}">Other Charge Types</a></li>
-            <li><a href="{{ url('/add/new/purchase-product/quotation') }}">Add Quotation</a></li>
             <li>
                 <a href="{{ url('/view/all/purchase-product/quotation') }}">
                     View All Quotations
@@ -381,7 +326,6 @@
             </li>
             {{-- <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Order</span></a> --}}
 
-            <li><a href="{{ url('/add/new/purchase-product/order') }}">Add Order</a></li>
             <li>
                 <a href="{{ url('/view/all/purchase-product/order') }}">
                     View All Orders
@@ -399,108 +343,74 @@
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Accounts Modules</li>
 
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Payment Type</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/payment-type') }}">Add Type</a></li>
-            <li>
-                <a href="{{ url('/view/all/payment-type') }}">
-                    All Payment Types
-                    <span style="color:lightgreen" title="Total CS Types">
-                        ({{DB::table('db_paymenttypes')->count()}})
-                    </span>
-                </a>
-            </li>
+        <a href="{{ url('/view/all/payment-type') }}">
+            <i class="feather-box"></i> Payment Types
+            <span style="color:lightgreen" title="Total CS Types">
+                ({{DB::table('db_paymenttypes')->count()}})
+            </span>
+        </a>
+    </li>
+    <li>
 
-        </ul>
-    </li>
-    <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Expense Category</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/expense-category') }}">Add Category</a></li>
-            <li>
-                <a href="{{ url('/view/all/expense-category') }}">
-                    All Categories
-                    <span style="color:lightgreen" title="Total Categories">
-                        ({{DB::table('db_expense_categories')->count()}})
-                    </span>
-                </a>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Account</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/ac-account') }}">Add Account</a></li>
-            <li>
-                <a href="{{ url('/view/all/ac-account') }}">
-                    All Accounts
-                    <span style="color:lightgreen" title="Total Accounts">
-                        ({{DB::table('ac_accounts')->count()}})
-                    </span>
-                </a>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Expense</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/expense') }}">Add Expense</a></li>
-            <li>
-                <a href="{{ route('ViewAllExpense') }}">
-                    All Expenses
-                    <span style="color:lightgreen" title="Total Expenses">
-                        ({{DB::table('db_expenses')->count()}})
-                    </span>
-                </a>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Deposit</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/deposit') }}">Add Deposit</a></li>
-            <li>
-                <a href="{{ route('ViewAllDeposit') }}">
-                    All Deposits
-                    <span style="color:lightgreen" title="Total Deposits">
-                        ({{DB::table('ac_transactions')->count()}})
-                    </span>
-                </a>
-            </li>
-        </ul>
-    </li>
+        <a href="{{ url('/view/all/expense-category') }}">
+            <i class="feather-box"></i> Expense Categories
+            <span style="color:lightgreen" title="Total Categories">
+                ({{DB::table('db_expense_categories')->count()}})
+            </span>
+        </a>
 
+    </li>
+    <li>
+        <a href="{{ url('/view/all/ac-account') }}">
+            <i class="feather-box"></i> All Accounts
+            <span style="color:lightgreen" title="Total Accounts">
+                ({{DB::table('ac_accounts')->count()}})
+            </span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ route('ViewAllExpense') }}">
+            <i class="feather-box"></i> All Expenses
+            <span style="color:lightgreen" title="Total Expenses">
+                ({{DB::table('db_expenses')->count()}})
+            </span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ route('ViewAllDeposit') }}">
+            <i class="feather-box"></i> All Deposits
+            <span style="color:lightgreen" title="Total Deposits">
+                ({{DB::table('ac_transactions')->count()}})
+            </span>
+        </a>
+    </li>
 
 
     <li>
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>Reports</span></a>
         <ul class="sub-menu" aria-expanded="false">
             <li>
-                <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Journal</span></a>
-                <ul class="sub-menu" aria-expanded="false">
-                    <li><a href="{{ route('journal.index') }}">Index</a></li>
-                </ul>
+                <a href="{{ route('journal.index') }}">
+                    <i class="feather-box"></i>
+                    <span>Journal</span>
+                </a>
             </li>
             <li>
-                <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Ledger</span></a>
-                <ul class="sub-menu" aria-expanded="false">
-                    <li><a href="{{ route('ledger.index') }}">Index</a></li>
-                </ul>
+                <a href="{{ route('ledger.index') }}">
+                    <i class="feather-box"></i>
+                    <span>Ledger</span></a>
             </li>
             <li>
-                <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Balance
-                        Sheet</span></a>
-                <ul class="sub-menu" aria-expanded="false">
-                    <li><a href="{{ route('ledger.balance_sheet') }}">Index</a></li>
-                </ul>
+                <a href="{{ route('ledger.balance_sheet') }}">
+                    <i class="feather-box"></i>
+                    <span>Balance Sheet</span>
+                </a>
             </li>
             <li>
-                <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Income
-                        Statement</span></a>
-                <ul class="sub-menu" aria-expanded="false">
-                    {{-- <li><a href="{{ route('ledger.show') }}">Show</a></li> --}}
-                    <li><a href="{{ route('ledger.income_statement') }}">Index</a></li>
-                </ul>
+                <a href="{{ route('ledger.income_statement') }}">
+                    <i class="feather-box"></i>
+                    <span>Income Statement</span>
+                </a>
             </li>
         </ul>
     </li>
@@ -508,95 +418,54 @@
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">CRM Modules</li>
     <li>
+        <a href="{{ url('/view/all/customer-source') }}">
+            <i class="feather-box"></i> Customer Src Type
+            <span style="color:lightgreen" title="Total CS Types">
+                ({{DB::table('customer_source_types')->count()}})
+            </span>
+        </a>
+    </li>
+    <li>
 
+        <a href="{{ url('/view/all/customer-category') }}">
+            <i class="feather-box"></i> Customer Category
+            <span style="color:lightgreen" title="Total Categories">
+                ({{DB::table('customer_categories')->count()}})
+            </span>
+        </a>
 
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Customer Src
-                Type</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/customer-source') }}">Add Type</a></li>
-            <li>
-                <a href="{{ url('/view/all/customer-source') }}">
-                    All Source Types
-                    <span style="color:lightgreen" title="Total CS Types">
-                        ({{DB::table('customer_source_types')->count()}})
-                    </span>
-                </a>
-            </li>
-
-        </ul>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Customer
-                Category</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/customer-category') }}">Add Category</a></li>
-            <li>
-                <a href="{{ url('/view/all/customer-category') }}">
-                    All Categories
-                    <span style="color:lightgreen" title="Total Categories">
-                        ({{DB::table('customer_categories')->count()}})
-                    </span>
-                </a>
-            </li>
-        </ul>
+        <a href="{{ url('/view/all/customer') }}">
+            <i class="feather-box"></i> Customers
+            <span style="color:lightgreen" title="Total Customers">
+                ({{DB::table('customers')->count()}})
+            </span>
+        </a>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Customer</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/customers') }}">Add Customer</a></li>
-            <li>
-                <a href="{{ url('/view/all/customer') }}">
-                    All Customers
-                    <span style="color:lightgreen" title="Total Customers">
-                        ({{DB::table('customers')->count()}})
-                    </span>
-                </a>
-            </li>
-        </ul>
+        <a href="{{ route('ViewAllCustomerContactHistories') }}">
+            <i class="feather-box"></i> Contacts History
+            <span style="color:lightgreen" title="Total Contact Histories">
+                ({{DB::table('customer_contact_histories')->count()}})
+            </span>
+        </a>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Contact
-                History</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/customer-contact-history') }}">Add Contact</a></li>
-            <li>
-                <a href="{{ route('ViewAllCustomerContactHistories') }}">
-                    All Contacts
-                    <span style="color:lightgreen" title="Total Contact Histories">
-                        ({{DB::table('customer_contact_histories')->count()}})
-                    </span>
-                </a>
-            </li>
-        </ul>
+        <a href="{{ route('ViewAllCustomerEcommerce') }}">
+            <i class="feather-box"></i> E-Customer
+            <span style="color:lightgreen" title="Total Contact Histories">
+                ({{DB::table('users')->where('user_type', 3)->count()}})
+            </span>
+        </a>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>E-Customer</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/customer-ecommerce') }}">Add Customer</a></li>
-            <li>
-                <a href="{{ route('ViewAllCustomerEcommerce') }}">
-                    All Customer
-                    <span style="color:lightgreen" title="Total Contact Histories">
-                        ({{DB::table('users')->where('user_type', 3)->count()}})
-                    </span>
-                </a>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Next Date
-                Contact</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/customer-next-contact-date') }}">Add Next Date</a></li>
-            <li>
-                <a href="{{ url('/view/all/customer-next-contact-date') }}">
-                    All Next Contacts
-                    <span style="color:lightgreen" title="Total Contact Histories">
-                        ({{DB::table('customer_next_contact_dates')->count()}})
-                    </span>
-                </a>
-            </li>
-        </ul>
+        <a href="{{ url('/view/all/customer-next-contact-date') }}">
+            <i class="feather-box"></i> Next Date Contacts
+            <span style="color:lightgreen" title="Total Contact Histories">
+                ({{DB::table('customer_next_contact_dates')->count()}})
+            </span>
+        </a>
     </li>
 
     <li>

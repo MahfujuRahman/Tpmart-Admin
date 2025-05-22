@@ -154,6 +154,10 @@
                 <div class="card-body">
                     <h4 class="card-title mb-3">All Orders</h4>
                     <div class="table-responsive">
+                        <label id="customFilter">
+                            <a href="{{url('/create/new/order')}}" class="btn btn-primary btn-sm"
+                                style="margin-left: 5px"><b><i class="fas fa-plus"></i> Create Order</b></a>
+                        </label>
                         <table class="table table-bordered mb-0 data-table">
                             <thead>
                                 <tr>
@@ -222,6 +226,7 @@
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
+         $(".dataTables_filter").append($("#customFilter"));sds
     </script>
 
     {{-- js code for user crud --}}

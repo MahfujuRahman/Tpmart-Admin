@@ -75,7 +75,10 @@
                 <div class="card-body">
                     <h4 class="card-title mb-3">View All Product Warehouse Room Cartoons</h4>
                     <div class="table-responsive">
-
+                        <label id="customFilter">
+                            <a href="{{url('/add/new/product-warehouse-room-cartoon')}}" class="btn btn-primary btn-sm"
+                                style="margin-left: 5px"><b><i class="fas fa-plus"></i> Add New Cartoon</b></a>
+                        </label>v
                         <table class="table table-bordered mb-0 data-table">
                             <thead>
                                 <tr>
@@ -158,6 +161,7 @@
 
 
         });
+        $(".dataTables_filter").append($("#customFilter"));
     </script>
 
 

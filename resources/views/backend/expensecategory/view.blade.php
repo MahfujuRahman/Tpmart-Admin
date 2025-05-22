@@ -77,6 +77,10 @@
                         <h4 class="card-title mb-0">View All Payment Types</h4>
                     </div>
                     <div class="table-responsive">
+                        <label id="customFilter">
+                            <a href="{{url('/add/new/expense-category')}}" class="btn btn-primary btn-sm"
+                                style="margin-left: 5px"><b><i class="fas fa-plus"></i> Add New Category</b></a>
+                        </label>
                         <table class="table table-bordered mb-0 data-table">
                             <thead>
                                 <tr>
@@ -143,6 +147,7 @@
 
 
         });
+         $(".dataTables_filter").append($("#customFilter"));
     </script>
 
 
