@@ -48,6 +48,10 @@
                     <h4 class="card-title mb-3">Testimonials</h4>
 
                     <div class="table-responsive">
+                        <label id="customFilter">
+                            <a href="{{url('/add/new/product')}}" class="btn btn-primary btn-sm"
+                                style="margin-left: 5px"><b><i class="fas fa-plus"></i> Add New Testimonial</b></a>
+                        </label>
                         <table class="table table-bordered mb-0 data-table">
                             <thead>
                                 <tr>
@@ -119,6 +123,8 @@
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
         });
+
+        $(".dataTables_filter").append($("#customFilter"));
     </script>
 
     {{-- js code for user crud --}}

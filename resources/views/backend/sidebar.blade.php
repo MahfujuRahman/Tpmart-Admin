@@ -537,12 +537,10 @@
         </ul>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i
-                class="feather-message-square"></i><span>Testimonials</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/testimonial') }}">Add New Testimonial</a></li>
-            <li><a href="{{ url('/view/testimonials') }}">View All Testimonials</a></li>
-        </ul>
+        <a href="{{ url('/view/testimonials') }}">
+            <i class="feather-message-square"></i>
+            <span>Testimonials</span>
+        </a>
     </li>
     <li>
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-file-text"></i><span>Manage Blogs</span></a>
@@ -563,41 +561,28 @@
         </ul>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-file-plus"></i><span>Custom Pages</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/create/new/page') }}">Create New Page</a></li>
-            <li><a href="{{ url('/view/all/pages') }}">View All Pages</a></li>
-        </ul>
+        <a href="{{ url('/view/all/pages') }}"><i class="feather-file-plus"></i>
+            <span>Custom Pages</span>
+            <span style="color:lightgreen" title="Total Outlets">
+                ({{DB::table('custom_pages')->count()}})
+            </span>
+        </a>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Outlet</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/outlet') }}">Add New </a></li>
-            <li>
-                <a href="{{ url('/view/all/outlet') }}">
-                    View All Outlets
-                    <span style="color:lightgreen" title="Total Outlets">
-                        ({{DB::table('outlets')->count()}})
-                    </span>
-                </a>
-            </li>
-
-        </ul>
+        <a href="{{ url('/view/all/outlet') }}">
+            <i class="feather-box"></i> View All Outlets
+            <span style="color:lightgreen" title="Total Outlets">
+                ({{DB::table('outlets')->count()}})
+            </span>
+        </a>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Video Gallery</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/add/new/video-gallery') }}">Add New </a></li>
-            <li>
-                <a href="{{ url('/view/all/video-gallery') }}">
-                    View All Videos
-                    <span style="color:lightgreen" title="Total Videos">
-                        ({{DB::table('video_galleries')->count()}})
-                    </span>
-                </a>
-            </li>
-
-        </ul>
+        <a href="{{ url('/view/all/video-gallery') }}">
+            <i class="feather-box"></i> View All Videos
+            <span style="color:lightgreen" title="Total Videos">
+                ({{DB::table('video_galleries')->count()}})
+            </span>
+        </a>
     </li>
     <li><a href="{{ url('/about/us/page') }}"><i class="feather-globe"></i><span>About Us</span></a></li>
     <li><a href="{{ url('/view/all/faqs') }}"><i class="far fa-question-circle"></i><span>FAQ's</span></a></li>
@@ -606,18 +591,58 @@
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Download & Backup</li>
 
 
-    <li><a href="{{ url('/download/database/backup') }}"><i class="feather-database"></i>Database Backup</a></li>
-    <li><a href="{{ url('/download/product/files/backup') }}"><i class="feather-image"></i>Product Images Backup</a>
+    <li>
+        <a href="{{ url('/download/database/backup') }}"
+           onclick="return confirm('Are you sure you want to download the database backup?');">
+            <i class="feather-database"></i>
+            Database Backup
+        </a>
     </li>
-    <li><a href="{{ url('/download/user/files/backup') }}"><i class="feather-user"></i>User Images Backup</a></li>
-    <li><a href="{{ url('/download/banner/files/backup') }}"><i class="feather-layers"></i>Banner Images Backup</a></li>
-    <li><a href="{{ url('/download/category/files/backup') }}"><i class="feather-grid"></i>Category Icon Backup</a></li>
-    <li><a href="{{ url('/download/subcategory/files/backup') }}"><i class="feather-list"></i>Subcategory Backup</a>
+    <li>
+        <a href="{{ url('/download/product/files/backup') }}"
+           onclick="return confirm('Are you sure you want to download the product images backup?');">
+            <i class="feather-image"></i>Product Images Backup</a>
     </li>
-    <li><a href="{{ url('/download/flag/files/backup') }}"><i class="feather-flag"></i>Flag Icon Backup</a></li>
-    <li><a href="{{ url('/download/ticket/files/backup') }}"><i class="feather-file"></i>Ticket Files Backup</a></li>
-    <li><a href="{{ url('/download/blog/files/backup') }}"><i class="feather-file-text"></i>Blog Files Backup</a></li>
-    <li><a href="{{ url('/download/other/files/backup') }}"><i class="feather-folder"></i>Other Images Backup</a></li>
+    <li>
+        <a href="{{ url('/download/user/files/backup') }}"
+           onclick="return confirm('Are you sure you want to download the user images backup?');">
+            <i class="feather-user"></i>User Images Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/banner/files/backup') }}"
+           onclick="return confirm('Are you sure you want to download the banner images backup?');">
+            <i class="feather-layers"></i>Banner Images Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/category/files/backup') }}"
+           onclick="return confirm('Are you sure you want to download the category icon backup?');">
+            <i class="feather-grid"></i>Category Icon Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/subcategory/files/backup') }}"
+           onclick="return confirm('Are you sure you want to download the subcategory backup?');">
+            <i class="feather-list"></i>Subcategory Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/flag/files/backup') }}"
+           onclick="return confirm('Are you sure you want to download the flag icon backup?');">
+            <i class="feather-flag"></i>Flag Icon Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/ticket/files/backup') }}"
+           onclick="return confirm('Are you sure you want to download the ticket files backup?');">
+            <i class="feather-file"></i>Ticket Files Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/blog/files/backup') }}"
+           onclick="return confirm('Are you sure you want to download the blog files backup?');">
+            <i class="feather-file-text"></i>Blog Files Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/other/files/backup') }}"
+           onclick="return confirm('Are you sure you want to download the other images backup?');">
+            <i class="feather-folder"></i>Other Images Backup</a>
+    </li>
 
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
 
