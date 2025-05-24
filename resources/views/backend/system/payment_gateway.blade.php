@@ -110,7 +110,7 @@
             </div>
         </div>
 
-        <div class="col-lg-3 col-xl-3">
+        {{-- <div class="col-lg-3 col-xl-3">
             <div class="card" style="height: 750px; @if($gateways[1]->status == 1) border: 2px solid green; box-shadow: 2px 2px 5px #b5b5b5; @endif">
                 <div class="card-body">
                     <h4 class="card-title mb-3">
@@ -204,9 +204,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
-        <div class="col-lg-3 col-xl-3">
+        {{-- <div class="col-lg-3 col-xl-3">
             <div class="card" style="height: 750px; @if($gateways[2]->status == 1) border: 2px solid green; box-shadow: 2px 2px 5px #b5b5b5; @endif">
                 <div class="card-body">
                     <h4 class="card-title mb-3">
@@ -300,9 +300,9 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
-        <div class="col-lg-3 col-xl-3">
+        {{-- <div class="col-lg-3 col-xl-3">
             <div class="card" style="height: 750px; @if($gateways[3]->status == 1) border: 2px solid green; box-shadow: 2px 2px 5px #b5b5b5; @endif">
                 <div class="card-body">
                     <h4 class="card-title mb-3">
@@ -396,7 +396,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection
 

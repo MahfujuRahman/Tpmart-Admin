@@ -72,7 +72,7 @@ class PosController extends Controller
         return response()->json(['searchResults' => $searchResults]);
     }
 
-    public function getProductVariants(Request $request){
+    public function getProductVariantsPos(Request $request){
 
         $product = Product::where('id', $request->product_id)->first();
 

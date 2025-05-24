@@ -24,13 +24,13 @@ require __DIR__.'/dashboardRoutes.php';
 require __DIR__.'/paymentRoutes.php';
 
 // file manager routes start
-Route::get('/file-manager', function () {
-    return view('backend.file_manager');
-})->middleware(['auth']);
+// Route::get('/file-manager', function () {
+//     return view('backend.file_manager');
+// })->middleware(['auth']);
 
-Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
-    \UniSharp\LaravelFilemanager\Lfm::routes();
-});
+// Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
+//     \UniSharp\LaravelFilemanager\Lfm::routes();
+// });
 // file manager routes end
 
 //ecommerce routes

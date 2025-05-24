@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class UserVerificationEmail extends Mailable
 {
@@ -19,6 +20,7 @@ class UserVerificationEmail extends Mailable
     public function __construct($data)
     {
         $this->sendLinkInfo = $data;
+        Log::info(  config('mail.mailers.smtp'));
     }
 
     /**
@@ -30,8 +32,8 @@ class UserVerificationEmail extends Mailable
     {
 
         return $this->subject('User Verification Email')
-                ->view('backend.mail.userVerificationEmail')->with([
-                    'name' => 'User',
-                ]);
+            ->view('backend.mail.userVerificationEmail')->with([
+                'name' => 'User',
+            ]);
     }
 }

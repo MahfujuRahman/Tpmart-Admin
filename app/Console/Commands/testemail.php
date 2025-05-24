@@ -30,6 +30,8 @@ class testemail extends Command
             'mail.from.name' => $emailConfig->mail_from_name,
         ]);
 
+        // \Log::info(  config('mail.mailers.smtp'));
+
         Mail::raw('✅ Test email from Laravel dynamic SMTP config.', function ($msg) {
             $msg->to('mahfujur15-14276@diu.edu.bd') // <- CHANGE THIS TO YOUR EMAIL
                 ->subject('Test Email from Laravel Command');

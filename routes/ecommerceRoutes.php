@@ -135,7 +135,7 @@ Route::group(['middleware' => ['auth', 'CheckUserType', 'DemoMode']], function (
     // pos routes
     Route::get('/create/new/order', [PosController::class, 'createNewOrder'])->name('CreateNewOrder');
     Route::post('/product/live/search', [PosController::class, 'productLiveSearch'])->name('ProductLiveSearch');
-    Route::post('/get/pos/product/variants', [PosController::class, 'getProductVariants'])->name('GetProductVariants');
+    Route::post('/get/pos/product/variants', [PosController::class, 'getProductVariantsPos'])->name('GetProductVariantsPos');
     Route::post('/check/pos/product/variant', [PosController::class, 'checkProductVariant'])->name('CheckProductVariant');
     Route::post('/add/to/cart', [PosController::class, 'addToCart'])->name('AddToCart');
     Route::get('/remove/cart/item/{index}', [PosController::class, 'removeCartItem'])->name('RemoveCartItem');

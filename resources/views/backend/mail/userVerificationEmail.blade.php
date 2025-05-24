@@ -59,6 +59,7 @@
 </head>
 
 <body>
+    
     <div class="container">
         <div class="header">Email Verification</div>
         <div class="content">
