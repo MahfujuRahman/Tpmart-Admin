@@ -78,8 +78,8 @@
                                     <th class="text-center">Rating</th>
                                     <th class="text-center">Review</th>
                                     <th class="text-center" style="min-width: 135px;">Reply From Admin</th>
-                                    <th class="text-center">Customer</th>
-                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Customer Img</th>
+                                    <th class="text-center">Customer Name</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center" style="min-width: 80px;">Action</th>
                                 </tr>
@@ -193,7 +193,7 @@
                         if(data){
                             return "<img class=\"gridProductImage\" src=\"/" + data + "\" width=\"40\"/>";
                         } else {
-                            return '';
+                            return 'N/A';
                         }
                     }
                 },

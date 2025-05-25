@@ -465,18 +465,18 @@
         </a>
     </li>
     <li>
-        <a href="{{ route('ViewAllCustomerContactHistories') }}">
-            <i class="feather-box"></i> Contacts History
-            <span style="color:lightgreen" title="Total Contact Histories">
-                ({{DB::table('customer_contact_histories')->count()}})
-            </span>
-        </a>
-    </li>
-    <li>
         <a href="{{ route('ViewAllCustomerEcommerce') }}">
             <i class="feather-box"></i> E-Customer
             <span style="color:lightgreen" title="Total Contact Histories">
                 ({{DB::table('users')->where('user_type', 3)->count()}})
+            </span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ route('ViewAllCustomerContactHistories') }}">
+            <i class="feather-box"></i> Contacts History
+            <span style="color:lightgreen" title="Total Contact Histories">
+                ({{DB::table('customer_contact_histories')->count()}})
             </span>
         </a>
     </li>
@@ -528,11 +528,11 @@
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 5px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">User Role Permission</li>
     <li><a href="{{ url('/view/system/users') }}"><i class="fas fa-user-shield"></i><span>System Users</span></a></li>
-    <li><a href="{{ url('/view/permission/routes') }}"><i class="feather-git-merge"></i><span>Permission
-                Routes</span></a></li>
     <li><a href="{{ url('/view/user/roles') }}"><i class="feather-user-plus"></i><span>User Roles</span></a></li>
     <li><a href="{{ url('/view/user/role/permission') }}"><i class="mdi mdi-security"></i><span>Assign Role
-                Permission</span></a></li>
+        Permission</span></a></li>
+    <li><a href="{{ url('/view/permission/routes') }}"><i class="feather-git-merge"></i><span>Permission
+                Routes</span></a></li>
 
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 5px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Website Config</li>

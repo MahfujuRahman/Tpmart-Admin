@@ -40,7 +40,7 @@
                         @csrf
 
                         <div class="row">
-                            <div class="col-lg-3">
+                            {{-- <div class="col-lg-3">
                                 <div class="row">
                                     @foreach ($techConfigs as $config)
                                     <div class="col-lg-12">
@@ -53,7 +53,7 @@
                                     </div>
                                     @endforeach
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-lg-3">
                                 <div class="row">
                                     @foreach ($fashionConfigs as $config)
