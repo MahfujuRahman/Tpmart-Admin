@@ -42,13 +42,13 @@ class NotificationController extends Controller
             $message = [
                 "message" => [
                     "token" => $token,
-                    "notification" => [
+                    "data" => [
                         "title" => $title,
                         "body" => $body,
                     ],
                     "webpush" => [
                         "fcm_options" => [
-                            "link" => "http://127.0.0.1:8000"
+                            "link" => url("/")
                         ]
                     ]
                 ]
