@@ -26,7 +26,8 @@ class NotificationController extends Controller
         $tokens = DB::table('fcm_tokens')->pluck('token');
 
         if ($tokens->isEmpty()) {
-            return response()->json(['error' => 'No FCM tokens found'], 404);
+            Toastr::error('No FCM tokens found.', 'Error');
+            return back();
         }
 
         $serviceAccountPath = storage_path('app/firebase/firebase-service-account.json');
