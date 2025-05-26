@@ -43,7 +43,7 @@ class NotificationController extends Controller
             $message = [
                 "message" => [
                     "token" => $token,
-                    "data" => [
+                    "notification" => [
                         "title" => $title,
                         "body" => $body,
                     ],
