@@ -43,10 +43,6 @@ class NotificationController extends Controller
             $message = [
                 "message" => [
                     "token" => $token,
-                    "notification" => [
-                        "title" => $title,
-                        "body" => $body,
-                    ],
                     "webpush" => [
                         "notification" => [
                             "title" => $title,
