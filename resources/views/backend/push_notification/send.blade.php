@@ -22,7 +22,7 @@
                     <form class="needs-validation" method="POST" action="{{url('send/push/notification')}}" enctype="multipart/form-data">
                         @csrf
 
-                        <div class="form-group row">
+                        {{-- <div class="form-group row">
                             <label for="server_key" class="col-sm-2 col-form-label">Firebase Server Key : <span class="text-danger">*</span></label>
                             <div class="col-sm-10">
                                 <input type="text" name="server_key" class="form-control" id="server_key" value="{{env('FIREBASE_PUSH_NOTIFICATION_SERVER_KEY')}}" placeholder="AAAAN7ShpFk:APA91bF-0kcNVFSYr1J-bq3UvWcPv6tbvNFfOyZvbtOqmrYk3-3qst0IjaDX9SYzj" required>
@@ -56,7 +56,7 @@
                                     @enderror
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="form-group row">
                             <label for="title" class="col-sm-2 col-form-label">Notification Title : <span class="text-danger">*</span></label>

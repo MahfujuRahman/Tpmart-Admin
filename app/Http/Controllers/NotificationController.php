@@ -2,102 +2,107 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Notification;
-use Carbon\Carbon;
 use DataTables;
+use Carbon\Carbon;
+use Google\Client;
+use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class NotificationController extends Controller
 {
-    public function sendNotificationPage(){
+    public function sendNotificationPage()
+    {
         return view("backend.push_notification.send");
     }
 
-    public function sendPushNotification(Request $request){
-
-        $serverKey = $request->server_key;
-        $fcmUrl = $request->fcm_url;
-        $topic = $request->topic;
+    public function sendPushNotification(Request $request)
+    {
         $title = $request->title;
-        $description = $request->description;
+        $body = $request->description;
+        $tokens = DB::table('fcm_tokens')->pluck('token');
 
+        if ($tokens->isEmpty()) {
+            return response()->json(['error' => 'No FCM tokens found'], 404);
+        }
 
-        //push notification start
-        $notification = [
-            'title' => $topic,
-            'body' => $description,
-            'image' => '',
-        ];
+        $serviceAccountPath = storage_path('app/firebase/firebase-service-account.json');
+        $client = new Client();
+        $client->setAuthConfig($serviceAccountPath);
+        $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
+        $accessToken = $client->fetchAccessTokenWithAssertion()['access_token'];
 
-        $fcmNotification = [
-            'to' => $topic,
-            'notification' => $notification,
-        ];
+        $projectId = json_decode(file_get_contents($serviceAccountPath), true)['project_id'];
+        $url = "https://fcm.googleapis.com/v1/projects/{$projectId}/messages:send";
 
-        $headers = [
-            'Authorization: key=' . $serverKey,
-            'Content-Type: application/json',
-        ];
+        foreach ($tokens as $token) {
+            $message = [
+                "message" => [
+                    "token" => $token,
+                    "notification" => [
+                        "title" => $title,
+                        "body" => $body,
+                    ],
+                    "webpush" => [
+                        "fcm_options" => [
+                            "link" => "http://127.0.0.1:8000"
+                        ]
+                    ]
+                ]
+            ];
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $fcmUrl);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmNotification));
-        $result = curl_exec($ch);
-        curl_close($ch);
-        //push notification end
+            $response = Http::withToken($accessToken)
+                ->withHeaders(['Content-Type' => 'application/json'])
+                ->post($url, $message);
+        }
 
-        Notification::insert([
-            'server_key' => $serverKey,
-            'fcm_url' => $fcmUrl,
-            'topic' => $topic,
-            'title' => $title,
-            'description' => $description,
-            'created_at' => Carbon::now()
-        ]);
+        // return response()->json([
+        //     'status' => $response->status(),
+        //     'body' => $response->json(),
+        // ]);
 
-        Toastr::success('Notification has Sent', 'Successfully');
+        Toastr::success('Notifications sent Succesffully.', 'Successful');
         return back();
-
     }
 
-    public function viewAllNotifications(Request $request){
+    public function viewAllNotifications(Request $request)
+    {
         if ($request->ajax()) {
 
             $data = Notification::orderBy('id', 'desc')->get();
 
             return Datatables::of($data)
-                    ->editColumn('created_at', function($data) {
-                        return date("Y-m-d h:i:s a", strtotime($data->created_at));
-                    })
-                    ->addIndexColumn()
-                    ->addColumn('action', function($data){
-                        $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="'.$data->id.'" data-original-title="Delete" class="btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'status'])
-                    ->make(true);
+                ->editColumn('created_at', function ($data) {
+                    return date("Y-m-d h:i:s a", strtotime($data->created_at));
+                })
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $data->id . '" data-original-title="Delete" class="btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
+                    return $btn;
+                })
+                ->rawColumns(['action', 'status'])
+                ->make(true);
         }
 
         return view('backend.push_notification.view');
     }
 
-    public function deleteNotification($id){
+    public function deleteNotification($id)
+    {
         Notification::where('id', $id)->delete();
         return response()->json(['success' => 'Notification Deleted Successfully.']);
     }
 
-    public function deleteNotificationRangeWise(){
+    public function deleteNotificationRangeWise()
+    {
 
         $currentDate = date("Y-m-d H:i:s");
         $prevDate = date('Y-m-d', strtotime('-15 day', strtotime($currentDate)));
         Notification::where('created_at', '<=', $prevDate)->delete();
         Toastr::error('Notifications are Deleted', 'Successful');
         return back();
-
     }
 }

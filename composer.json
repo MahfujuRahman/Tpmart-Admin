@@ -9,6 +9,7 @@
         "brian2694/laravel-toastr": "^5.57",
         "dgvai/laravel-sslcommerz": "^1.0",
         "fruitcake/laravel-cors": "^2.0",
+        "google/apiclient": "^2.18",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.7",
         "laravel/framework": "^8.75",
