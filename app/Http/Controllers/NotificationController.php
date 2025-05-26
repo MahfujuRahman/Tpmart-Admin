@@ -46,7 +46,9 @@ class NotificationController extends Controller
                     "data" => [
                         "title" => $title,
                         "body" => $body,
+                        "icon" => url('logo.jpg'),
                     ],
+
                     "webpush" => [
                         "fcm_options" => [
                             "link" => url("/"),
