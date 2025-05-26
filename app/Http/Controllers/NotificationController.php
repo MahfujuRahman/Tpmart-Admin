@@ -48,12 +48,18 @@ class NotificationController extends Controller
                         "body" => $body,
                     ],
                     "webpush" => [
+                        "notification" => [
+                            "title" => $title,
+                            "body" => $body,
+                            "icon" => url('/logo.jpg'),
+                        ],
                         "fcm_options" => [
-                            "link" => url("/")
+                            "link" => url("/"),
                         ]
                     ]
                 ]
             ];
+
 
             $response = Http::withToken($accessToken)
                 ->withHeaders(['Content-Type' => 'application/json'])
