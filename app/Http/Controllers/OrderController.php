@@ -19,557 +19,566 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function viewAllOrders(Request $request){
+    public function viewAllOrders(Request $request)
+    {
         if ($request->ajax()) {
 
             $data = DB::table('orders')
-                        ->leftJoin('shipping_infos', 'shipping_infos.order_id', '=', 'orders.id')
-                        ->select('orders.*', 'shipping_infos.full_name as customer_name', 'shipping_infos.email as customer_email', 'shipping_infos.phone as customer_phone')
-                        ->orderBy('id', 'desc')
-                        ->get();
+                ->leftJoin('shipping_infos', 'shipping_infos.order_id', '=', 'orders.id')
+                ->select('orders.*', 'shipping_infos.full_name as customer_name', 'shipping_infos.email as customer_email', 'shipping_infos.phone as customer_phone')
+                ->orderBy('id', 'desc')
+                ->get();
 
             return Datatables::of($data)
-                    ->editColumn('order_status', function($data) {
-                        if($data->order_status == 0){
-                            return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
-                        } elseif($data->order_status == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
-                        } elseif($data->order_status == 2) {
-                            return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
-                        } elseif($data->order_status == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
-                        } elseif($data->order_status == 5) {
-                            return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
-                        }
-                    })
-                    ->editColumn('payment_method', function($data) {
-                        if($data->payment_method == NULL){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_method == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
-                        } elseif($data->payment_method == 2) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
-                        } elseif($data->payment_method == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
-                        } else {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
-                        }
-                    })
-                    ->editColumn('payment_status', function($data) {
-                        if($data->payment_status == 0){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_status == 1) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
-                        }
-                    })
-                    ->editColumn('total', function($data) {
-                        return "৳ ". number_format($data->total, 2);
-                    })
-                    ->addIndexColumn()
-                    ->addColumn('action', function($data){
+                ->editColumn('order_status', function ($data) {
+                    if ($data->order_status == 0) {
+                        return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
+                    } elseif ($data->order_status == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
+                    } elseif ($data->order_status == 2) {
+                        return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
+                    } elseif ($data->order_status == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
+                    } elseif ($data->order_status == 5) {
+                        return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
+                    }
+                })
+                ->editColumn('payment_method', function ($data) {
+                    if ($data->payment_method == NULL) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_method == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
+                    } elseif ($data->payment_method == 2) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
+                    } elseif ($data->payment_method == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
+                    } else {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
+                    }
+                })
+                ->editColumn('payment_status', function ($data) {
+                    if ($data->payment_status == 0) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_status == 1) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
+                    }
+                })
+                ->editColumn('total', function ($data) {
+                    return "৳ " . number_format($data->total, 2);
+                })
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
 
-                        $btn = ' <a href="'.url('order/details').'/'.$data->slug.'" title="Order Details" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
-                        // $btn .= ' <a href="'.url('edit/place/order').'/'.$data->slug.'" title="Edit" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-pencil-alt"></i></a>';
+                    $btn = ' <a href="' . url('order/details') . '/' . $data->slug . '" title="Order Details" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
+                    // $btn .= ' <a href="'.url('edit/place/order').'/'.$data->slug.'" title="Edit" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-pencil-alt"></i></a>';
 
-                        if($data->order_status == 0){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Cancel" data-id="'.$data->slug.'" data-original-title="Cancel" class="d-inline-block btn-sm btn-danger rounded cancelBtn"><i class="fa fa-times"></i></a>';
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Approve" data-id="'.$data->slug.'" data-original-title="Check" class="d-inline-block btn-sm btn-success rounded approveBtn"><i class="fas fa-check"></i></a>';
-                        }
+                    if ($data->order_status == 0) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Cancel" data-id="' . $data->slug . '" data-original-title="Cancel" class="d-inline-block btn-sm btn-danger rounded cancelBtn"><i class="fa fa-times"></i></a>';
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Approve" data-id="' . $data->slug . '" data-original-title="Check" class="d-inline-block btn-sm btn-success rounded approveBtn"><i class="fas fa-check"></i></a>';
+                    }
 
-                        if($data->order_status == 1){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Cancel" data-id="'.$data->slug.'" data-original-title="Cancel" class="d-inline-block btn-sm btn-danger rounded cancelBtn"><i class="fa fa-times"></i></a>';
-                            // $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Approve" data-id="'.$data->slug.'" data-original-title="Check" class="d-inline-block btn-sm btn-success rounded intransitBtn"><i class="fas fa-check"></i></a>';
-                        }
+                    if ($data->order_status == 1) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Cancel" data-id="' . $data->slug . '" data-original-title="Cancel" class="d-inline-block btn-sm btn-danger rounded cancelBtn"><i class="fa fa-times"></i></a>';
+                        // $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Approve" data-id="'.$data->slug.'" data-original-title="Check" class="d-inline-block btn-sm btn-success rounded intransitBtn"><i class="fas fa-check"></i></a>';
+                    }
 
-                        if($data->order_status == 2){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Deliver" data-id="'.$data->slug.'" data-original-title="Delivery" class="d-inline-block btn-sm btn-success rounded deliveryBtn"><i class="fas fa-truck"></i></a>';
-                        }
+                    if ($data->order_status == 2) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Deliver" data-id="' . $data->slug . '" data-original-title="Delivery" class="d-inline-block btn-sm btn-success rounded deliveryBtn"><i class="fas fa-truck"></i></a>';
+                    }
 
-                        if(Auth::user()->user_type == 1){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
-                        }
+                    if (Auth::user()->user_type == 1) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
+                    }
 
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
-                    ->make(true);
+                    return $btn;
+                })
+                ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
+                ->make(true);
         }
         return view('backend.orders.all');
     }
 
-    public function viewPendigOrders(Request $request){
+    public function viewPendigOrders(Request $request)
+    {
         if ($request->ajax()) {
 
             // $data = Order::where('order_status', 0)->orderBy('id', 'desc')->get();
             $data = DB::table('orders')
-                        ->leftJoin('shipping_infos', 'shipping_infos.order_id', '=', 'orders.id')
-                        ->select('orders.*', 'shipping_infos.full_name as customer_name', 'shipping_infos.email as customer_email', 'shipping_infos.phone as customer_phone')
-                        ->where('order_status', 0)
-                        ->orderBy('id', 'desc')
-                        ->get();
+                ->leftJoin('shipping_infos', 'shipping_infos.order_id', '=', 'orders.id')
+                ->select('orders.*', 'shipping_infos.full_name as customer_name', 'shipping_infos.email as customer_email', 'shipping_infos.phone as customer_phone')
+                ->where('order_status', 0)
+                ->orderBy('id', 'desc')
+                ->get();
 
             return Datatables::of($data)
-                    ->editColumn('order_status', function($data) {
-                        if($data->order_status == 0){
-                            return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
-                        } elseif($data->order_status == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
-                        } elseif($data->order_status == 2) {
-                            return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
-                        } elseif($data->order_status == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
-                        } elseif($data->order_status == 5) {
-                            return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
-                        }
-                    })
-                    ->editColumn('payment_method', function($data) {
-                        if($data->payment_method == NULL){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_method == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
-                        } elseif($data->payment_method == 2) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
-                        } elseif($data->payment_method == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
-                        } else {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
-                        }
-                    })
-                    ->editColumn('payment_status', function($data) {
-                        if($data->payment_status == 0){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_status == 1) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
-                        }
-                    })
-                    ->editColumn('total', function($data) {
-                        return "৳ ". number_format($data->total, 2);
-                    })
-                    ->addIndexColumn()
-                    ->addColumn('action', function($data){
-                        $btn = ' <a href="'.url('order/edit').'/'.$data->slug.'" onclick="return orderEditWarning()" title="Order Edit" class="mb-1 d-inline-block btn-sm btn-warning rounded"><i class="fas fa-edit"></i></a>';
-                        $btn .= ' <a href="'.url('order/details').'/'.$data->slug.'" title="Order Details" class="mb-1 d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
-                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Cancel" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded cancelBtn"><i class="fa fa-times"></i></a>';
-                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Approve" data-id="'.$data->slug.'" data-original-title="Check" class="d-inline-block btn-sm btn-success rounded approveBtn"><i class="fas fa-check"></i></a>';
-                        if(Auth::user()->user_type == 1){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
-                        }
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
-                    ->make(true);
+                ->editColumn('order_status', function ($data) {
+                    if ($data->order_status == 0) {
+                        return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
+                    } elseif ($data->order_status == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
+                    } elseif ($data->order_status == 2) {
+                        return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
+                    } elseif ($data->order_status == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
+                    } elseif ($data->order_status == 5) {
+                        return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
+                    }
+                })
+                ->editColumn('payment_method', function ($data) {
+                    if ($data->payment_method == NULL) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_method == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
+                    } elseif ($data->payment_method == 2) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
+                    } elseif ($data->payment_method == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
+                    } else {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
+                    }
+                })
+                ->editColumn('payment_status', function ($data) {
+                    if ($data->payment_status == 0) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_status == 1) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
+                    }
+                })
+                ->editColumn('total', function ($data) {
+                    return "৳ " . number_format($data->total, 2);
+                })
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    $btn = ' <a href="' . url('order/edit') . '/' . $data->slug . '" onclick="return orderEditWarning()" title="Order Edit" class="mb-1 d-inline-block btn-sm btn-warning rounded"><i class="fas fa-edit"></i></a>';
+                    $btn .= ' <a href="' . url('order/details') . '/' . $data->slug . '" title="Order Details" class="mb-1 d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
+                    $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Cancel" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded cancelBtn"><i class="fa fa-times"></i></a>';
+                    $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Approve" data-id="' . $data->slug . '" data-original-title="Check" class="d-inline-block btn-sm btn-success rounded approveBtn"><i class="fas fa-check"></i></a>';
+                    if (Auth::user()->user_type == 1) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
+                    }
+                    return $btn;
+                })
+                ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
+                ->make(true);
         }
         return view('backend.orders.pending');
     }
 
-    public function viewApprovedOrders(Request $request){
+    public function viewApprovedOrders(Request $request)
+    {
         if ($request->ajax()) {
 
             $data = Order::where('order_status', 1)->orderBy('id', 'desc')->get();
 
             return Datatables::of($data)
-                    ->editColumn('order_status', function($data) {
-                        if($data->order_status == 0){
-                            return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
-                        } elseif($data->order_status == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
-                        } elseif($data->order_status == 2) {
-                            return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
-                        } elseif($data->order_status == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
-                        } elseif($data->order_status == 5) {
-                            return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
-                        }
-                    })
-                    ->editColumn('payment_method', function($data) {
-                        if($data->payment_method == NULL){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_method == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
-                        } elseif($data->payment_method == 2) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
-                        } elseif($data->payment_method == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
-                        } else {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
-                        }
-                    })
-                    ->editColumn('payment_status', function($data) {
-                        if($data->payment_status == 0){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_status == 1) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
-                        }
-                    })
-                    ->editColumn('sub_total', function($data) {
-                        return "৳ ". number_format($data->sub_total, 2);
-                    })
-                    ->editColumn('discount', function($data) {
-                        return "৳ ". number_format($data->discount, 2);
-                    })
-                    ->editColumn('delivery_fee', function($data) {
-                        return "৳ ". number_format($data->delivery_fee, 2);
-                    })
-                    ->editColumn('total', function($data) {
-                        return "৳ ". number_format($data->total, 2);
-                    })
-                    ->addIndexColumn()
-                    ->addColumn('action', function($data){
-                        $btn = ' <a href="'.url('order/details').'/'.$data->slug.'" title="Order Details" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
+                ->editColumn('order_status', function ($data) {
+                    if ($data->order_status == 0) {
+                        return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
+                    } elseif ($data->order_status == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
+                    } elseif ($data->order_status == 2) {
+                        return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
+                    } elseif ($data->order_status == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
+                    } elseif ($data->order_status == 5) {
+                        return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
+                    }
+                })
+                ->editColumn('payment_method', function ($data) {
+                    if ($data->payment_method == NULL) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_method == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
+                    } elseif ($data->payment_method == 2) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
+                    } elseif ($data->payment_method == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
+                    } else {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
+                    }
+                })
+                ->editColumn('payment_status', function ($data) {
+                    if ($data->payment_status == 0) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_status == 1) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
+                    }
+                })
+                ->editColumn('sub_total', function ($data) {
+                    return "৳ " . number_format($data->sub_total, 2);
+                })
+                ->editColumn('discount', function ($data) {
+                    return "৳ " . number_format($data->discount, 2);
+                })
+                ->editColumn('delivery_fee', function ($data) {
+                    return "৳ " . number_format($data->delivery_fee, 2);
+                })
+                ->editColumn('total', function ($data) {
+                    return "৳ " . number_format($data->total, 2);
+                })
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    $btn = ' <a href="' . url('order/details') . '/' . $data->slug . '" title="Order Details" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
 
-                        if($data->order_status == 1){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Cancel" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded cancelBtn"><i class="fa fa-times"></i></a>';
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Approve" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-success rounded intransitBtn"><i class="fas fa-check"></i></a>';
-                        }
-                        if($data->order_status == 2){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Deliver" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-success rounded deliveryBtn"><i class="fas fa-truck"></i></a>';
-                        }
+                    if ($data->order_status == 1) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Cancel" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded cancelBtn"><i class="fa fa-times"></i></a>';
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Approve" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-success rounded intransitBtn"><i class="fas fa-check"></i></a>';
+                    }
+                    if ($data->order_status == 2) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Deliver" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-success rounded deliveryBtn"><i class="fas fa-truck"></i></a>';
+                    }
 
-                        if(Auth::user()->user_type == 1){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
-                        }
+                    if (Auth::user()->user_type == 1) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
+                    }
 
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
-                    ->make(true);
+                    return $btn;
+                })
+                ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
+                ->make(true);
         }
         return view('backend.orders.approved');
     }
 
-    public function viewIntransitOrders(Request $request){
+    public function viewIntransitOrders(Request $request)
+    {
         if ($request->ajax()) {
 
             $data = Order::where('order_status', 2)->orderBy('id', 'desc')->get();
 
             return Datatables::of($data)
-                    ->editColumn('order_status', function($data) {
-                        if($data->order_status == 0){
-                            return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
-                        } elseif($data->order_status == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
-                        } elseif($data->order_status == 2) {
-                            return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
-                        } elseif($data->order_status == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
-                        } elseif($data->order_status == 5) {
-                            return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
-                        }
-                    })
-                    ->editColumn('payment_method', function($data) {
-                        if($data->payment_method == NULL){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_method == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
-                        } elseif($data->payment_method == 2) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
-                        } elseif($data->payment_method == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
-                        } else {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
-                        }
-                    })
-                    ->editColumn('payment_status', function($data) {
-                        if($data->payment_status == 0){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_status == 1) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
-                        }
-                    })
-                    ->editColumn('sub_total', function($data) {
-                        return "৳ ". number_format($data->sub_total, 2);
-                    })
-                    ->editColumn('discount', function($data) {
-                        return "৳ ". number_format($data->discount, 2);
-                    })
-                    ->editColumn('delivery_fee', function($data) {
-                        return "৳ ". number_format($data->delivery_fee, 2);
-                    })
-                    ->editColumn('total', function($data) {
-                        return "৳ ". number_format($data->total, 2);
-                    })
-                    ->addIndexColumn()
-                    ->addColumn('action', function($data){
-                        $btn = ' <a href="'.url('order/details').'/'.$data->slug.'" title="Order Details" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
+                ->editColumn('order_status', function ($data) {
+                    if ($data->order_status == 0) {
+                        return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
+                    } elseif ($data->order_status == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
+                    } elseif ($data->order_status == 2) {
+                        return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
+                    } elseif ($data->order_status == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
+                    } elseif ($data->order_status == 5) {
+                        return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
+                    }
+                })
+                ->editColumn('payment_method', function ($data) {
+                    if ($data->payment_method == NULL) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_method == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
+                    } elseif ($data->payment_method == 2) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
+                    } elseif ($data->payment_method == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
+                    } else {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
+                    }
+                })
+                ->editColumn('payment_status', function ($data) {
+                    if ($data->payment_status == 0) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_status == 1) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
+                    }
+                })
+                ->editColumn('sub_total', function ($data) {
+                    return "৳ " . number_format($data->sub_total, 2);
+                })
+                ->editColumn('discount', function ($data) {
+                    return "৳ " . number_format($data->discount, 2);
+                })
+                ->editColumn('delivery_fee', function ($data) {
+                    return "৳ " . number_format($data->delivery_fee, 2);
+                })
+                ->editColumn('total', function ($data) {
+                    return "৳ " . number_format($data->total, 2);
+                })
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    $btn = ' <a href="' . url('order/details') . '/' . $data->slug . '" title="Order Details" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
 
-                        if($data->order_status == 1){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Cancel" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded cancelBtn"><i class="fa fa-times"></i></a>';
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Approve" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-success rounded intransitBtn"><i class="fas fa-check"></i></a>';
-                        }
-                        if($data->order_status == 2){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Deliver" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-success rounded deliveryBtn"><i class="fas fa-truck"></i></a>';
-                        }
+                    if ($data->order_status == 1) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Cancel" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded cancelBtn"><i class="fa fa-times"></i></a>';
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Approve" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-success rounded intransitBtn"><i class="fas fa-check"></i></a>';
+                    }
+                    if ($data->order_status == 2) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Deliver" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-success rounded deliveryBtn"><i class="fas fa-truck"></i></a>';
+                    }
 
-                        if(Auth::user()->user_type == 1){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
-                        }
+                    if (Auth::user()->user_type == 1) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
+                    }
 
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
-                    ->make(true);
+                    return $btn;
+                })
+                ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
+                ->make(true);
         }
         return view('backend.orders.intransit');
     }
 
-    public function viewDeliveredOrders(Request $request){
+    public function viewDeliveredOrders(Request $request)
+    {
         if ($request->ajax()) {
 
             $data = Order::where('order_status', 3)->orderBy('id', 'desc')->get();
 
             return Datatables::of($data)
-                    ->editColumn('order_status', function($data) {
-                        if($data->order_status == 0){
-                            return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
-                        } elseif($data->order_status == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
-                        } elseif($data->order_status == 2) {
-                            return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
-                        } elseif($data->order_status == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
-                        } elseif($data->order_status == 5) {
-                            return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
-                        }
-                    })
-                    ->editColumn('payment_method', function($data) {
-                        if($data->payment_method == NULL){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_method == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
-                        } elseif($data->payment_method == 2) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
-                        } elseif($data->payment_method == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
-                        } else {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
-                        }
-                    })
-                    ->editColumn('payment_status', function($data) {
-                        if($data->payment_status == 0){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_status == 1) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
-                        }
-                    })
-                    ->editColumn('sub_total', function($data) {
-                        return "৳ ". number_format($data->sub_total, 2);
-                    })
-                    ->editColumn('discount', function($data) {
-                        return "৳ ". number_format($data->discount, 2);
-                    })
-                    ->editColumn('delivery_fee', function($data) {
-                        return "৳ ". number_format($data->delivery_fee, 2);
-                    })
-                    ->editColumn('total', function($data) {
-                        return "৳ ". number_format($data->total, 2);
-                    })
-                    ->addIndexColumn()
-                    ->addColumn('action', function($data){
-                        $btn = ' <a href="'.url('order/details').'/'.$data->slug.'" title="Order Details" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
+                ->editColumn('order_status', function ($data) {
+                    if ($data->order_status == 0) {
+                        return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
+                    } elseif ($data->order_status == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
+                    } elseif ($data->order_status == 2) {
+                        return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
+                    } elseif ($data->order_status == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
+                    } elseif ($data->order_status == 5) {
+                        return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
+                    }
+                })
+                ->editColumn('payment_method', function ($data) {
+                    if ($data->payment_method == NULL) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_method == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
+                    } elseif ($data->payment_method == 2) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
+                    } elseif ($data->payment_method == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
+                    } else {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
+                    }
+                })
+                ->editColumn('payment_status', function ($data) {
+                    if ($data->payment_status == 0) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_status == 1) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
+                    }
+                })
+                ->editColumn('sub_total', function ($data) {
+                    return "৳ " . number_format($data->sub_total, 2);
+                })
+                ->editColumn('discount', function ($data) {
+                    return "৳ " . number_format($data->discount, 2);
+                })
+                ->editColumn('delivery_fee', function ($data) {
+                    return "৳ " . number_format($data->delivery_fee, 2);
+                })
+                ->editColumn('total', function ($data) {
+                    return "৳ " . number_format($data->total, 2);
+                })
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    $btn = ' <a href="' . url('order/details') . '/' . $data->slug . '" title="Order Details" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
 
-                        if(Auth::user()->user_type == 1){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
-                        }
+                    if (Auth::user()->user_type == 1) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
+                    }
 
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
-                    ->make(true);
+                    return $btn;
+                })
+                ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
+                ->make(true);
         }
         return view('backend.orders.delivered');
     }
 
-    public function viewCancelledOrders(Request $request){
+    public function viewCancelledOrders(Request $request)
+    {
         if ($request->ajax()) {
 
             $data = Order::where('order_status', 4)->orderBy('id', 'desc')->get();
 
             return Datatables::of($data)
-                    ->editColumn('order_status', function($data) {
-                        if($data->order_status == 0){
-                            return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
-                        } elseif($data->order_status == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
-                        } elseif($data->order_status == 2) {
-                            return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
-                        } elseif($data->order_status == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
-                        } elseif($data->order_status == 5) {
-                            return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
-                        }
-                    })
-                    ->editColumn('payment_method', function($data) {
-                        if($data->payment_method == NULL){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_method == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
-                        } elseif($data->payment_method == 2) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
-                        } elseif($data->payment_method == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
-                        } else {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
-                        }
-                    })
-                    ->editColumn('payment_status', function($data) {
-                        if($data->payment_status == 0){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_status == 1) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
-                        }
-                    })
-                    ->editColumn('sub_total', function($data) {
-                        return "৳ ". number_format($data->sub_total, 2);
-                    })
-                    ->editColumn('discount', function($data) {
-                        return "৳ ". number_format($data->discount, 2);
-                    })
-                    ->editColumn('delivery_fee', function($data) {
-                        return "৳ ". number_format($data->delivery_fee, 2);
-                    })
-                    ->editColumn('total', function($data) {
-                        return "৳ ". number_format($data->total, 2);
-                    })
-                    ->addIndexColumn()
-                    ->addColumn('action', function($data){
-                        $btn = ' <a href="'.url('order/details').'/'.$data->slug.'" title="Order Details" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
+                ->editColumn('order_status', function ($data) {
+                    if ($data->order_status == 0) {
+                        return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
+                    } elseif ($data->order_status == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
+                    } elseif ($data->order_status == 2) {
+                        return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
+                    } elseif ($data->order_status == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
+                    } elseif ($data->order_status == 5) {
+                        return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
+                    }
+                })
+                ->editColumn('payment_method', function ($data) {
+                    if ($data->payment_method == NULL) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_method == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
+                    } elseif ($data->payment_method == 2) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
+                    } elseif ($data->payment_method == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
+                    } else {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
+                    }
+                })
+                ->editColumn('payment_status', function ($data) {
+                    if ($data->payment_status == 0) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_status == 1) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
+                    }
+                })
+                ->editColumn('sub_total', function ($data) {
+                    return "৳ " . number_format($data->sub_total, 2);
+                })
+                ->editColumn('discount', function ($data) {
+                    return "৳ " . number_format($data->discount, 2);
+                })
+                ->editColumn('delivery_fee', function ($data) {
+                    return "৳ " . number_format($data->delivery_fee, 2);
+                })
+                ->editColumn('total', function ($data) {
+                    return "৳ " . number_format($data->total, 2);
+                })
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    $btn = ' <a href="' . url('order/details') . '/' . $data->slug . '" title="Order Details" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
 
-                        if(Auth::user()->user_type == 1){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
-                        }
+                    if (Auth::user()->user_type == 1) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
+                    }
 
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
-                    ->make(true);
+                    return $btn;
+                })
+                ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
+                ->make(true);
         }
         return view('backend.orders.cancelled');
     }
 
-    public function viewPickedOrders(Request $request){
+    public function viewPickedOrders(Request $request)
+    {
         if ($request->ajax()) {
             $data = Order::where('order_status', 5)->orderBy('id', 'desc')->get();
 
             return Datatables::of($data)
-                    ->editColumn('order_status', function($data) {
-                        if($data->order_status == 0){
-                            return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
-                        } elseif($data->order_status == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
-                        } elseif($data->order_status == 2) {
-                            return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
-                        } elseif($data->order_status == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
-                        } elseif($data->order_status == 5) {
-                            return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
-                        }
-                    })
-                    ->editColumn('payment_method', function($data) {
-                        if($data->payment_method == NULL){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_method == 1) {
-                            return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
-                        } elseif($data->payment_method == 2) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
-                        } elseif($data->payment_method == 3) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
-                        } else {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
-                        }
-                    })
-                    ->editColumn('payment_status', function($data) {
-                        if($data->payment_status == 0){
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
-                        } elseif($data->payment_status == 1) {
-                            return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
-                        } else {
-                            return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
-                        }
-                    })
-                    ->editColumn('sub_total', function($data) {
-                        return "৳ ". number_format($data->sub_total, 2);
-                    })
-                    ->editColumn('discount', function($data) {
-                        return "৳ ". number_format($data->discount, 2);
-                    })
-                    ->editColumn('delivery_fee', function($data) {
-                        return "৳ ". number_format($data->delivery_fee, 2);
-                    })
-                    ->editColumn('total', function($data) {
-                        return "৳ ". number_format($data->total, 2);
-                    })
-                    ->addIndexColumn()
-                    ->addColumn('action', function($data){
-                        $btn = ' <a href="'.url('order/details').'/'.$data->slug.'" title="Order Details" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
+                ->editColumn('order_status', function ($data) {
+                    if ($data->order_status == 0) {
+                        return '<span class="alert alert-warning" style="padding: 2px 10px !important;">Pending</span>';
+                    } elseif ($data->order_status == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">Approved</span>';
+                    } elseif ($data->order_status == 2) {
+                        return '<span class="alert alert-primary" style="padding: 2px 10px !important;">Intransit</span>';
+                    } elseif ($data->order_status == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Delivered</span>';
+                    } elseif ($data->order_status == 5) {
+                        return '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Cancelled</span>';
+                    }
+                })
+                ->editColumn('payment_method', function ($data) {
+                    if ($data->payment_method == NULL) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_method == 1) {
+                        return '<span class="alert alert-info" style="padding: 2px 10px !important;">COD</span>';
+                    } elseif ($data->payment_method == 2) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">bKash</span>';
+                    } elseif ($data->payment_method == 3) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Nagad</span>';
+                    } else {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Card</span>';
+                    }
+                })
+                ->editColumn('payment_status', function ($data) {
+                    if ($data->payment_status == 0) {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Unpaid</span>';
+                    } elseif ($data->payment_status == 1) {
+                        return '<span class="alert alert-success" style="padding: 2px 10px !important;">Paid</span>';
+                    } else {
+                        return '<span class="alert alert-danger" style="padding: 2px 10px !important;">Failed</span>';
+                    }
+                })
+                ->editColumn('sub_total', function ($data) {
+                    return "৳ " . number_format($data->sub_total, 2);
+                })
+                ->editColumn('discount', function ($data) {
+                    return "৳ " . number_format($data->discount, 2);
+                })
+                ->editColumn('delivery_fee', function ($data) {
+                    return "৳ " . number_format($data->delivery_fee, 2);
+                })
+                ->editColumn('total', function ($data) {
+                    return "৳ " . number_format($data->total, 2);
+                })
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    $btn = ' <a href="' . url('order/details') . '/' . $data->slug . '" title="Order Details" class="d-inline-block btn-sm btn-info rounded"><i class="fas fa-list-ul"></i></a>';
 
-                        if(Auth::user()->user_type == 1){
-                            $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="'.$data->slug.'" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
-                        }
+                    if (Auth::user()->user_type == 1) {
+                        $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
+                    }
 
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
-                    ->make(true);
+                    return $btn;
+                })
+                ->rawColumns(['action', 'order_status', 'payment_method', 'payment_status'])
+                ->make(true);
         }
         return view('backend.orders.picked');
     }
 
-    public function orderDetails($slug){
+    public function orderDetails($slug)
+    {
         $order = Order::where('slug', $slug)->first();
-        
+
         $userInfo = User::where('id', $order->user_id)->first();
         $shippingInfo = ShippingInfo::where('order_id', $order->id)->first();
         $billingAddress = BillingAddress::where('order_id', $order->id)->first();
         $orderDetails = DB::table('order_details')
-                            ->leftJoin('products', 'order_details.product_id', '=', 'products.id')
-                            ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
-                            ->leftJoin('units', 'order_details.unit_id', '=', 'units.id')
-                            ->leftJoin('product_warehouses', 'order_details.warehouse_id', '=', 'product_warehouses.id')
-                            ->leftJoin('product_warehouse_rooms', 'order_details.warehouse_room_id', '=', 'product_warehouse_rooms.id')
-                            ->leftJoin('product_warehouse_room_cartoons', 'order_details.warehouse_room_cartoon_id', '=', 'product_warehouse_room_cartoons.id')
-                            ->select(
-                                'order_details.*',
-                                'products.name as product_name',
-                                'units.name as unit_name',
-                                'categories.name as category_name',
-                                'product_warehouses.title as warehouse_title',
-                                'product_warehouse_rooms.title as warehouse_room_title',
-                                'product_warehouse_room_cartoons.title as warehouse_room_cartoon_title'
-                            )
-                            ->where('order_details.order_id', $order->id)
-                            ->get();
+            ->leftJoin('products', 'order_details.product_id', '=', 'products.id')
+            ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
+            ->leftJoin('units', 'order_details.unit_id', '=', 'units.id')
+            ->leftJoin('product_warehouses', 'order_details.warehouse_id', '=', 'product_warehouses.id')
+            ->leftJoin('product_warehouse_rooms', 'order_details.warehouse_room_id', '=', 'product_warehouse_rooms.id')
+            ->leftJoin('product_warehouse_room_cartoons', 'order_details.warehouse_room_cartoon_id', '=', 'product_warehouse_room_cartoons.id')
+            ->select(
+                'order_details.*',
+                'products.name as product_name',
+                'units.name as unit_name',
+                'categories.name as category_name',
+                'product_warehouses.title as warehouse_title',
+                'product_warehouse_rooms.title as warehouse_room_title',
+                'product_warehouse_room_cartoons.title as warehouse_room_cartoon_title'
+            )
+            ->where('order_details.order_id', $order->id)
+            ->get();
         $generalInfo = DB::table('general_infos')->select('logo', 'logo_dark', 'company_name')->first();
 
         return view('backend.orders.details', compact('order', 'shippingInfo', 'billingAddress', 'orderDetails', 'userInfo', 'generalInfo'));
     }
 
-    public function cancelOrder($slug){
+    public function cancelOrder($slug)
+    {
 
         $data = Order::where('slug', $slug)->first();
         $data->order_status = 4;
@@ -586,7 +595,8 @@ class OrderController extends Controller
         return response()->json(['success' => 'Order Cancelled successfully.']);
     }
 
-    public function approveOrder($slug){
+    public function approveOrder($slug)
+    {
 
         $data = Order::where('slug', $slug)->first();
         $data->order_status = 1;
@@ -602,7 +612,8 @@ class OrderController extends Controller
         return response()->json(['success' => 'Order Approved successfully.']);
     }
 
-    public function intransitOrder($slug){
+    public function intransitOrder($slug)
+    {
 
         $data = Order::where('slug', $slug)->first();
         $data->order_status = 2;
@@ -618,7 +629,8 @@ class OrderController extends Controller
         return response()->json(['success' => 'Order In Transit successfully.']);
     }
 
-    public function deliverOrder($slug){
+    public function deliverOrder($slug)
+    {
 
         $data = Order::where('slug', $slug)->first();
         $data->order_status = 3;
@@ -635,12 +647,13 @@ class OrderController extends Controller
         return response()->json(['success' => 'Order Delivered successfully.']);
     }
 
-    public function orderInfoUpdate(Request $request){
+    public function orderInfoUpdate(Request $request)
+    {
 
         $data = Order::where('id', $request->order_id)->first();
-        if($data->order_status != $request->order_status){
+        if ($data->order_status != $request->order_status) {
 
-            if($request->order_status == 5 && $data->payment_method == 1){
+            if ($request->order_status == 5 && $data->payment_method == 1) {
                 $data->payment_status = 1;
             }
 
@@ -655,7 +668,6 @@ class OrderController extends Controller
                 'order_status' => $request->order_status,
                 'created_at' => Carbon::now()
             ]);
-
         } else {
             $data->order_remarks = $request->order_remarks;
             $data->estimated_dd = $request->estimated_dd;
@@ -665,38 +677,43 @@ class OrderController extends Controller
 
         Toastr::success('Order Information Updated', 'Success');
         return back();
-
     }
 
-    public function orderEdit($slug){
+    public function orderEdit($slug)
+    {
         $order = Order::where('slug', $slug)->first();
         $userInfo = User::where('id', $order->user_id)->first();
         $shippingInfo = ShippingInfo::where('order_id', $order->id)->first();
         $billingAddress = BillingAddress::where('order_id', $order->id)->first();
 
         $orderDetails = DB::table('order_details')
-                            ->leftJoin('products', 'order_details.product_id', 'products.id')
-                            ->leftJoin('categories', 'products.category_id', 'categories.id')
-                            ->leftJoin('units', 'order_details.unit_id', 'units.id')
-                            ->select('order_details.*', 'products.name as product_name', 'units.name as unit_name', 'categories.name as category_name')
-                            ->where('order_id', $order->id)
-                            ->get();
+            ->leftJoin('products', 'order_details.product_id', 'products.id')
+            ->leftJoin('categories', 'products.category_id', 'categories.id')
+            ->leftJoin('units', 'order_details.unit_id', 'units.id')
+            ->select('order_details.*', 'products.name as product_name', 'units.name as unit_name', 'categories.name as category_name')
+            ->where('order_id', $order->id)
+            ->get();
 
         $generalInfo = DB::table('general_infos')->select('logo', 'logo_dark', 'company_name')->first();
         $districts = DB::table('districts')->get();
         $countries = DB::table('country')->get();
-        return view('backend.orders.edit', compact('order', 'shippingInfo', 'billingAddress', 'orderDetails', 'userInfo', 'generalInfo', 'districts', 'countries'));
+        $upazilas = DB::table('upazilas')->get();
+
+        return view('backend.orders.edit',
+            compact('order', 'shippingInfo', 'billingAddress', 'orderDetails', 'userInfo', 'generalInfo', 'districts', 'countries', 'upazilas')
+        );
     }
 
-    public function orderUpdate(Request $request){
+    public function orderUpdate(Request $request)
+    {
         $orderInfo = Order::where('id', $request->order_id)->first();
 
         // order items
-        if(isset($request->product_id)){
+        if (isset($request->product_id)) {
             OrderDetails::where('order_id', $request->order_id)->delete();
             $index = 0;
             $totalOrderAmount = 0;
-            foreach($request->product_id as $product_id){
+            foreach ($request->product_id as $product_id) {
 
                 $color_id = isset($request->color_id[$index]) ? $request->color_id[$index] : '';
                 $size_id = isset($request->size_id[$index]) ? $request->size_id[$index] : '';
@@ -719,7 +736,7 @@ class OrderController extends Controller
                     'unit_id' => $request->unit_id[$index],
                     'qty' => $request->qty[$index],
                     'unit_price' => $request->unit_price[$index],
-                    'total_price' => $request->qty[$index]*$request->unit_price[$index],
+                    'total_price' => $request->qty[$index] * $request->unit_price[$index],
                     'updated_at' => Carbon::now()
                 ]);
                 $totalOrderAmount = $totalOrderAmount + ($request->qty[$index] * $request->unit_price[$index]);
@@ -736,11 +753,11 @@ class OrderController extends Controller
 
         // shipping info
         $shippingInfo = ShippingInfo::where('order_id', $request->order_id)->first();
-        if($shippingInfo){
+        if ($shippingInfo) {
 
             $deliveryCharge = 100;
             $districtWiseDeliveryCharge = DB::table('districts')->select('delivery_charge')->where('name', strtolower(trim($request->shipping_city)))->first();
-            if($districtWiseDeliveryCharge){
+            if ($districtWiseDeliveryCharge) {
                 $deliveryCharge = $districtWiseDeliveryCharge->delivery_charge;
             }
 
@@ -756,14 +773,14 @@ class OrderController extends Controller
             $shippingInfo->post_code = $request->shipping_post_code;
             $shippingInfo->city = $request->shipping_city;
             $shippingInfo->country = $request->shipping_country;
+            $shippingInfo->thana = $request->shipping_thana;
             $shippingInfo->updated_at = Carbon::now();
             $shippingInfo->save();
-
         } else {
 
             $deliveryCharge = 100;
             $districtWiseDeliveryCharge = DB::table('districts')->select('delivery_charge')->where('name', strtolower(trim($request->shipping_city)))->first();
-            if($districtWiseDeliveryCharge){
+            if ($districtWiseDeliveryCharge) {
                 $deliveryCharge = $districtWiseDeliveryCharge->delivery_charge;
             }
 
@@ -786,11 +803,12 @@ class OrderController extends Controller
 
         // billing info
         $billingInfo = BillingAddress::where('order_id', $request->order_id)->first();
-        if($billingInfo){
+        if ($billingInfo) {
             $billingInfo->address = $request->billing_address;
             $billingInfo->post_code = $request->billing_post_code;
             $billingInfo->city = $request->billing_city;
             $billingInfo->country = $request->billing_country;
+            $billingInfo->thana = $request->billing_thana;
             $billingInfo->updated_at = Carbon::now();
             $billingInfo->save();
         } else {
@@ -804,7 +822,7 @@ class OrderController extends Controller
             ]);
         }
 
-        if(isset($request->payment_method) && $request->payment_method == 1){
+        if (isset($request->payment_method) && $request->payment_method == 1) {
             $orderInfo->bank_tran_id = "Not Available (COD)";
             $orderInfo->payment_method = 1;
             $orderInfo->payment_status = 1; //success
@@ -834,49 +852,51 @@ class OrderController extends Controller
         return back();
     }
 
-    public function addMoreProduct(Request $request){
+    public function addMoreProduct(Request $request)
+    {
         $rowNo = $request->rowno;
         $returnHTML = view('backend.orders.add_more', compact('rowNo'))->render();
         return response()->json(['more' => $returnHTML]);
     }
 
-    public function getProductVariants(Request $request){
+    public function getProductVariants(Request $request)
+    {
 
         $productInfo = Product::where('id', $request->product_id)->first();
-        if($productInfo->has_variant == 1){
+        if ($productInfo->has_variant == 1) {
             $data = DB::table('product_variants')
-                        ->leftJoin('colors', 'product_variants.color_id', '=', 'colors.id')
-                        ->leftJoin('product_sizes', 'product_variants.size_id', '=', 'product_sizes.id')
-                        ->leftJoin('country', 'product_variants.region_id', '=', 'country.id')
-                        ->leftJoin('sims', 'product_variants.sim_id', '=', 'sims.id')
-                        ->leftJoin('storage_types', 'product_variants.storage_type_id', '=', 'storage_types.id')
-                        ->leftJoin('product_warrenties', 'product_variants.warrenty_id', '=', 'product_warrenties.id')
-                        ->leftJoin('device_conditions', 'product_variants.device_condition_id', '=', 'device_conditions.id')
-                        ->leftJoin('products', 'product_variants.product_id', '=', 'products.id')
-                        ->leftJoin('units', 'products.unit_id', '=', 'units.id')
+                ->leftJoin('colors', 'product_variants.color_id', '=', 'colors.id')
+                ->leftJoin('product_sizes', 'product_variants.size_id', '=', 'product_sizes.id')
+                ->leftJoin('country', 'product_variants.region_id', '=', 'country.id')
+                ->leftJoin('sims', 'product_variants.sim_id', '=', 'sims.id')
+                ->leftJoin('storage_types', 'product_variants.storage_type_id', '=', 'storage_types.id')
+                ->leftJoin('product_warrenties', 'product_variants.warrenty_id', '=', 'product_warrenties.id')
+                ->leftJoin('device_conditions', 'product_variants.device_condition_id', '=', 'device_conditions.id')
+                ->leftJoin('products', 'product_variants.product_id', '=', 'products.id')
+                ->leftJoin('units', 'products.unit_id', '=', 'units.id')
 
-                        ->select('product_variants.id', 'product_variants.color_id', 'product_variants.size_id', 'product_variants.storage_type_id', 'product_variants.region_id', 'product_variants.sim_id', 'product_variants.warrenty_id', 'product_variants.device_condition_id', 'product_variants.discounted_price', 'product_variants.price', 'product_variants.stock as variant_stock', 'colors.name as color_name', 'product_sizes.name as size_name', 'country.name as region_name', 'sims.name as sim_name', 'storage_types.ram', 'storage_types.rom', 'product_warrenties.name as warrrenty', 'device_conditions.name as device_condition', 'units.name as unit_name', 'units.id as unit_id')
+                ->select('product_variants.id', 'product_variants.color_id', 'product_variants.size_id', 'product_variants.storage_type_id', 'product_variants.region_id', 'product_variants.sim_id', 'product_variants.warrenty_id', 'product_variants.device_condition_id', 'product_variants.discounted_price', 'product_variants.price', 'product_variants.stock as variant_stock', 'colors.name as color_name', 'product_sizes.name as size_name', 'country.name as region_name', 'sims.name as sim_name', 'storage_types.ram', 'storage_types.rom', 'product_warrenties.name as warrrenty', 'device_conditions.name as device_condition', 'units.name as unit_name', 'units.id as unit_id')
 
-                        ->where('product_variants.product_id', $request->product_id)
-                        ->where('product_variants.stock', '>', 0)
-                        ->orderBy('product_variants.id', 'asc')
-                        ->get();
+                ->where('product_variants.product_id', $request->product_id)
+                ->where('product_variants.stock', '>', 0)
+                ->orderBy('product_variants.id', 'asc')
+                ->get();
 
             return response()->json($data);
         } else {
 
             $productInfo = DB::table('products')
-                            ->leftJoin('units', 'products.unit_id', '=', 'units.id')
-                            ->select('products.*', 'units.name as unit_name')
-                            ->where('products.id', $request->product_id)
-                            ->first();
+                ->leftJoin('units', 'products.unit_id', '=', 'units.id')
+                ->select('products.*', 'units.name as unit_name')
+                ->where('products.id', $request->product_id)
+                ->first();
 
             return response()->json($productInfo);
-
         }
     }
 
-    public function deleteOrder($slug){
+    public function deleteOrder($slug)
+    {
 
         $orderInfo = Order::where('slug', $slug)->first();
         OrderDetails::where('order_id', $orderInfo->id)->delete();

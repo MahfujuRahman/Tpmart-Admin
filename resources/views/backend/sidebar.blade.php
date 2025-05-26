@@ -326,13 +326,6 @@
         </a>
     </li>
 
-    <li><a href="{{ url('/view/all/customers') }}"><i class="feather-users"></i>
-            <span>Customers</span>
-            <span style="color:lightgreen" title="Total CS Types">
-                ({{DB::table('users')->where('user_type', 3)->count()}})
-            </span>
-        </a></li>
-
     <li>
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Product Purchase</span></a>
         <ul class="sub-menu" aria-expanded="false">

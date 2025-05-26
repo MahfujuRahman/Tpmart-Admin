@@ -95,6 +95,13 @@
                                     </style>
                                     @endif
 
+                                    <select class="form-control" name="shipping_thana" data-toggle="select2" required>
+                                        <option value="">Select Shipping thana</option>
+                                        @foreach ($upazilas as $upazila)
+                                        <option value="{{$upazila->name}}" @if($shippingInfo && $shippingInfo->thana == $upazila->name) selected @endif>{{$upazila->name}}</option>
+                                        @endforeach
+                                    </select>
+
                                     <select class="form-control" name="shipping_city" data-toggle="select2" required>
                                         <option value="">Select Shipping City</option>
                                         @foreach ($districts as $district)
@@ -296,6 +303,13 @@
                                             }
                                         </style>
                                         @endif
+
+                                          <select class="form-control" name="billing_thana" data-toggle="select2" required>
+                                        <option value="">Select Shipping thana</option>
+                                        @foreach ($upazilas as $upazila)
+                                        <option value="{{$upazila->name}}" @if($shippingInfo && $shippingInfo->thana == $upazila->name) selected @endif>{{$upazila->name}}</option>
+                                        @endforeach
+                                    </select>
 
                                         <select class="form-control" name="billing_city" data-toggle="select2" required>
                                             <option value="">Select Billing City</option>
