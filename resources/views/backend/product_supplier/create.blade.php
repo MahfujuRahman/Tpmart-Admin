@@ -55,6 +55,23 @@
                                     <div class="col-lg-9">
 
         
+                                        <div class="form-group">
+                                            <label for="supplier_type">Supplier Type <span class="text-danger">*</span></label>
+                                            <select id="supplier_type" name="supplier_type" class="form-control" >
+                                                <option value="" disabled selected>Select Supplier</option>
+                                                @foreach($supplier_type as $type)
+                                                    <option value="{{ $type->id }}" 
+                                                        {{ old('supplier_type') == $type->id ? 'selected' : '' }}>
+                                                        {{ $type->title }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <div class="invalid-feedback" style="display: block;">
+                                                @error('supplier_type')
+                                                    <strong>{{ $message }}</strong>
+                                                @enderror
+                                            </div>
+                                        </div>
                                         
 
                                         <div class="form-group">

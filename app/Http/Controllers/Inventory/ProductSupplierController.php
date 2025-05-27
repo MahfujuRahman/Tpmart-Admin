@@ -22,7 +22,8 @@ class ProductSupplierController extends Controller
     public function addNewProductSupplier()
     {
         $productSupplierContacts = ProductSupplierContact::where('status', 'active')->get();
-        return view('backend.product_supplier.create', compact('productSupplierContacts'));
+        $supplier_type = DB::table('supplier_source_types')->where('status', 'active')->get();
+        return view('backend.product_supplier.create', compact('productSupplierContacts', 'supplier_type'));
     }
 
     public function saveNewProductSupplier(Request $request)
@@ -62,6 +63,7 @@ class ProductSupplierController extends Controller
 
         $product_supplier_id = ProductSupplier::insertGetId([
                                             'name' => request()->name,
+                                            'supplier_type' => request()->supplier_type,
                                             'address' => request()->address,            
                                             'image' => $image,
                                             'creator' => auth()->user()->id,
@@ -124,7 +126,8 @@ class ProductSupplierController extends Controller
     {
         $data = ProductSupplier::where('slug', $slug)->first();
         $product_supplier_contacts = ProductSupplierContact::where('status', 'active')->get();
-        return view('backend.product_supplier.edit', compact('data', 'product_supplier_contacts'));
+        $supplier_type = DB::table('supplier_source_types')->where('status', 'active')->get();
+        return view('backend.product_supplier.edit', compact('data', 'product_supplier_contacts','supplier_type'));
     }
 
     public function updateProductSupplier(Request $request)
@@ -167,6 +170,7 @@ class ProductSupplierController extends Controller
 
 
         $data->name = request()->name ?? $data->name;
+        $data->supplier_type = request()->supplier_type ?? $data->supplier_type;
         $data->address = request()->address ?? $data->address;
         $data->image = $image;
         if ($data->name != $request->name) {
