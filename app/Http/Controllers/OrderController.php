@@ -25,9 +25,12 @@ class OrderController extends Controller
 
             $data = DB::table('orders')
                 ->leftJoin('shipping_infos', 'shipping_infos.order_id', '=', 'orders.id')
-                ->select('orders.*', 'shipping_infos.full_name as customer_name', 'shipping_infos.email as customer_email', 'shipping_infos.phone as customer_phone')
+                ->leftJoin('order_details', 'order_details.order_id', '=', 'orders.id')
+                ->select('orders.*', 'shipping_infos.full_name as customer_name', 'shipping_infos.email as customer_email', 'shipping_infos.phone as customer_phone', 'order_details.qty as quantity')
                 ->orderBy('id', 'desc')
                 ->get();
+
+     
 
             return Datatables::of($data)
                 ->editColumn('order_status', function ($data) {

@@ -167,6 +167,7 @@
                                     <th class="text-center">Name</th>
                                     <th class="text-center">Email</th>
                                     <th class="text-center">Phone</th>
+                                    <th class="text-center">Quantity</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Payment</th>
                                     <th class="text-center">Total</th>
@@ -214,6 +215,10 @@
                 { data: 'customer_name', name: 'customer_name' },
                 { data: 'customer_email', name: 'customer_email' },
                 { data: 'customer_phone', name: 'customer_phone' },
+                {
+                    data: 'quantity',
+                    name: 'quantity'
+                },
                 {
                     data: 'order_status',
                     name: 'order_status'
