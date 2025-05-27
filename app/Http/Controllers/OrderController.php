@@ -582,12 +582,20 @@ class OrderController extends Controller
 
     public function cancelOrder($slug)
     {
-
         $data = Order::where('slug', $slug)->first();
         $data->order_status = 4;
         $data->payment_status = 2;
         $data->updated_at = Carbon::now();
         $data->save();
+
+        $order_details = DB::table('order_details')->where('order_id', $data->id)->select('product_id', 'qty')->get();
+
+        foreach ($order_details as $order_detail) {
+            $product = Product::find($order_detail->product_id);
+            if ($product) {
+                $product->increment('stock', $order_detail->qty);
+            }
+        }
 
         OrderProgress::insert([
             'order_id' => $data->id,
