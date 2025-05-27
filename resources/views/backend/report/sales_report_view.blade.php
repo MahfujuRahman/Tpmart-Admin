@@ -55,9 +55,12 @@
                                 echo '<span class="text-info" style="padding: 2px 10px !important;">Intransit</span>';
                             } elseif($item->order_status == 3) {
                                 echo '<span class="text-success" style="padding: 2px 10px !important;">Delivered</span>';
+                            } elseif($item->order_status == 5) {
+                                echo '<span class="alert alert-dark" style="padding: 2px 10px !important;">Picked</span>';
                             } else {
                                 echo '<span class="text-danger" style="padding: 2px 10px !important;">Cancelled</span>';
                             }
+
                         ?>
                     </td>
                     <td class="text-center">

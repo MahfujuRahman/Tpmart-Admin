@@ -50,6 +50,7 @@
                                 <option value="1">Approved</option>
                                 <option value="2">Intransit</option>
                                 <option value="3">Delivered</option>
+                                <option value="5">Picked</option>
                                 <option value="4">Cancel</option>
                             </select>
                         </div>
