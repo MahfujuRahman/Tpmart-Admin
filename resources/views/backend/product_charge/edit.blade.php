@@ -58,7 +58,11 @@
 
                                         <div class="form-group">
                                             <label for="type">Type <span class="text-danger">*</span></label>
-                                            <input type="text" id="type" name="type" maxlength="255" class="form-control" placeholder="Enter Other Charge Type Here" value="{{ $data->type }}" required>
+                                            <select id="type" name="type" class="form-control">
+                                                <option value="">Select Type</option>
+                                                <option value="percent" {{ $data->type == 'percent' ? 'selected' : '' }}>Percentage</option>
+                                                <option value="fixed" {{ $data->type == 'fixed' ? 'selected' : '' }}>Fixed</option>
+                                            </select>
                                             <div class="invalid-feedback" style="display: block;">
                                                 @error('type')
                                                     <strong>{{ $message }}</strong>

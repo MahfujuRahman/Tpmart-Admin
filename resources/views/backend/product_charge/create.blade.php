@@ -46,17 +46,17 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="type">Type <span class="text-danger">*</span></label>
-                                            <input type="text" id="type" name="type" maxlength="255" class="form-control" placeholder="Other Charge Type" >
+                                            <select id="type" name="type" class="form-control">
+                                                <option value="">Select Type</option>
+                                                <option value="percent">Percentage</option>
+                                                <option value="fixed">Fixed</option>
+                                            </select>
                                             <div class="invalid-feedback" style="display: block;">
                                                 @error('type')
                                                     <strong>{{ $message }}</strong>
                                                 @enderror
                                             </div>
-                                        </div>
-
-
-                                        
-
+                                        </div>       
                                     </div>
                                 </div>
 

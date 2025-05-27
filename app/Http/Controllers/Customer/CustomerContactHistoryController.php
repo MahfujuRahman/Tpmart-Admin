@@ -175,14 +175,8 @@ class CustomerContactHistoryController extends Controller
             'employee_id.required' => 'employee is required.',
         ]);
 
-
-
         // Check if the selected product_warehouse_room_id exists for the selected product_warehouse_id        
         $data = CustomerContactHistory::where('id', request()->customer_contact_history_id)->first();
-        // $data = CustomerContactHistory::where('id', request()->customer_id)]
-        //                                     where('id', request()->customer_id)]
-        //                                 ->first();
-
 
         $data->customer_id = request()->customer_id ?? $data->customer_id;
         $data->employee_id = request()->employee_id ?? $data->employee_id;
@@ -197,7 +191,6 @@ class CustomerContactHistoryController extends Controller
         $data->status = request()->status ?? $data->status;
         $data->updated_at = Carbon::now();
         $data->save();
-
 
 
 
