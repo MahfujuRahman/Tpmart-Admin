@@ -126,15 +126,28 @@ $websiteConfigModule = App\Models\UserRolePermission::where('user_id', Auth::use
 
 })->get();
 
+$cmsModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where(function ($query) {
+    $query->Where('route', 'like', '%view/all/sliders%')
 
+        ->orWhere('route', 'like', '%view/all/banners%')
+        ->orWhere('route', 'like', '%view/promotional/banner%')
+        ->orWhere('route', 'like', '%view/all/side-banner%')
+        ->orWhere('route', 'like', '%blog/categories%')
+        ->orWhere('route', 'like', '%view/all/blogs%')
+        ->orWhere('route', 'like', '%terms/and/condition%')
+        ->orWhere('route', 'like', '%view/privacy/policy%')
+        ->orWhere('route', 'like', '%view/shipping/policy%')
+        ->orWhere('route', 'like', '%view/return/policy%')
+        ->orWhere('route', 'like', '%view/all/pages%')
+        ->orWhere('route', 'like', '%view/all/outlet%')
+        ->orWhere('route', 'like', '%view/all/video-gallery%')
+        ->orWhere('route', 'like', '%about/us/page%')
+        ->orwhere('route', 'like', '%view/all/faqs%');
 
+})->get();
 
 
 $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where('route', 'like', '%backup%')->get();
-$demoProductsModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)
-    ->where('route', 'like', '%generate/demo/products%')
-    ->orWhere('route', 'like', '%remove/demo/products/page%')
-    ->get();
 ?>
 
 
@@ -934,7 +947,7 @@ $demoProductsModule = App\Models\UserRolePermission::where('user_id', Auth::user
         @endif
     @endif
 
-
+    {{-- website config module --}}
     @if ($websiteConfigModule->count())
         <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 5px;">
         <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Website Config</li>
@@ -990,136 +1003,289 @@ $demoProductsModule = App\Models\UserRolePermission::where('user_id', Auth::user
     @endif
 
 
+    @if ($cmsModule->count())
+        <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
+        <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Content Management</li>
+
+        <li>
+            @php
+                $sliderBannerRoutes = [
+                    'view/all/sliders',
+                    'view/all/banners',
+                    'view/promotional/banner',
+                    'view/all/side-banner',
+                ];
+                $isSliderBannerActive = false;
+                foreach ($sliderBannerRoutes as $route) {
+                    if (checkAuth($route)) {
+                        $isSliderBannerActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            @if($isSliderBannerActive)
+                <a href="javascript: void(0);" class="has-arrow"><i class="feather-image"></i><span>Sliders & Banners</span></a>
+            @endif
+            <ul class="sub-menu" aria-expanded="false">
+                @if(checkAuth('view/all/sliders'))
+                    <li><a href="{{ url('/view/all/sliders') }}">View All Sliders</a></li>
+                @endif
+                @if(checkAuth('view/all/banners'))
+                    <li><a href="{{ url('/view/all/banners') }}">View All Banners</a></li>
+                @endif
+                @if(checkAuth('view/promotional/banner'))
+                    <li><a href="{{ url('/view/promotional/banner') }}">Promotional Banner</a></li>
+                @endif
+                @if(checkAuth('view/all/side-banner'))
+                    <li><a href="{{ url('/view/all/side-banner') }}">Side Banner</a></li>
+                @endif
+            </ul>
+        </li>
+        <li>
+            @if(checkAuth("view/testimonials"))
+                <a href="{{ url('/view/testimonials') }}">
+                    <i class="feather-message-square"></i>
+                    <span>Testimonials</span>
+                </a>
+            @endif
+        </li>
+        <li>
+            @php
+                $blogRoutes = [
+                    'blog/categories',
+                    'add/new/blog',
+                    'view/all/blogs',
+                ];
+                $isBlogActive = false;
+                foreach ($blogRoutes as $route) {
+                    if (checkAuth($route)) {
+                        $isBlogActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            @if($isBlogActive)
+                <a href="javascript: void(0);" class="has-arrow"><i class="feather-file-text"></i><span>Manage Blogs</span></a>
+            @endif
+            <ul class="sub-menu" aria-expanded="false">
+                @if(checkAuth("blog/categories"))
+                    <li><a href="{{ url('/blog/categories') }}">Blog Categories</a></li>
+                @endif
+                @if(checkAuth("add/new/blog"))
+                    <li><a href="{{ url('/add/new/blog') }}">Write a Blog</a></li>
+                @endif
+                @if(checkAuth("view/all/blogs"))
+                    <li><a href="{{ url('/view/all/blogs') }}">View All Blogs</a></li>
+                @endif
+            </ul>
+        </li>
+        <li>
+            @php
+                $termsRoutes = [
+                    'terms/and/condition',
+                    'view/privacy/policy',
+                    'view/shipping/policy',
+                    'view/return/policy',
+                ];
+                $isTermsActive = false;
+                foreach ($termsRoutes as $route) {
+                    if (checkAuth($route)) {
+                        $isTermsActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            @if($isTermsActive)
+                <a href="javascript: void(0);" class="has-arrow"><i class="feather-alert-triangle"></i><span>Terms &
+                        Policies</span></a>
+            @endif
+            <ul class="sub-menu" aria-expanded="false">
+                @if(checkAuth('terms/and/condition'))
+                    <li><a href="{{ url('/terms/and/condition') }}">Terms & Condition</a></li>
+                @endif
+                @if(checkAuth('view/privacy/policy'))
+                    <li><a href="{{ url('/view/privacy/policy') }}">Privacy Policy</a></li>
+                @endif
+                @if(checkAuth('view/shipping/policy'))
+                    <li><a href="{{ url('/view/shipping/policy') }}">Shipping Policy</a></li>
+                @endif
+                @if(checkAuth('view/return/policy'))
+                    <li><a href="{{ url('/view/return/policy') }}">Return Policy</a></li>
+                @endif
+            </ul>
+        </li>
+        <li>
+            @if(checkAuth("view/all/pages"))
+                <a href="{{ url('/view/all/pages') }}"><i class="feather-file-plus"></i>
+                    <span>Custom Pages</span>
+                    <span style="color:lightgreen" title="Total Outlets">
+                        ({{DB::table('custom_pages')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("view/all/outlet"))
+                <a href="{{ url('/view/all/outlet') }}">
+                    <i class="feather-box"></i> View All Outlets
+                    <span style="color:lightgreen" title="Total Outlets">
+                        ({{DB::table('outlets')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("view/all/video-gallery"))
+                <a href="{{ url('/view/all/video-gallery') }}">
+                    <i class="feather-box"></i> View All Videos
+                    <span style="color:lightgreen" title="Total Videos">
+                        ({{DB::table('video_galleries')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+
+        @if(checkAuth("about/us/page"))
+            <li>
+                <a href="{{ url('/about/us/page') }}">
+                    <i class="feather-globe"></i>
+                    <span>About Us</span>
+                </a>
+            </li>
+        @endif
+        @if(checkAuth("view/all/faqs"))
+            <li>
+                <a href="{{ url('/view/all/faqs') }}">
+                    <i class="far fa-question-circle"></i>
+                    <span>FAQ's</span>
+                </a>
+            </li>
+        @endif
+    @endif
+
+
+    {{-- download & backup module --}}
+    @if ($backupModule->count())
+        <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
+        <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Download & Backup</li>
+
+
+        <li>
+            @if(checkAuth("download/database/backup"))
+                <a href="{{ url('/download/database/backup') }}"
+                    onclick="return confirm('Are you sure you want to download the database backup?');">
+                    <i class="feather-database"></i>
+                    Database Backup
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("download/product/files/backup"))
+                <a href="{{ url('/download/product/files/backup') }}"
+                    onclick="return confirm('Are you sure you want to download the product images backup?');">
+                    <i class="feather-image"></i>Product Images Backup
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("download/user/files/backup"))
+                <a href="{{ url('/download/user/files/backup') }}"
+                    onclick="return confirm('Are you sure you want to download the user images backup?');">
+                    <i class="feather-user"></i>User Images Backup
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("download/banner/files/backup"))
+                <a href="{{ url('/download/banner/files/backup') }}"
+                    onclick="return confirm('Are you sure you want to download the banner images backup?');">
+                    <i class="feather-layers"></i>Banner Images Backup
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("download/category/files/backup"))
+                <a href="{{ url('/download/category/files/backup') }}"
+                    onclick="return confirm('Are you sure you want to download the category icon backup?');">
+                    <i class="feather-grid"></i>Category Icon Backup
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("download/subcategory/files/backup"))
+                <a href="{{ url('/download/subcategory/files/backup') }}"
+                    onclick="return confirm('Are you sure you want to download the subcategory backup?');">
+                    <i class="feather-list"></i>Subcategory Backup
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("download/flag/files/backup"))
+                <a href="{{ url('/download/flag/files/backup') }}"
+                    onclick="return confirm('Are you sure you want to download the flag icon backup?');">
+                    <i class="feather-flag"></i>Flag Icon Backup
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("download/ticket/files/backup"))
+                <a href="{{ url('/download/ticket/files/backup') }}"
+                    onclick="return confirm('Are you sure you want to download the ticket files backup?');">
+                    <i class="feather-file"></i>Ticket Files Backup
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("download/blog/files/backup"))
+                <a href="{{ url('/download/blog/files/backup') }}"
+                    onclick="return confirm('Are you sure you want to download the blog files backup?');">
+                    <i class="feather-file-text"></i>Blog Files Backup
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("download/other/files/backup"))
+                <a href="{{ url('/download/other/files/backup') }}"
+                    onclick="return confirm('Are you sure you want to download the other images backup?');">
+                    <i class="feather-folder"></i>Other Images Backup
+                </a>
+            @endif
+        </li>
+    @endif
+
 
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
-    <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Content Management</li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-image"></i><span>Sliders & Banners</span></a>
+        @php
+            $demoProductRoutes = [
+                'generate/demo/products',
+                'remove/demo/products/page',
+            ];
+            $isDemoProductActive = false;
+            foreach ($demoProductRoutes as $route) {
+                if (checkAuth($route)) {
+                    $isDemoProductActive = true;
+                    break;
+                }
+            }
+        @endphp
+        @if($isDemoProductActive)
+            <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Demo Products</span></a>
+        @endif
         <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/view/all/sliders') }}">View All Sliders</a></li>
-            <li><a href="{{ url('/view/all/banners') }}">View All Banners</a></li>
-            <li><a href="{{ url('/view/promotional/banner') }}">Promotional Banner</a></li>
-            <li><a href="{{ url('/view/all/side-banner') }}">Side Banner</a></li>
+            @if(checkAuth("generate/demo/products"))
+                <li><a href="{{ url('/generate/demo/products') }}">Generate Products</a></li>
+            @endif
+            @if(checkAuth("remove/demo/products/page"))
+                <li><a href="{{ url('/remove/demo/products/page') }}">Remove Products</a></li>
+            @endif
         </ul>
     </li>
-    <li>
-        <a href="{{ url('/view/testimonials') }}">
-            <i class="feather-message-square"></i>
-            <span>Testimonials</span>
-        </a>
-    </li>
-    <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-file-text"></i><span>Manage Blogs</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/blog/categories') }}">Blog Categories</a></li>
-            <li><a href="{{ url('/add/new/blog') }}">Write a Blog</a></li>
-            <li><a href="{{ url('/view/all/blogs') }}">View All Blogs</a></li>
-        </ul>
-    </li>
-    <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-alert-triangle"></i><span>Terms &
-                Policies</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/terms/and/condition') }}">Terms & Condition</a></li>
-            <li><a href="{{ url('/view/privacy/policy') }}">Privacy Policy</a></li>
-            <li><a href="{{ url('/view/shipping/policy') }}">Shipping Policy</a></li>
-            <li><a href="{{ url('/view/return/policy') }}">Return Policy</a></li>
-        </ul>
-    </li>
-    <li>
-        <a href="{{ url('/view/all/pages') }}"><i class="feather-file-plus"></i>
-            <span>Custom Pages</span>
-            <span style="color:lightgreen" title="Total Outlets">
-                ({{DB::table('custom_pages')->count()}})
-            </span>
-        </a>
-    </li>
-    <li>
-        <a href="{{ url('/view/all/outlet') }}">
-            <i class="feather-box"></i> View All Outlets
-            <span style="color:lightgreen" title="Total Outlets">
-                ({{DB::table('outlets')->count()}})
-            </span>
-        </a>
-    </li>
-    <li>
-        <a href="{{ url('/view/all/video-gallery') }}">
-            <i class="feather-box"></i> View All Videos
-            <span style="color:lightgreen" title="Total Videos">
-                ({{DB::table('video_galleries')->count()}})
-            </span>
-        </a>
-    </li>
-    <li><a href="{{ url('/about/us/page') }}"><i class="feather-globe"></i><span>About Us</span></a></li>
-    <li><a href="{{ url('/view/all/faqs') }}"><i class="far fa-question-circle"></i><span>FAQ's</span></a></li>
 
-    <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
-    <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Download & Backup</li>
+    @if(checkAuth("clear/cache"))
+        <li><a href="{{ url('/clear/cache') }}"><i class="feather-rotate-cw"></i><span>Clear Cache</span></a></li>
+    @endif
 
-
-    <li>
-        <a href="{{ url('/download/database/backup') }}"
-            onclick="return confirm('Are you sure you want to download the database backup?');">
-            <i class="feather-database"></i>
-            Database Backup
-        </a>
-    </li>
-    <li>
-        <a href="{{ url('/download/product/files/backup') }}"
-            onclick="return confirm('Are you sure you want to download the product images backup?');">
-            <i class="feather-image"></i>Product Images Backup</a>
-    </li>
-    <li>
-        <a href="{{ url('/download/user/files/backup') }}"
-            onclick="return confirm('Are you sure you want to download the user images backup?');">
-            <i class="feather-user"></i>User Images Backup</a>
-    </li>
-    <li>
-        <a href="{{ url('/download/banner/files/backup') }}"
-            onclick="return confirm('Are you sure you want to download the banner images backup?');">
-            <i class="feather-layers"></i>Banner Images Backup</a>
-    </li>
-    <li>
-        <a href="{{ url('/download/category/files/backup') }}"
-            onclick="return confirm('Are you sure you want to download the category icon backup?');">
-            <i class="feather-grid"></i>Category Icon Backup</a>
-    </li>
-    <li>
-        <a href="{{ url('/download/subcategory/files/backup') }}"
-            onclick="return confirm('Are you sure you want to download the subcategory backup?');">
-            <i class="feather-list"></i>Subcategory Backup</a>
-    </li>
-    <li>
-        <a href="{{ url('/download/flag/files/backup') }}"
-            onclick="return confirm('Are you sure you want to download the flag icon backup?');">
-            <i class="feather-flag"></i>Flag Icon Backup</a>
-    </li>
-    <li>
-        <a href="{{ url('/download/ticket/files/backup') }}"
-            onclick="return confirm('Are you sure you want to download the ticket files backup?');">
-            <i class="feather-file"></i>Ticket Files Backup</a>
-    </li>
-    <li>
-        <a href="{{ url('/download/blog/files/backup') }}"
-            onclick="return confirm('Are you sure you want to download the blog files backup?');">
-            <i class="feather-file-text"></i>Blog Files Backup</a>
-    </li>
-    <li>
-        <a href="{{ url('/download/other/files/backup') }}"
-            onclick="return confirm('Are you sure you want to download the other images backup?');">
-            <i class="feather-folder"></i>Other Images Backup</a>
-    </li>
-
-    <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
-
-    <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Demo Products</span></a>
-        <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/generate/demo/products') }}">Generate Products</a></li>
-            <li><a href="{{ url('/remove/demo/products/page') }}">Remove Products</a></li>
-        </ul>
-    </li>
-    <li><a href="{{ url('/clear/cache') }}"><i class="feather-rotate-cw"></i><span>Clear Cache</span></a></li>
     <li>
         <a href="{{ route('logout') }}"
             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
