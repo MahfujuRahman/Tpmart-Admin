@@ -62,12 +62,12 @@ class CustomerContactHistoryController extends Controller
             'created_at' => Carbon::now()
         ]);
 
-        if(request()->next_date && request()->next_date != '') {
+        if (request()->next_date && request()->next_date != '') {
             CustomerNextContactDate::insert([
                 'customer_id' => request()->customer_id ?? '',
                 'next_date' => request()->next_date,
                 'contact_status' => 'pending',
-    
+
                 'creator' => auth()->user()->id,
                 'slug' => $slug . time(),
                 'status' => 'active',
@@ -77,16 +77,24 @@ class CustomerContactHistoryController extends Controller
 
         Toastr::success('Added successfully!', 'Success');
         return back();
-
     }
 
     public function viewAllCustomerContactHistory(Request $request)
     {
-        
+        $user = auth()->user();
+
         if ($request->ajax()) {
-            $data = CustomerContactHistory::with(['customer', 'employee'])
-                                    ->orderBy('id', 'DESC')
-                                    ->get();
+            if ($user->user_type == 1) {
+                $data = CustomerContactHistory::with(['customer', 'employee'])
+                    ->orderBy('id', 'DESC')
+                    ->get();
+            }
+            else {
+                $data = CustomerContactHistory::with(['customer', 'employee'])
+                    ->where('employee_id', $user->id)
+                    ->orderBy('id', 'DESC')
+                    ->get();
+            }
             // dd($data->toArray());
             return Datatables::of($data)
                 // ->editColumn('status', function ($data) {
@@ -111,7 +119,7 @@ class CustomerContactHistoryController extends Controller
                         case 'not_held':
                             return 'Not Held';
                         default:
-                            return 'Unknown'; 
+                            return 'Unknown';
                     }
                 })
                 ->editColumn('priority', function ($data) {
@@ -129,7 +137,7 @@ class CustomerContactHistoryController extends Controller
                         case 'immediate':
                             return 'Immediate';
                         default:
-                            return 'Unknown'; 
+                            return 'Unknown';
                     }
                 })
                 ->addColumn('action', function ($data) {
@@ -150,7 +158,7 @@ class CustomerContactHistoryController extends Controller
         $customers = Customer::where('status', 'active')->get();
         $users = User::where('status', 1)->get();
         $next_contact_data = CustomerNextContactDate::where('customer_id', $data->customer_id)
-                                                        ->where('next_date', '>=', now())->first();
+            ->where('next_date', '>=', now())->first();
         // dd($next_contact_data);
 
         return view('backend.customer_contact_history.edit', compact('data', 'customers', 'users', 'next_contact_data'));
@@ -158,7 +166,6 @@ class CustomerContactHistoryController extends Controller
 
     public function updateCustomerContactHistory(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'customer_id' => ['required'],
             'employee_id' => ['required'],
@@ -178,8 +185,8 @@ class CustomerContactHistoryController extends Controller
 
 
         $data->customer_id = request()->customer_id ?? $data->customer_id;
-        // $data->employee_id = $data->employee_id ?? auth()->user()->id;
-        // $data->date = $data->date;
+        $data->employee_id = request()->employee_id ?? $data->employee_id;
+        $data->date = request()->next_date ?? $data->next_date;
         $data->note = request()->note ?? $data->note;
 
         $data->contact_history_status = request()->contact_history_status ?? $data->contact_history_status;
@@ -193,27 +200,27 @@ class CustomerContactHistoryController extends Controller
 
 
 
-        
+
         $clean = preg_replace('/[^a-zA-Z0-9\s]/', '', strtolower(request()->date)); //remove all non alpha numeric
         $slug = preg_replace('!\s+!', '-', $clean);
 
         $next_contact_data = CustomerNextContactDate::where('customer_id', request()->customer_id)
-                                                    ->where('next_date', request()->next_date)
-                                                    ->exists();
+            ->where('next_date', request()->next_date)
+            ->exists();
 
-        if(!$next_contact_data) {
+        if (!$next_contact_data) {
             CustomerNextContactDate::insert([
                 'customer_id' => request()->customer_id ?? '',
                 'next_date' => request()->next_date,
                 'contact_status' => 'pending',
-    
+
                 'creator' => auth()->user()->id,
                 'slug' => $slug . time(),
                 'status' => 'active',
                 'created_at' => Carbon::now()
             ]);
         }
-        
+
 
         Toastr::success('Successfully Updated', 'Success!');
         return redirect()->route('ViewAllCustomerContactHistories');
@@ -232,5 +239,4 @@ class CustomerContactHistoryController extends Controller
             'data' => 1
         ]);
     }
-
 }
