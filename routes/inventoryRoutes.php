@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Outlet\SupplierSourceController;
 use App\Http\Controllers\Inventory\ProductSupplierController;
@@ -119,5 +120,10 @@ Route::group(['middleware' => ['auth', 'CheckUserType', 'DemoMode']], function (
     Route::get('/delete/customers/{slug}', [CustomerController::class, 'deleteCustomer'])->name('DeleteCustomers');
     Route::get('/edit/customers/{slug}', [CustomerController::class, 'editCustomer'])->name('EditCustomers');      
     Route::post('/update/customers', [CustomerController::class, 'updateCustomer'])->name('UpdateCustomers');
+
+
+     // generate report
+    Route::get('/product/purchase/report', [ReportController::class, 'productPurchaseReport'])->name('productPurchaseReport');
+    Route::post('/generate/product/purchase/report', [ReportController::class, 'generateProductPurchaseReport'])->name('generateProductPurchaseReport');
 
 });

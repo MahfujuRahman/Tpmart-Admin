@@ -352,6 +352,13 @@
         </ul>
     </li>
 
+    <li>
+        <a href="javascript: void(0);" class="has-arrow"><i class="feather-printer"></i><span>Generate Report</span></a>
+        <ul class="sub-menu" aria-expanded="false">
+            <li><a href="{{ url('product/purchase/report') }}">Product Purchase Report</a></li>
+        </ul>
+    </li>
+
 
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Accounts Modules</li>
