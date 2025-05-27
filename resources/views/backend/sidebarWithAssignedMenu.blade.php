@@ -9,86 +9,128 @@ function checkAuth($routes)
     }
 }
 
-$configModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)
-    ->where('route', 'like', '%view/all/units%')
-    ->orWhere('route', 'like', '%view/all/flags%')
-    ->orWhere('route', 'like', '%view/all/sizes%')
-    ->orWhere('route', 'like', '%view/all/brands%')
-    ->orWhere('route', 'like', '%view/all/models%')
-    ->orWhere('route', 'like', '%view/all/colors%')
-    ->orWhere('route', 'like', '%view/all/storages%')
-    ->orWhere('route', 'like', '%view/all/sims%')
-    ->orWhere('route', 'like', '%view/all/device/conditions%')
-    ->orWhere('route', 'like', '%view/all/warrenties%')
-    ->orWhere('route', 'like', '%config/setup%')
-    ->get();
+$eCommerceModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where(function ($query) {
+    $query->Where('route', 'like', '%view/all/category%')
 
-$categoryModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where('route', 'like', '%add/new/category%')->orWhere('route', 'like', '%view/new/category%')->get();
+        ->orWhere('route', 'like', '%view/all/subcategory%')
 
-$subCategoryModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where(function ($query) {
-    $query->where('route', 'like', '%add/new/subcategory%')
-        ->orWhere('route', 'like', '%view/all/subcategory%');
+        ->orWhere('route', 'like', '%view/all/childcategory%')
+
+        ->orWhere('route', 'like', '%view/all/product%')
+
+        ->orWhere('route', 'like', '%view/all/product-color%')
+
+        ->orWhere('route', 'like', '%view/all/product-size%')
+
+        ->orWhere('route', 'like', '%view/all/product-size-value%')
+
+        ->orwhere('route', 'like', '%view/product/reviews%')
+
+        ->orwhere('route', 'like', '%view/product/question/answer%')
+
+        ->orwhere('route', 'like', '%view/orders%')
+        ->orWhere('route', 'like', '%view/trash/orders%')
+        ->orWhere('route', 'like', '%restore/orders%')
+        ->orWhere('route', 'like', '%view/pending/orders%')
+        ->orWhere('route', 'like', '%view/approved/orders%')
+        ->orWhere('route', 'like', '%view/delivered/orders%')
+        ->orWhere('route', 'like', '%view/cancelled/orders%')
+        ->orWhere('route', 'like', '%view/picked/orders%')
+        ->orWhere('route', 'like', '%view/intransit/orders%')
+
+        ->orwhere('route', 'like', '%create/new/order%')
+
+        ->orWhere('route', 'like', '%view/all/promo/codes%')
+
+        ->orWhere('route', 'like', '%get/wishlist/count%')
+
+        ->orwhere('route', 'like', '%send/notification/page%')
+        ->orWhere('route', 'like', '%view/all/notifications%')
+
+        ->orwhere('route', 'like', '%view/delivery/charges%')
+
+        ->orwhere('route', 'like', '%view/upazila/thana%')
+
+        ->orwhere('route', 'like', '%sales/report%')
+        ->orWhere('route', 'like', '%generate/sales/report%')
+
+        ->orwhere('route', 'like', '%sales/report%')
+        ->orwhere('route', 'like', '%view/payment/history%');
 })->get();
 
-$childCategoryModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where('route', 'like', '%add/new/childcategory%')->orWhere('route', 'like', '%view/all/childcategory%')->get();
 
-$productModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)
-    ->where('route', 'like', '%add/new/product%')
-    ->orWhere('route', 'like', '%view/all/product%')
-    ->orWhere('route', 'like', '%view/product/reviews%')
-    ->orWhere('route', 'like', '%view/product/question/answer%')
-    ->get();
+$inventoryModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where(function ($query) {
+    $query->Where('route', 'like', '%view/all/product-warehouse%')
 
-$orderModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)
-    ->where('route', 'like', '%view/orders%')
-    ->where('route', 'like', '%create/new/order%')
-    ->orWhere('route', 'like', '%view/pending/orders%')
-    ->orWhere('route', 'like', '%view/approved/orders%')
-    ->orWhere('route', 'like', '%view/delivered/orders%')
-    ->orWhere('route', 'like', '%view/cancelled/orders%')
-    ->get();
+        ->orWhere('route', 'like', '%view/all/product-warehouse-room%')
+        ->orWhere('route', 'like', '%view/all/product-warehouse-room-cartoon%')
+        ->orWhere('route', 'like', '%view/all/product-supplier%')
+        ->orWhere('route', 'like', '%view/all/supplier-source%')
+        ->orWhere('route', 'like', '%view/all/purchase-product/quotation%')
+        ->orWhere('route', 'like', '%view/all/purchase-product/order%')
+        ->orWhere('route', 'like', '%view/all/purchase-product/charge%')
+        ->orWhere('route', 'like', '%view/all/customer%')
+        ->orWhere('route', 'like', '%product/purchase/report%')
 
-$promoCodeModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where('route', 'like', '%add/new/code%')->orWhere('route', 'like', '%view/all/promo/codes%')->get();
-$sliderBannerModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where('route', 'like', '%view/all/sliders%')->orWhere('route', 'like', '%view/all/banners%')->orWhere('route', 'like', '%view/promotional/banner%')->get();
+        ->orwhere('route', 'like', '%view/payment/history%');
 
-$termsPolicyModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)
-    ->where('route', 'like', '%terms/and/condition%')
-    ->orWhere('route', 'like', '%view/privacy/policy%')
-    ->orWhere('route', 'like', '%view/shipping/policy%')
-    ->orWhere('route', 'like', '%view/return/policy%')
-    ->get();
 
-// $customerUserModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where('route', 'like', '%view/all/sliders%')->orWhere('route', 'like', '%view/all/banners%')->get();
+})->get();
 
-$supportTicketModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)
-    ->where('route', 'like', '%pending/support/tickets%')
-    ->orWhere('route', 'like', '%solved/support/tickets%')
-    ->orWhere('route', 'like', '%on/hold/support/tickets%')
-    ->orWhere('route', 'like', '%rejected/support/tickets%')
-    ->get();
 
-$testimonialModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where('route', 'like', '%add/testimonial%')->orWhere('route', 'like', '%view/testimonials%')->get();
-$pushNotificationModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where('route', 'like', '%send/notification/page%')->orWhere('route', 'like', '%view/all/notifications%')->get();
-$smsServiceModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where('route', 'like', '%view/sms/templates%')->orWhere('route', 'like', '%send/sms/page%')->orWhere('route', 'like', '%view/sms/history%')->get();
+$accountModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where(function ($query) {
+    $query->Where('route', 'like', '%view/all/payment-type%')
 
-$systemModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)
-    ->where('route', 'like', '%view/email/credential%')
-    ->orWhere('route', 'like', '%view/email/templates%')
-    ->orWhere('route', 'like', '%setup/sms/gateways%')
-    ->orWhere('route', 'like', '%setup/payment/gateways%')
-    ->get();
+        ->orWhere('route', 'like', '%view/all/expense-category%')
+        ->orWhere('route', 'like', '%view/all/ac-account%')
+        ->orWhere('route', 'like', '%view/all/expense%')
+        ->orWhere('route', 'like', '%view/all/deposit%')
+        ->orWhere('route', 'like', '%ledger%')
+        ->orwhere('route', 'like', '%view/payment/history%');
 
-// $webPagesModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where('route', 'like', '%about/us/page%')->orWhere('route', 'like', '%view/all/faqs%')->get();
-$blogModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where('route', 'like', '%blog/categories%')->orWhere('route', 'like', '%add/new/blog%')->orWhere('route', 'like', '%view/all/blogs%')->get();
-$customPageModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)
-    ->where('route', 'like', '%create/new/page%')
-    ->orWhere('route', 'like', '%view/all/pages%')
-    ->get();
+})->get();
+
+$crmModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where(function ($query) {
+    $query->Where('route', 'like', '%view/all/customer-source%')
+
+        ->orWhere('route', 'like', '%view/all/customer-category%')
+        ->orWhere('route', 'like', '%view/all/customer-ecommerce%')
+        ->orWhere('route', 'like', '%view/all/customer-contact-history%')
+        ->orWhere('route', 'like', '%view/all/customer-next-contact-date%')
+        ->orWhere('route', 'like', '%pending/support/tickets%')
+        ->orWhere('route', 'like', '%solved/support/tickets%')
+        ->orWhere('route', 'like', '%on/hold/support/tickets%')
+        ->orWhere('route', 'like', '%rejected/support/tickets%')
+        ->orWhere('route', 'like', '%view/all/contact/requests%')
+        ->orwhere('route', 'like', '%view/all/subscribed/users%');
+
+})->get();
+
+$rolePermissionModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where(function ($query) {
+    $query->Where('route', 'like', '%view/system/users%')
+
+        ->orWhere('route', 'like', '%view/user/roles%')
+        ->orWhere('route', 'like', '%view/user/role/permission%')
+        ->orwhere('route', 'like', '%view/permission/routes%');
+
+})->get();
+
+$websiteConfigModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where(function ($query) {
+    $query->Where('route', 'like', '%general/info%')
+
+        ->orWhere('route', 'like', '%website/theme/page%')
+        ->orWhere('route', 'like', '%social/media/page%')
+        ->orWhere('route', 'like', '%seo/homepage%')
+        ->orWhere('route', 'like', '%custom/css/js%')
+        ->orwhere('route', 'like', '%social/chat/script/page%');
+
+})->get();
+
+
+
+
 
 $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where('route', 'like', '%backup%')->get();
-
-$reportModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)->where('route', 'like', '%sales/report%')->get();
-
 $demoProductsModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id)
     ->where('route', 'like', '%generate/demo/products%')
     ->orWhere('route', 'like', '%remove/demo/products/page%')
@@ -97,139 +139,176 @@ $demoProductsModule = App\Models\UserRolePermission::where('user_id', Auth::user
 
 
 <ul class="metismenu list-unstyled" id="side-menu">
-    <li class="menu-title">Menu</li>
+    <li>
+        <a href="{{ url('/home') }}">
+            <i class="feather-home"></i>
+            <span> Ecommerce Dashboard</span>
+        </a>
+    </li>
 
-    <li><a href="{{ url('/home') }}"><i class="feather-home"></i><span>Dashboard</span></a></li>
-
-
-    @if(checkAuth("general/info") || checkAuth("website/theme/page") || checkAuth("social/media/page") || checkAuth("seo/homepage") || checkAuth("custom/css/js") || checkAuth("social/chat/script"))
-        <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 5px;">
-        <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Website Config</li>
+    @if(checkAuth("crm-home"))
+        <li>
+            <a href="{{ url('/crm-home') }}">
+                <i class="feather-home"></i>
+                <span> CRM Dashboard</span>
+            </a>
+        </li>
     @endif
-    @if(checkAuth("general/info"))
-    <li><a href="{{ url('/general/info') }}"><i class="feather-grid"></i><span>General Info</span></a></li> @endif
-    @if(checkAuth("website/theme/page"))
-        <li><a href="{{ url('/website/theme/page') }}"><i class="mdi mdi-format-color-fill"
-    style="font-size: 18px"></i><span>Website Theme Color</span></a></li> @endif
-    @if(checkAuth("social/media/page"))
-        <li><a href="{{ url('/social/media/page') }}"><i class="mdi mdi-link-variant"
-    style="font-size: 17px"></i><span>Social Media Links</span></a></li> @endif
-    @if(checkAuth("seo/homepage"))
-    <li><a href="{{ url('/seo/homepage') }}"><i class="dripicons-search"></i><span>Home Page SEO</span></a></li> @endif
-    @if(checkAuth("custom/css/js"))
-    <li><a href="{{ url('/custom/css/js') }}"><i class="feather-code"></i><span>Custom CSS & JS</span></a></li> @endif
-    @if(checkAuth("social/chat/script"))
-        <li><a href="{{ url('/social/chat/script') }}"><i class="mdi mdi-code-brackets"></i><span>Social & Chat
-    Scripts</span></a></li> @endif
 
+    @if(checkAuth("accounts-home"))
+        <li>
+            <a href="{{ url('/accounts-home') }}">
+                <i class="feather-home"></i>
+                <span> Accounts Dashboard</span>
+            </a>
+        </li>
+    @endif
 
-    @if(count($configModule) > 0 || count($categoryModule) > 0 || count($subCategoryModule) > 0 || count($childCategoryModule) > 0 || count($productModule) > 0 || count($orderModule) > 0 || count($promoCodeModule) > 0 || count($pushNotificationModule) > 0 || count($smsServiceModule) > 0 || count($systemModule) > 0 || checkAuth("view/all/customers") || checkAuth("view/customers/wishlist") || checkAuth("view/delivery/charges") || count($reportModule) > 0 || count($backupModule) > 0)
+    {{-- E commerce module --}}
+    @if ($eCommerceModule->count())
         <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
         <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">E-commerce Modules</li>
-    @endif
-
-    @if ($configModule && count($configModule) > 0)
         <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>Config</span></a>
+            @php
+                $configRoutes = [
+                    'config/setup',
+                    'view/email/credential',
+                    'setup/payment/gateways',
+                ];
+                $isConfigActive = false;
+                foreach ($configRoutes as $route) {
+                    if (checkAuth($route)) {
+                        $isConfigActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            @if($isConfigActive)
+                <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>Config</span></a>
+            @endif
             <ul class="sub-menu" aria-expanded="false">
-
-                <li><a href="{{ url('/config/setup') }}">Setup Your Config</a></li>
-
-                @if(DB::table('config_setups')->where('code', 'product_size')->where('status', 1)->first())
-                    @if(checkAuth("view/all/sizes"))
-                    <li><a href="{{ url('/view/all/sizes') }}">Product Sizes</a></li> @endif
+                @if(checkAuth("config/setup"))
+                    <li><a href="{{ url('/config/setup') }}">Setup Your Config</a></li>
                 @endif
-                @if(DB::table('config_setups')->where('code', 'storage')->where('status', 1)->first())
-                    @if(checkAuth("view/all/storages"))
-                    <li><a href="{{ url('/view/all/storages') }}">Storage (RAM/ROM)</a></li> @endif
+                @if(checkAuth("view/email/credential"))
+                    <li><a href="{{ url('/view/email/credential') }}">Email Configure (SMTP)</a></li>
                 @endif
-                @if(DB::table('config_setups')->where('code', 'sim')->where('status', 1)->first())
-                    @if(checkAuth("view/all/sims"))
-                    <li><a href="{{ url('/view/all/sims') }}">SIM Type</a></li> @endif
-                @endif
-                @if(DB::table('config_setups')->where('code', 'device_condition')->where('status', 1)->first())
-                    @if(checkAuth("view/all/device/conditions"))
-                    <li><a href="{{ url('/view/all/device/conditions') }}">Device Condition</a></li> @endif
-                @endif
-                @if(DB::table('config_setups')->where('code', 'product_warranty')->where('status', 1)->first())
-                    @if(checkAuth("view/all/warrenties"))
-                    <li><a href="{{ url('/view/all/warrenties') }}">Product Warrenty</a></li> @endif
+                @if(checkAuth("setup/payment/gateways"))
+                    <li><a href="{{ url('/setup/payment/gateways') }}">Payment Gateway</a></li>
                 @endif
 
-                @if(DB::table('config_setups')->where('code', 'color')->where('status', 1)->first())
-                    @if(checkAuth("view/all/colors"))
-                    <li><a href="{{ url('/view/all/colors') }}">Product Colors</a></li> @endif
-                @endif
-                @if(DB::table('config_setups')->where('code', 'measurement_unit')->where('status', 1)->first())
-                    @if(checkAuth("view/all/units"))
-                    <li><a href="{{ url('/view/all/units') }}">Measurement Units</a></li> @endif
-                @endif
-
-
-                @if(checkAuth("view/all/flags"))
-                <li><a href="{{ url('/view/all/flags') }}">Product Flags</a></li> @endif
-                @if(checkAuth("view/all/brands"))
-                <li><a href="{{ url('/view/all/brands') }}">Product Brands</a></li> @endif
-                @if(checkAuth("view/all/models"))
-                <li><a href="{{ url('/view/all/models') }}">Models of Brand</a></li> @endif
             </ul>
         </li>
-    @endif
-
-    @if ($categoryModule && count($categoryModule) > 0)
         <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-sliders"></i><span>Category</span></a>
+            @php
+                $attributeRoutes = [
+                    'view/all/sizes',
+                    'view/all/colors',
+                    'view/all/units',
+                    'view/all/brands',
+                    'view/all/models',
+                    'view/all/flags',
+                ];
+                $isAttributeActive = false;
+                foreach ($attributeRoutes as $route) {
+                    if (checkAuth($route)) {
+                        $isAttributeActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            @if($isAttributeActive)
+                <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>Product
+                        Attributes</span></a>
+            @endif
             <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("add/new/category"))
-                <li><a href="{{ url('/add/new/category') }}">Add New Category</a></li> @endif
-                @if(checkAuth("view/all/category"))
-                <li><a href="{{ url('/view/all/category') }}">View All Categories</a></li> @endif
+                {{-- Fashion Industry --}}
+                @if(DB::table('config_setups')->where('code', 'product_size')->first() && checkAuth('view-all-sizes'))
+                    <li><a href="{{ url('/view/all/sizes') }}">Product Sizes</a></li>
+                @endif
+
+                {{-- Common --}}
+                @if(DB::table('config_setups')->where('code', 'color')->first() && checkAuth('view-all-colors'))
+                    <li><a href="{{ url('/view/all/colors') }}">Product Colors</a></li>
+                @endif
+
+                @if(DB::table('config_setups')->where('code', 'measurement_unit')->first() && checkAuth('view-all-units'))
+                    <li><a href="{{ url('/view/all/units') }}">Measurement Units</a></li>
+                @endif
+
+                @if(checkAuth('view/all/brands'))
+                    <li><a href="{{ url('/view/all/brands') }}">Product Brands</a></li>
+                @endif
+                @if(checkAuth('view/all/models'))
+                    <li><a href="{{ url('/view/all/models') }}">Models of Brand</a></li>
+                @endif
+                @if(checkAuth('view/all/flags'))
+                    <li><a href="{{ url('/view/all/flags') }}">Product Flags</a></li>
+                @endif
             </ul>
         </li>
-    @endif
 
-    @if ($subCategoryModule && count($subCategoryModule) > 0)
         <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-command"></i><span>Subcategory</span></a>
-            <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("add/new/subcategory"))
-                <li><a href="{{ url('/add/new/subcategory') }}">Add New Subcategory</a></li> @endif
-                @if(checkAuth("view/all/subcategory"))
-                <li><a href="{{ url('/view/all/subcategory') }}">View All Subcategories</a></li> @endif
-            </ul>
+            @if(checkAuth("view/all/category"))
+                <a href="{{ url('/view/all/category') }}">
+                    <i class="feather-sliders"></i>
+                    <span>Category</span>
+                    <span style="color:lightgreen" title="Total Products">
+                        ({{DB::table('categories')->count()}})
+                    </span>
+                </a>
+            @endif
         </li>
-    @endif
-
-    @if ($childCategoryModule && count($childCategoryModule) > 0)
         <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-git-pull-request"></i><span>Child
-                    Category</span></a>
-            <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("add/new/childcategory"))
-                <li><a href="{{ url('/add/new/childcategory') }}">Add New Child Category</a></li> @endif
-                @if(checkAuth("view/all/childcategory"))
-                <li><a href="{{ url('/view/all/childcategory') }}">View All Child Categories</a></li> @endif
-            </ul>
+            @if(checkAuth("view/all/subcategory"))
+                <a href="{{ url('/view/all/subcategory') }}"><i class="feather-command"></i>
+                    <span>Subcategory</span>
+                    <span style="color:lightgreen" title="Total Products">
+                        ({{DB::table('subcategories')->count()}})
+                    </span>
+                </a>
+            @endif
         </li>
-    @endif
-
-    @if ($productModule && count($productModule) > 0)
         <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Manage Products</span></a>
+            @if(checkAuth("view/all/childcategory"))
+                <a href="{{ url('/view/all/childcategory') }}"><i class="feather-git-pull-request"></i><span>Child
+                        Category</span>
+                    <span style="color:lightgreen" title="Total Products">
+                        ({{DB::table('child_categories')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+        <li>
+            @php
+                $productRoutes = [
+                    'view/all/product',
+                    'view/product/reviews',
+                    'view/product/question-answer',
+                ];
+                $isProductActive = false;
+                foreach ($productRoutes as $route) {
+                    if (checkAuth($route)) {
+                        $isProductActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            @if($isProductActive)
+                <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Manage Products</span></a>
+            @endif
             <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("add/new/product"))
-                <li><a href="{{ url('/add/new/product') }}">Add New Product</a></li> @endif
-                @if(checkAuth("view/all/product"))
+                @if(checkAuth('view/all/product'))
                     <li>
                         <a href="{{ url('/view/all/product') }}">
                             View All Products
                             <span style="color:lightgreen" title="Total Products">
-                                ({{DB::table('products')->where('status', 1)->count()}})
+                                ({{DB::table('products')->count()}})
                             </span>
                         </a>
                     </li>
                 @endif
-                @if(checkAuth("view/product/reviews"))
+                @if(checkAuth('view/product/reviews'))
                     <li>
                         <a href="{{ url('/view/product/reviews') }}">
                             Products's Review
@@ -243,7 +322,7 @@ $demoProductsModule = App\Models\UserRolePermission::where('user_id', Auth::user
                         </a>
                     </li>
                 @endif
-                @if(checkAuth("view/product/question/answer"))
+                @if(checkAuth('view/product/question/answer'))
                     <li>
                         <a href="{{ url('/view/product/question/answer') }}">
                             Product Ques/Ans
@@ -260,46 +339,78 @@ $demoProductsModule = App\Models\UserRolePermission::where('user_id', Auth::user
                 @endif
             </ul>
         </li>
-    @endif
 
-    @if ($orderModule && count($orderModule) > 0)
+
         <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-shopping-cart"></i><span>Manage
-                    Orders</span></a>
+            @php
+                $orderRoutes = [
+                    'view/orders',
+                    'view/pending/orders',
+                    'view/approved/orders',
+                    'view/intransit/orders',
+                    'view/delivered/orders',
+                    'view/picked/orders',
+                    'view/cancelled/orders',
+                ];
+                $isOrderActive = false;
+                foreach ($orderRoutes as $route) {
+                    if (checkAuth($route)) {
+                        $isOrderActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            @if($isOrderActive)
+                <a href="javascript: void(0);" class="has-arrow"><i class="feather-shopping-cart"></i><span>Manage
+                        Orders</span></a>
+            @endif
             <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("create/new/order"))
-                <li><a style="color: white !important;" href="{{ url('/create/new/order') }}">Create Order</a></li> @endif
-                @if(checkAuth("view/orders"))
+                @if(checkAuth('view/orders'))
                     <li><a style="color: white !important;" href="{{ url('/view/orders') }}">All Orders (@php echo
-                DB::table('orders')->count(); @endphp)</a></li> @endif
-                @if(checkAuth("view/pending/orders"))
-                    <li><a style="color: skyblue !important;" href="{{ url('/view/pending/orders') }}">Pending Orders (@php
-                        echo DB::table('orders')
-                            ->where('order_status', 0)
-                            ->count();
-                    @endphp)</a>
-                    </li>
+                            DB::table('orders')->count(); @endphp)</a></li>
                 @endif
-                @if(checkAuth("view/approved/orders"))
-                    <li><a style="color: wheat !important;" href="{{ url('/view/approved/orders') }}">Approved Orders
+                @if(checkAuth('view/pending/orders'))
+                    <li><a style="color: skyblue !important;" href="{{ url('/view/pending/orders') }}">Pending Orders
                             (@php
                                 echo DB::table('orders')
-                                    ->where('order_status', 1)
-                                    ->orWhere('order_status', 2)
+                                    ->where('order_status', 0)
                                     ->count();
                             @endphp)</a>
                     </li>
                 @endif
-                @if(checkAuth("view/delivered/orders"))
+                @if(checkAuth('view/approved/orders'))
+                    <li><a style="color: wheat !important;" href="{{ url('/view/approved/orders') }}">Approved Orders
+                            (@php
+                                echo DB::table('orders')
+                                    ->where('order_status', 1)
+                                    ->count();
+                            @endphp)</a></li>
+                @endif
+                @if(checkAuth('view/intransit/orders'))
+                    <li><a style="color: violet !important;" href="{{ url('/view/intransit/orders') }}">Intransit Orders
+                            (@php
+                                echo DB::table('orders')
+                                    ->where('order_status', 2)
+                                    ->count();
+                            @endphp)</a></li>
+                @endif
+                @if(checkAuth('view/delivered/orders'))
                     <li><a style="color: #0c0 !important;" href="{{ url('/view/delivered/orders') }}">Delivered Orders
                             (@php
                                 echo DB::table('orders')
                                     ->where('order_status', 3)
                                     ->count();
-                            @endphp)</a>
-                    </li>
+                            @endphp)</a></li>
                 @endif
-                @if(checkAuth("view/cancelled/orders"))
+                @if(checkAuth('view/picked/orders'))
+                    <li><a style="color: tomato !important;" href="{{ url('/view/picked/orders') }}">Picked Orders
+                            (@php
+                                echo DB::table('orders')
+                                    ->where('order_status', 5)
+                                    ->count();
+                            @endphp)</a></li>
+                @endif
+                @if(checkAuth('view/cancelled/orders'))
                     <li><a style="color: red !important;" href="{{ url('/view/cancelled/orders') }}">Cancelled Orders
                             (@php
                                 echo DB::table('orders')
@@ -309,291 +420,711 @@ $demoProductsModule = App\Models\UserRolePermission::where('user_id', Auth::user
                 @endif
             </ul>
         </li>
-    @endif
 
-    @if ($promoCodeModule && count($promoCodeModule) > 0)
         <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-gift"></i><span>Promo Codes</span></a>
+            @if(checkAuth("view/all/promo/codes"))
+                <a href="{{ url('/view/all/promo/codes') }}"><i class="feather-gift"></i>
+                    <span>Promo Codes</span>
+                    <span style="color:lightgreen" title="Total Products">
+                        ({{DB::table('promo_codes')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+
+        <li>
+            @php
+                $pushNotificationRoutes = [
+                    'send/notification/page',
+                    'view/all/notifications',
+                ];
+                $isPushNotificationActive = false;
+                foreach ($pushNotificationRoutes as $route) {
+                    if (checkAuth($route)) {
+                        $isPushNotificationActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            @if($isPushNotificationActive)
+                <a href="javascript: void(0);" class="has-arrow"><i class="feather-bell"></i><span>Push Notification</span></a>
+            @endif
             <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("add/new/code"))
-                <li><a href="{{ url('/add/new/code') }}">Add New Promo Code</a></li> @endif
-                @if(checkAuth("view/all/promo/codes"))
-                <li><a href="{{ url('/view/all/promo/codes') }}">View All Promo Codes</a></li> @endif
+                @if(checkAuth('send/notification/page'))
+                    <li><a href="{{ url('/send/notification/page') }}">Send Notification</a></li>
+                @endif
+                @if(checkAuth('view/all/notifications'))
+                    <li><a href="{{ url('/view/all/notifications') }}">Previous Notifications</a></li>
+                @endif
+            </ul>
+        </li>
+
+        @if(checkAuth("view/customers/wishlist"))
+            <li><a href="{{ url('/view/customers/wishlist') }}"><i class="feather-heart"></i><span>Customer's
+                        Wishlist</span></a></li>
+        @endif
+        @if(checkAuth("view/delivery/charges"))
+            <li><a href="{{ url('/view/delivery/charges') }}"><i class="feather-truck"></i><span>Delivery Charges</span></a>
+            </li>
+        @endif
+        @if(checkAuth("view/upazila/thana"))
+            <li><a href="{{ url('/view/upazila/thana') }}"><i class="dripicons-location"></i><span>Upazila & Thana</span></a>
+            </li>
+        @endif
+        @if(checkAuth("view/payment/history"))
+            <li><a href="{{ url('/view/payment/history') }}"><i class="feather-dollar-sign"></i><span>Payment History</span></a>
+            </li>
+        @endif
+
+        <li>
+            @php
+                $reportRoutes = [
+                    'sales/report',
+                ];
+                $isReportActive = false;
+                foreach ($reportRoutes as $route) {
+                    if (checkAuth($route)) {
+                        $isReportActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            @if($isReportActive)
+                <a href="javascript: void(0);" class="has-arrow"><i class="feather-printer"></i><span>Generate Report</span></a>
+            @endif
+            <ul class="sub-menu" aria-expanded="false">
+                @if(checkAuth('sales/report'))
+                    <li><a href="{{ url('/sales/report') }}">Sales Report</a></li>
+                @endif
             </ul>
         </li>
     @endif
 
-    {{-- <li><a href="{{ url('/file-manager') }}"><i class="fas fa-folder-open"></i><span>File Manager</span></a></li>
-    --}}
-
-    @if ($pushNotificationModule && count($pushNotificationModule) > 0)
+    {{-- inventory module --}}
+    @if($inventoryModule->count())
+        <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
+        <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Inventory Modules</li>
         <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-bell"></i><span>Push Notification</span></a>
+            @if(checkAuth("view/all/product-warehouse"))
+                <a href="{{ url('/view/all/product-warehouse') }}"><i class="feather-box"></i>
+                    <span>Product Warehouse</span>
+                    <span style="color:lightgreen" title="Total Product Warehouses">
+                        ({{DB::table('product_warehouses')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("view/all/product-warehouse-room"))
+                <a href="{{ url('/view/all/product-warehouse-room') }}">
+                    <i class="feather-box"></i>Warehouse Room
+                    <span style="color:lightgreen" title="Total Product Warehouse Rooms">
+                        ({{DB::table('product_warehouse_rooms')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("view/all/product-warehouse-room-cartoon"))
+                <a href="{{ url('/view/all/product-warehouse-room-cartoon') }}">
+                    <i class="feather-box"></i> Room Cartoon
+                    <span style="color:lightgreen" title="Total Product Warehouse Room cartoons">
+                        ({{DB::table('product_warehouse_room_cartoons')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("view/all/supplier-source"))
+                <a href="{{ url('/view/all/supplier-source') }}">
+                    <i class="feather-box"></i> Supplier Src Type
+                    <span style="color:lightgreen" title="Total CS Types">
+                        ({{DB::table('supplier_source_types')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+
+        <li>
+            @if(checkAuth("view/all/product-supplier"))
+                <a href="{{ url('/view/all/product-supplier') }}">
+                    <i class="feather-box"></i> Product Suppliers
+                    <span style="color:lightgreen" title="Total Product Suppliers">
+                        ({{DB::table('product_suppliers')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+
+        <li>
+            @php
+                $purchaseRoutes = [
+                    'view/all/purchase-product/charge',
+                    'view/all/purchase-product/quotation',
+                    'view/all/purchase-product/order',
+                ];
+                $isPurchaseActive = false;
+                foreach ($purchaseRoutes as $route) {
+                    if (checkAuth($route)) {
+                        $isPurchaseActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            @if($isPurchaseActive)
+                <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Product Purchase</span></a>
+            @endif
             <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("send/notification/page"))
-                <li><a href="{{ url('/send/notification/page') }}">Send Notification</a></li> @endif
-                @if(checkAuth("view/all/notifications"))
-                <li><a href="{{ url('/view/all/notifications') }}">Prevoious Notifications</a></li> @endif
+                @if(checkAuth('view/all/purchase-product/charge'))
+                    <li><a href="{{ url('/view/all/purchase-product/charge') }}">Other Charge Types</a></li>
+                @endif
+                @if(checkAuth('view/all/purchase-product/quotation'))
+                    <li>
+                        <a href="{{ url('/view/all/purchase-product/quotation') }}">
+                            View All Quotations
+                            <span style="color:lightgreen" title="Total Product Purchase Quotations">
+                                ({{DB::table('product_purchase_quotations')->count()}})
+                            </span>
+                        </a>
+                    </li>
+                @endif
+                @if(checkAuth('view/all/purchase-product/order'))
+                    <li>
+                        <a href="{{ url('/view/all/purchase-product/order') }}">
+                            View All Orders
+                            <span style="color:lightgreen" title="Total Product Purchase Orders">
+                                ({{DB::table('product_purchase_orders')->count()}})
+                            </span>
+                        </a>
+                    </li>
+                @endif
+            </ul>
+        </li>
+
+        <li>
+            @php
+                $reportRoutes = [
+                    'product/purchase/report',
+                ];
+                $isReportActive = false;
+                foreach ($reportRoutes as $route) {
+                    if (checkAuth($route)) {
+                        $isReportActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            @if($isReportActive)
+                <a href="javascript: void(0);" class="has-arrow"><i class="feather-printer"></i><span>Generate Report</span></a>
+            @endif
+            <ul class="sub-menu" aria-expanded="false">
+                @if(checkAuth('product/purchase/report'))
+                    <li><a href="{{ url('product/purchase/report') }}">Product Purchase Report</a></li>
+                @endif
             </ul>
         </li>
     @endif
 
-    @if ($smsServiceModule && count($smsServiceModule) > 0)
+    {{-- accounts module --}}
+    @if ($accountModule->count())
+        <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
+        <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Accounts Modules</li>
+
         <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="fas fa-sms"></i><span>SMS Service</span></a>
+            @if(checkAuth("view/all/payment-type"))
+                <a href="{{ url('/view/all/payment-type') }}">
+                    <i class="feather-box"></i> Payment Types
+                    <span style="color:lightgreen" title="Total CS Types">
+                        ({{DB::table('db_paymenttypes')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+        <li>
+
+            @if(checkAuth("view/all/expense-category"))
+                <a href="{{ url('/view/all/expense-category') }}">
+                    <i class="feather-box"></i> Expense Categories
+                    <span style="color:lightgreen" title="Total Categories">
+                        ({{DB::table('db_expense_categories')->count()}})
+                    </span>
+                </a>
+            @endif
+
+        </li>
+        <li>
+            @if(checkAuth("view/all/ac-account"))
+                <a href="{{ url('/view/all/ac-account') }}">
+                    <i class="feather-box"></i> All Accounts
+                    <span style="color:lightgreen" title="Total Accounts">
+                        ({{DB::table('ac_accounts')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("view/all/expense"))
+                <a href="{{ route('ViewAllExpense') }}">
+                    <i class="feather-box"></i> All Expenses
+                    <span style="color:lightgreen" title="Total Expenses">
+                        ({{DB::table('db_expenses')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("view/all/deposit"))
+                <a href="{{ route('ViewAllDeposit') }}">
+                    <i class="feather-box"></i> All Deposits
+                    <span style="color:lightgreen" title="Total Deposits">
+                        ({{DB::table('ac_transactions')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+
+
+        <li>
+            @php
+                $reportRoutes = [
+                    'ledger/journal',
+                    'ledger',
+                    'ledger/balance-sheet',
+                    'ledger/income-statement',
+                ];
+                $isReportActive = false;
+                foreach ($reportRoutes as $route) {
+                    if (checkAuth($route)) {
+                        $isReportActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            @if($isReportActive)
+                <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>Reports</span></a>
+            @endif
             <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("view/sms/templates"))
-                <li><a href="{{ url('/view/sms/templates') }}">SMS Templates</a></li> @endif
-                @if(checkAuth("send/sms/page"))
-                <li><a href="{{ url('/send/sms/page') }}">Send SMS</a></li> @endif
-                @if(checkAuth("view/sms/history"))
-                <li><a href="{{ url('/view/sms/history') }}">SMS History</a></li> @endif
+                @if(checkAuth('ledger/journal'))
+                    <li>
+                        <a href="{{ route('journal.index') }}">
+                            <i class="feather-box"></i>
+                            <span>Journal</span>
+                        </a>
+                    </li>
+                @endif
+                @if(checkAuth('ledger'))
+                    <li>
+                        <a href="{{ route('ledger.index') }}">
+                            <i class="feather-box"></i>
+                            <span>Ledger</span>
+                        </a>
+                    </li>
+                @endif
+                @if(checkAuth('ledger/balance-sheet'))
+                    <li>
+                        <a href="{{ route('ledger.balance_sheet') }}">
+                            <i class="feather-box"></i>
+                            <span>Balance Sheet</span>
+                        </a>
+                    </li>
+                @endif
+                @if(checkAuth('ledger/income/statement'))
+                    <li>
+                        <a href="{{ route('ledger.income_statement') }}">
+                            <i class="feather-box"></i>
+                            <span>Income Statement</span>
+                        </a>
+                    </li>
+                @endif
             </ul>
         </li>
     @endif
 
-    @if ($systemModule && count($systemModule) > 0)
-        <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>System</span></a>
-            <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("view/email/credential"))
-                <li><a href="{{ url('/view/email/credential') }}">Email Configure (SMTP)</a></li> @endif
-                @if(checkAuth("view/email/templates"))
-                <li><a href="{{ url('/view/email/templates') }}">Email Templates</a></li> @endif
-                @if(checkAuth("setup/sms/gateways"))
-                <li><a href="{{ url('/setup/sms/gateways') }}">SMS Gateway</a></li> @endif
-                @if(checkAuth("setup/payment/gateways"))
-                <li><a href="{{ url('/setup/payment/gateways') }}">Payment Gateway</a></li> @endif
-            </ul>
-        </li>
-    @endif
-
-    @if(checkAuth("view/all/customers"))
-    <li><a href="{{ url('/view/all/customers') }}"><i class="feather-users"></i><span>Customers</span></a></li> @endif
-    @if(checkAuth("view/customers/wishlist"))
-        <li><a href="{{ url('/view/customers/wishlist') }}"><i class="feather-heart"></i><span>Customer's
-    Wishlist</span></a></li> @endif
-    @if(checkAuth("view/delivery/charges"))
-        <li><a href="{{ url('/view/delivery/charges') }}"><i class="feather-truck"></i><span>Delivery Charges</span></a>
-    </li> @endif
-    @if(checkAuth("view/upazila/thana"))
-        <li><a href="{{ url('/view/upazila/thana') }}"><i class="dripicons-location"></i><span>Upazila & Thana</span></a>
-    </li> @endif
-
-    @if ($reportModule && count($reportModule) > 0)
-        <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-printer"></i><span>Generate Report</span></a>
-            <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("sales/report"))
-                <li><a href="{{ url('/sales/report') }}">Sales Report</a></li> @endif
-            </ul>
-        </li>
-    @endif
-
-    @if ($backupModule && count($backupModule) > 0)
-        <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-download-cloud"></i><span>Download
-                    Backup</span></a>
-            <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("download/database/backup"))
-                <li><a href="{{ url('/download/database/backup') }}">Database Backup</a></li> @endif
-                @if(checkAuth("download/product/files/backup"))
-                <li><a href="{{ url('/download/product/files/backup') }}">Product Images Backup</a></li> @endif
-                @if(checkAuth("download/user/files/backup"))
-                <li><a href="{{ url('/download/user/files/backup') }}">User Images Backup</a></li> @endif
-                @if(checkAuth("download/banner/files/backup"))
-                <li><a href="{{ url('/download/banner/files/backup') }}">Banner Images Backup</a></li> @endif
-                @if(checkAuth("download/category/files/backup"))
-                <li><a href="{{ url('/download/category/files/backup') }}">Category Icon Backup</a></li> @endif
-                @if(checkAuth("download/subcategory/files/backup"))
-                <li><a href="{{ url('/download/subcategory/files/backup') }}">Subcategory Backup</a></li> @endif
-                @if(checkAuth("download/flag/files/backup"))
-                <li><a href="{{ url('/download/flag/files/backup') }}">Flag Icon Backup</a></li> @endif
-                @if(checkAuth("download/ticket/files/backup"))
-                <li><a href="{{ url('/download/ticket/files/backup') }}">Ticket Files Backup</a></li> @endif
-                @if(checkAuth("download/blog/files/backup"))
-                <li><a href="{{ url('/download/blog/files/backup') }}">Blog Files Backup</a></li> @endif
-                @if(checkAuth("download/other/files/backup"))
-                <li><a href="{{ url('/download/other/files/backup') }}">Other Images Backup</a></li> @endif
-            </ul>
-        </li>
-    @endif
-
-
-    @if(count($supportTicketModule) > 0 || checkAuth("view/all/contact/requests") || checkAuth("view/all/subscribed/users"))
+    {{-- crm module --}}
+    @if($crmModule->count())
         <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
         <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">CRM Modules</li>
-    @endif
-
-    @if ($supportTicketModule && count($supportTicketModule) > 0)
         <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="fas fa-headset"></i><span>Support Ticket</span></a>
+            @if(checkAuth("view/all/customer-source"))
+                <a href="{{ url('/view/all/customer-source') }}">
+                    <i class="feather-box"></i> Customer Src Type
+                    <span style="color:lightgreen" title="Total CS Types">
+                        ({{DB::table('customer_source_types')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+        <li>
+
+            @if(checkAuth("view/all/customer-category"))
+                <a href="{{ url('/view/all/customer-category') }}">
+                    <i class="feather-box"></i> Customer Category
+                    <span style="color:lightgreen" title="Total Categories">
+                        ({{DB::table('customer_categories')->count()}})
+                    </span>
+                </a>
+            @endif
+
+        </li>
+        <li>
+            @if(checkAuth("view/all/customer"))
+                <a href="{{ url('/view/all/customer') }}">
+                    <i class="feather-box"></i> Customers
+                    <span style="color:lightgreen" title="Total Customers">
+                        ({{DB::table('customers')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("view/all/customer-ecommerce"))
+                <a href="{{ route('ViewAllCustomerEcommerce') }}">
+                    <i class="feather-box"></i> E-Customer
+                    <span style="color:lightgreen" title="Total Contact Histories">
+                        ({{DB::table('users')->where('user_type', 3)->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("view/all/customer-contact-history"))
+                <a href="{{ route('ViewAllCustomerContactHistories') }}">
+                    <i class="feather-box"></i> Contacts History
+                    <span style="color:lightgreen" title="Total Contact Histories">
+                        ({{DB::table('customer_contact_histories')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+        <li>
+            @if(checkAuth("view/all/customer-next-contact-date"))
+                <a href="{{ url('/view/all/customer-next-contact-date') }}">
+                    <i class="feather-box"></i> Next Date Contacts
+                    <span style="color:lightgreen" title="Total Contact Histories">
+                        ({{DB::table('customer_next_contact_dates')->count()}})
+                    </span>
+                </a>
+            @endif
+        </li>
+
+        <li>
+            @php
+                $supportTicketRoutes = [
+                    'pending/support/tickets',
+                    'solved/support/tickets',
+                    'on/hold/support/tickets',
+                    'rejected/support/tickets',
+                ];
+                $isSupportTicketActive = false;
+                foreach ($supportTicketRoutes as $route) {
+                    if (checkAuth($route)) {
+                        $isSupportTicketActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            @if($isSupportTicketActive)
+                <a href="javascript: void(0);" class="has-arrow"><i class="fas fa-headset"></i><span>Support Ticket</span></a>
+            @endif
             <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("pending/support/tickets"))
-                    <li><a style="color: skyblue !important;" href="{{ url('/pending/support/tickets') }}">Pending Supports
+                @if(checkAuth('pending/support/tickets'))
+                    <li>
+                        <a style="color: skyblue !important;" href="{{ url('/pending/support/tickets') }}">
+                            Pending Supports
                             (@php
                                 echo DB::table('support_tickets')
                                     ->where('status', 0)
                                     ->orWhere('status', 1)
                                     ->count();
-                            @endphp)</a>
+                            @endphp)
+                        </a>
                     </li>
                 @endif
-                @if(checkAuth("solved/support/tickets"))
-                    <li><a style="color: #0c0 !important;" href="{{ url('/solved/support/tickets') }}">Solved Supports
+                @if(checkAuth('solved/support/tickets'))
+                    <li>
+                        <a style="color: #0c0 !important;" href="{{ url('/solved/support/tickets') }}">
+                            Solved Supports
                             (@php
                                 echo DB::table('support_tickets')
                                     ->where('status', 2)
                                     ->count();
-                            @endphp)</a>
+                            @endphp)
+                        </a>
                     </li>
                 @endif
-                @if(checkAuth("on/hold/support/tickets"))
-                    <li><a style="color: goldenrod !important;" href="{{ url('/on/hold/support/tickets') }}">On Hold Supports
+                @if(checkAuth('on/hold/support/tickets'))
+                    <li>
+                        <a style="color: goldenrod !important;" href="{{ url('/on/hold/support/tickets') }}">
+                            On Hold Supports
                             (@php
                                 echo DB::table('support_tickets')
                                     ->where('status', 4)
                                     ->count();
-                            @endphp)</a>
+                            @endphp)
+                        </a>
                     </li>
                 @endif
-                @if(checkAuth("rejected/support/tickets"))
-                    <li><a style="color: red !important;" href="{{ url('/rejected/support/tickets') }}">Rejected Supports
+                @if(checkAuth('rejected/support/tickets'))
+                    <li>
+                        <a style="color: red !important;" href="{{ url('/rejected/support/tickets') }}">
+                            Rejected Supports
                             (@php
                                 echo DB::table('support_tickets')
                                     ->where('status', 3)
                                     ->count();
-                            @endphp)</a>
+                            @endphp)
+                        </a>
                     </li>
                 @endif
             </ul>
         </li>
-    @endif
-    @if(checkAuth("view/all/contact/requests"))
-        <li><a href="{{ url('/view/all/contact/requests') }}"><i class="feather-phone-forwarded"></i><span>Contact
-    Request</span></a></li> @endif
-    @if(checkAuth("view/all/subscribed/users"))
-        <li><a href="{{ url('/view/all/subscribed/users') }}"><i class="feather-user-check"></i><span>Subscribed
-    Users</span></a></li> @endif
-
-
-    @if(count($sliderBannerModule) > 0 || count($termsPolicyModule) > 0 || count($testimonialModule) > 0 || count($customPageModule) > 0 || checkAuth("about/us/page") || checkAuth("view/all/faqs") || count($blogModule) > 0)
-        <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
-        <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Content Management</li>
-    @endif
-
-    @if ($sliderBannerModule && count($sliderBannerModule) > 0)
-        <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-image"></i><span>Sliders & Banners</span></a>
-            <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("view/all/sliders"))
-                <li><a href="{{ url('/view/all/sliders') }}">View All Sliders</a></li> @endif
-                @if(checkAuth("view/all/banners"))
-                <li><a href="{{ url('/view/all/banners') }}">View All Banners</a></li> @endif
-                @if(checkAuth("view/promotional/banner"))
-                <li><a href="{{ url('/view/promotional/banner') }}">Promotional Banner</a></li> @endif
-            </ul>
-        </li>
+        @if(checkAuth("view/all/contact/requests"))
+            <li>
+                <a href="{{ url('/view/all/contact/requests') }}">
+                    <i class="feather-phone-forwarded"></i>
+                    <span>Contact Request</span>
+                </a>
+            </li>
+        @endif
+        @if(checkAuth("view/all/subscribed/users"))
+            <li>
+                <a href="{{ url('/view/all/subscribed/users') }}">
+                    <i class="feather-user-check"></i>
+                    <span>Subscribed Users</span>
+                </a>
+            </li>
+        @endif
     @endif
 
-    @if ($testimonialModule && count($testimonialModule) > 0)
-        <li>
-            <a href="javascript: void(0);" class="has-arrow"><i
-                    class="feather-message-square"></i><span>Testimonials</span></a>
-            <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("add/testimonial"))
-                <li><a href="{{ url('/add/testimonial') }}">Add New Testimonial</a></li> @endif
-                @if(checkAuth("view/testimonials"))
-                <li><a href="{{ url('/view/testimonials') }}">View All Testimonials</a></li> @endif
-            </ul>
-        </li>
-    @endif
-
-    @if ($blogModule && count($blogModule) > 0)
-        <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-file-text"></i><span>Manage Blogs</span></a>
-            <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("blog/categories"))
-                <li><a href="{{ url('/blog/categories') }}">Blog Categories</a></li> @endif
-                @if(checkAuth("add/new/blog"))
-                <li><a href="{{ url('/add/new/blog') }}">Write a Blog</a></li> @endif
-                @if(checkAuth("view/all/blogs"))
-                <li><a href="{{ url('/view/all/blogs') }}">View All Blogs</a></li> @endif
-            </ul>
-        </li>
-    @endif
-
-    @if ($termsPolicyModule && count($termsPolicyModule) > 0)
-        <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-alert-triangle"></i><span>Terms &
-                    Policies</span></a>
-            <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("terms/and/condition"))
-                <li><a href="{{ url('/terms/and/condition') }}">Terms & Condition</a></li> @endif
-                @if(checkAuth("view/privacy/policy"))
-                <li><a href="{{ url('/view/privacy/policy') }}">Privacy Policy</a></li> @endif
-                @if(checkAuth("view/shipping/policy"))
-                <li><a href="{{ url('/view/shipping/policy') }}">Shipping Policy</a></li> @endif
-                @if(checkAuth("view/return/policy"))
-                <li><a href="{{ url('/view/return/policy') }}">Return Policy</a></li> @endif
-            </ul>
-        </li>
-    @endif
-
-    @if ($customPageModule && count($customPageModule) > 0)
-        <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-file-plus"></i><span>Custom Pages</span></a>
-            <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("create/new/page"))
-                <li><a href="{{ url('/create/new/page') }}">Create New Page</a></li> @endif
-                @if(checkAuth("view/all/pages"))
-                <li><a href="{{ url('/view/all/pages') }}">View All Pages</a></li> @endif
-            </ul>
-        </li>
-    @endif
-
-    @if(checkAuth("about/us/page"))
-    <li><a href="{{ url('/about/us/page') }}"><i class="feather-globe"></i><span>About Us</span></a></li> @endif
-    @if(checkAuth("view/all/faqs"))
-    <li><a href="{{ url('/view/all/faqs') }}"><i class="far fa-question-circle"></i><span>FAQ's</span></a></li> @endif
-
-
-
-
-
-    @if(checkAuth("view/permission/routes") || checkAuth("view/user/roles") || checkAuth("view/user/role/permission") || checkAuth("view/system/users"))
+    {{-- role permission module --}}
+    @if ($rolePermissionModule->count())
         <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 5px;">
         <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">User Role Permission</li>
+        @if(checkAuth("view/system/users"))
+            <li>
+                <a href="{{ url('/view/system/users') }}">
+                    <i class="fas fa-user-shield"></i>
+                    <span>System Users</span>
+                </a>
+            </li>
+        @endif
+        @if(checkAuth("view/user/roles"))
+            <li>
+                <a href="{{ url('/view/user/roles') }}">
+                    <i class="feather-user-plus"></i>
+                    <span>User Roles</span>
+                </a>
+            </li>
+        @endif
+        @if(checkAuth("view/user/role/permission"))
+            <li>
+                <a href="{{ url('/view/user/role/permission') }}">
+                    <i class="mdi mdi-security"></i>
+                    <span>Assign Role Permission</span>
+                </a>
+            </li>
+        @endif
+        @if(checkAuth("view/permission/routes"))
+            <li>
+                <a href="{{ url('/view/permission/routes') }}">
+                    <i class="feather-git-merge"></i>
+                    <span>Permission Routes</span>
+                </a>
+            </li>
+        @endif
     @endif
 
-    @if(checkAuth("view/system/users"))
-        <li><a href="{{ url('/view/system/users') }}"><i class="fas fa-user-shield"></i><span>System Users</span></a></li>
+
+    @if ($websiteConfigModule->count())
+        <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 5px;">
+        <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Website Config</li>
+
+        @if(checkAuth("general/info"))
+            <li>
+                <a href="{{ url('/general/info') }}">
+                    <i class="feather-grid"></i>
+                    <span>General Info</span>
+                </a>
+            </li>
+        @endif
+        @if(checkAuth("website/theme/page"))
+            <li>
+                <a href="{{ url('/website/theme/page') }}">
+                    <i class="mdi mdi-format-color-fill" style="font-size: 18px"></i>
+                    <span>Website Theme Color</span>
+                </a>
+            </li>
+        @endif
+        @if(checkAuth("social/media/page"))
+            <li>
+                <a href="{{ url('/social/media/page') }}">
+                    <i class="mdi mdi-link-variant" style="font-size: 17px"></i>
+                    <span>Social Media Links</span>
+                </a>
+            </li>
+        @endif
+        @if(checkAuth("seo/homepage"))
+            <li>
+                <a href="{{ url('/seo/homepage') }}">
+                    <i class="dripicons-search"></i>
+                    <span>Home Page SEO</span>
+                </a>
+            </li>
+        @endif
+        @if(checkAuth("custom/css/js"))
+            <li>
+                <a href="{{ url('/custom/css/js') }}">
+                    <i class="feather-code"></i>
+                    <span>Custom CSS & JS</span>
+                </a>
+            </li>
+        @endif
+        @if(checkAuth("social/chat/script/page"))
+            <li>
+                <a href="{{ url('/social/chat/script/page') }}">
+                    <i class="mdi mdi-code-brackets"></i>
+                    <span>Social & Chat Scripts</span>
+                </a>
+            </li>
+        @endif
     @endif
-    @if(checkAuth("view/permission/routes"))
-        <li><a href="{{ url('/view/permission/routes') }}"><i class="feather-git-merge"></i><span>Permission
-    Routes</span></a></li> @endif
-    @if(checkAuth("view/user/roles"))
-    <li><a href="{{ url('/view/user/roles') }}"><i class="feather-user-plus"></i><span>User Roles</span></a></li> @endif
-    @if(checkAuth("view/user/role/permission"))
-        <li><a href="{{ url('/view/user/role/permission') }}"><i class="mdi mdi-security"></i><span>Assign Role
-    Permission</span></a></li> @endif
+
+
 
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
-    @if ($demoProductsModule && count($demoProductsModule) > 0)
-        <li>
-            <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Demo Products</span></a>
-            <ul class="sub-menu" aria-expanded="false">
-                @if(checkAuth("generate/demo/products"))
-                <li><a href="{{ url('/generate/demo/products') }}">Generate Products</a></li>@endif
-                @if(checkAuth("remove/demo/products/page"))
-                <li><a href="{{ url('/remove/demo/products') }}">Remove Products</a></li>@endif
-            </ul>
-        </li>
-    @endif
-    @if(checkAuth("clear/cache"))
-    <li><a href="{{ url('/clear/cache') }}"><i class="feather-rotate-cw"></i><span>Clear Cache</span></a></li> @endif
-    <li><a href="{{ route('logout') }}"
-            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i
-                class="feather-log-out"></i><span>Logout</span></a></li>
+    <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Content Management</li>
+    <li>
+        <a href="javascript: void(0);" class="has-arrow"><i class="feather-image"></i><span>Sliders & Banners</span></a>
+        <ul class="sub-menu" aria-expanded="false">
+            <li><a href="{{ url('/view/all/sliders') }}">View All Sliders</a></li>
+            <li><a href="{{ url('/view/all/banners') }}">View All Banners</a></li>
+            <li><a href="{{ url('/view/promotional/banner') }}">Promotional Banner</a></li>
+            <li><a href="{{ url('/view/all/side-banner') }}">Side Banner</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="{{ url('/view/testimonials') }}">
+            <i class="feather-message-square"></i>
+            <span>Testimonials</span>
+        </a>
+    </li>
+    <li>
+        <a href="javascript: void(0);" class="has-arrow"><i class="feather-file-text"></i><span>Manage Blogs</span></a>
+        <ul class="sub-menu" aria-expanded="false">
+            <li><a href="{{ url('/blog/categories') }}">Blog Categories</a></li>
+            <li><a href="{{ url('/add/new/blog') }}">Write a Blog</a></li>
+            <li><a href="{{ url('/view/all/blogs') }}">View All Blogs</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="javascript: void(0);" class="has-arrow"><i class="feather-alert-triangle"></i><span>Terms &
+                Policies</span></a>
+        <ul class="sub-menu" aria-expanded="false">
+            <li><a href="{{ url('/terms/and/condition') }}">Terms & Condition</a></li>
+            <li><a href="{{ url('/view/privacy/policy') }}">Privacy Policy</a></li>
+            <li><a href="{{ url('/view/shipping/policy') }}">Shipping Policy</a></li>
+            <li><a href="{{ url('/view/return/policy') }}">Return Policy</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="{{ url('/view/all/pages') }}"><i class="feather-file-plus"></i>
+            <span>Custom Pages</span>
+            <span style="color:lightgreen" title="Total Outlets">
+                ({{DB::table('custom_pages')->count()}})
+            </span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ url('/view/all/outlet') }}">
+            <i class="feather-box"></i> View All Outlets
+            <span style="color:lightgreen" title="Total Outlets">
+                ({{DB::table('outlets')->count()}})
+            </span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ url('/view/all/video-gallery') }}">
+            <i class="feather-box"></i> View All Videos
+            <span style="color:lightgreen" title="Total Videos">
+                ({{DB::table('video_galleries')->count()}})
+            </span>
+        </a>
+    </li>
+    <li><a href="{{ url('/about/us/page') }}"><i class="feather-globe"></i><span>About Us</span></a></li>
+    <li><a href="{{ url('/view/all/faqs') }}"><i class="far fa-question-circle"></i><span>FAQ's</span></a></li>
+
+    <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
+    <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Download & Backup</li>
+
+
+    <li>
+        <a href="{{ url('/download/database/backup') }}"
+            onclick="return confirm('Are you sure you want to download the database backup?');">
+            <i class="feather-database"></i>
+            Database Backup
+        </a>
+    </li>
+    <li>
+        <a href="{{ url('/download/product/files/backup') }}"
+            onclick="return confirm('Are you sure you want to download the product images backup?');">
+            <i class="feather-image"></i>Product Images Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/user/files/backup') }}"
+            onclick="return confirm('Are you sure you want to download the user images backup?');">
+            <i class="feather-user"></i>User Images Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/banner/files/backup') }}"
+            onclick="return confirm('Are you sure you want to download the banner images backup?');">
+            <i class="feather-layers"></i>Banner Images Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/category/files/backup') }}"
+            onclick="return confirm('Are you sure you want to download the category icon backup?');">
+            <i class="feather-grid"></i>Category Icon Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/subcategory/files/backup') }}"
+            onclick="return confirm('Are you sure you want to download the subcategory backup?');">
+            <i class="feather-list"></i>Subcategory Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/flag/files/backup') }}"
+            onclick="return confirm('Are you sure you want to download the flag icon backup?');">
+            <i class="feather-flag"></i>Flag Icon Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/ticket/files/backup') }}"
+            onclick="return confirm('Are you sure you want to download the ticket files backup?');">
+            <i class="feather-file"></i>Ticket Files Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/blog/files/backup') }}"
+            onclick="return confirm('Are you sure you want to download the blog files backup?');">
+            <i class="feather-file-text"></i>Blog Files Backup</a>
+    </li>
+    <li>
+        <a href="{{ url('/download/other/files/backup') }}"
+            onclick="return confirm('Are you sure you want to download the other images backup?');">
+            <i class="feather-folder"></i>Other Images Backup</a>
+    </li>
+
+    <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
+
+    <li>
+        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Demo Products</span></a>
+        <ul class="sub-menu" aria-expanded="false">
+            <li><a href="{{ url('/generate/demo/products') }}">Generate Products</a></li>
+            <li><a href="{{ url('/remove/demo/products/page') }}">Remove Products</a></li>
+        </ul>
+    </li>
+    <li><a href="{{ url('/clear/cache') }}"><i class="feather-rotate-cw"></i><span>Clear Cache</span></a></li>
+    <li>
+        <a href="{{ route('logout') }}"
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <i class="feather-log-out"></i><span>Logout</span>
+        </a>
+    </li>
 
 </ul>
