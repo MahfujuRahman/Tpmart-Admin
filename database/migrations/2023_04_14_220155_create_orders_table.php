@@ -37,6 +37,7 @@ class CreateOrdersTable extends Migration
             $table->longText('order_remarks')->comment("Special Note By Admin")->nullable();
             $table->string('slug')->unique();
             $table->tinyInteger('complete_order')->default(0)->comment('0=>Incomplete Order (Address Missing); 1=>Complete Order (Address Given)');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

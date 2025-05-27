@@ -157,8 +157,8 @@
                         <label id="customFilter">
                             <a href="{{url('/create/new/order')}}" class="btn btn-primary btn-sm"
                                 style="margin-left: 5px"><b><i class="fas fa-plus"></i> Create Order</b></a>
-                            <a href="{{url('/view/trash/orders')}}" class="btn btn-danger btn-sm"
-                                style="margin-left: 5px"><b><i class="fas fa-trash"></i> Trashed Order</b></a>
+                            <a href="{{url('/view/orders')}}" class="btn btn-success btn-sm"
+                                style="margin-left: 5px"><b><i class="fas fa-list"></i> All Order</b></a>
                         </label>
                         <table class="table table-bordered mb-0 data-table">
                             <thead>
@@ -200,7 +200,7 @@
             processing: true,
             serverSide: true,
             pageLength: 10,
-            ajax: "{{ url('view/orders') }}",
+            ajax: "{{ url('view/trash/orders') }}",
             columns: [
                 {
                     data: 'DT_RowIndex',
@@ -244,52 +244,18 @@
             }
         });
 
-        $('body').on('click', '.cancelBtn', function () {
-            var slug = $(this).data("id");
-            if (confirm("Are You sure to Cancel !")) {
-                $.ajax({
-                    type: "GET",
-                    url: "{{ url('cancel/order') }}" + '/' + slug,
-                    success: function (data) {
-                        table.draw(false);
-                        toastr.error("Order has been Cancelled", "Cancelled Successfully");
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
-            }
-        });
-
-        $('body').on('click', '.approveBtn', function () {
-            var slug = $(this).data("id");
-            if (confirm("Are You sure to Approve !")) {
-                $.ajax({
-                    type: "GET",
-                    url: "{{ url('approve/order') }}" + '/' + slug,
-                    success: function (data) {
-                        table.draw(false);
-                        toastr.success("Order has been Approved", "Approved Successfully");
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
-            }
-        });
-
         $('body').on('click', '.deleteBtn', function () {
             var slug = $(this).data("id");
-            if (confirm("Are You sure to Delete Order !")) {
+            if (confirm("Are You sure to Restore Order !")) {
                 if (check_demo_user()) {
                     return false;
                 }
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('delete/order') }}" + '/' + slug,
+                    url: "{{ url('restore/orders') }}" + '/' + slug,
                     success: function (data) {
                         table.draw(false);
-                        toastr.error("Order has been Deleted", "Deleted Successfully");
+                        toastr.success("Order has been Restored", "Restored Successfully");
                         location.reload(true);
                     },
                     error: function (data) {

@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\ShippingInfo;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Http\Controllers\Outlet\Models\Outlet;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Http\Controllers\Outlet\Models\CustomerSourceType;
 use App\Http\Controllers\Inventory\Models\ProductWarehouse;
 use App\Http\Controllers\Inventory\Models\ProductWarehouseRoom;
 use App\Http\Controllers\Inventory\Models\ProductWarehouseRoomCartoon;
-use App\Http\Controllers\Outlet\Models\CustomerSourceType;
-use App\Http\Controllers\Outlet\Models\Outlet;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\ShippingInfo;
 
 class Order extends Model
 {
-    use HasFactory;
-
+    use HasFactory, SoftDeletes;
 
     public function warehouse() {
         return $this->belongsTo(ProductWarehouse::class, 'warehouse_id');
