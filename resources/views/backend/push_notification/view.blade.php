@@ -78,7 +78,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center" style="max-width: 50px;">SL</th>
-                                    <th class="text-center" style="max-width: 200px;">Notification Channel</th>
+                                    {{-- <th class="text-center" style="max-width: 200px;">Notification Channel</th> --}}
                                     <th class="text-center" style="max-width: 300px;">Notification Title</th>
                                     <th class="text-center" style="min-width: 500px;">Notification Description</th>
                                     <th class="text-center" style="max-width: 160px;">Sent At</th>
@@ -114,10 +114,10 @@
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
                 }, //orderable: true, searchable: true
-                {
-                    data: 'topic',
-                    name: 'topic'
-                },
+                // {
+                //     data: 'topic',
+                //     name: 'topic'
+                // },
                 {
                     data: 'title',
                     name: 'title'

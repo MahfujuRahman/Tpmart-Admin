@@ -57,16 +57,19 @@ class NotificationController extends Controller
                 ]
             ];
 
+              Notification::insert([
+                'title' => $title,
+                'description' => $body,
+                'created_at' => Carbon::now()
+        ]);
+
 
             $response = Http::withToken($accessToken)
                 ->withHeaders(['Content-Type' => 'application/json'])
                 ->post($url, $message);
         }
 
-        // return response()->json([
-        //     'status' => $response->status(),
-        //     'body' => $response->json(),
-        // ]);
+        
 
         Toastr::success('Notifications sent Succesffully.', 'Successful');
         return back();
