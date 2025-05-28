@@ -1274,10 +1274,18 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         @endif
         <ul class="sub-menu" aria-expanded="false">
             @if(checkAuth("generate/demo/products"))
-                <li><a href="{{ url('/generate/demo/products') }}">Generate Products</a></li>
+                <li>
+                    <a href="{{ url('/generate/demo/products') }}">
+                        Generate Products
+                    </a>
+                </li>
             @endif
             @if(checkAuth("remove/demo/products/page"))
-                <li><a href="{{ url('/remove/demo/products/page') }}">Remove Products</a></li>
+                <li>
+                    <a href="{{ url('/remove/demo/products/page') }}">
+                         Products
+                    </a>
+                </li>
             @endif
         </ul>
     </li>

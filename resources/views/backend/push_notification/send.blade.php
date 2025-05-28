@@ -82,6 +82,18 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label for="topic" class="col-sm-2 col-form-label">FCM Notification URL : </label>
+                            <div class="col-sm-10">
+                                <input type="text" name="topic" class="form-control" id="topic" value="" placeholder="">
+                                <div class="invalid-feedback" style="display: block;">
+                                    @error('topic')
+                                        {{ $message }}
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane"></i> Send Push Notification</button>
                         </div>

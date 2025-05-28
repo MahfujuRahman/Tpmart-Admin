@@ -21,8 +21,16 @@ class NotificationController extends Controller
 
     public function sendPushNotification(Request $request)
     {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'topic' => 'nullable|url|max:255',
+        ]);
+
         $title = $request->title;
         $body = $request->description;
+        $topic_url = $request->topic ?? url("/");
+
         $tokens = DB::table('fcm_tokens')->pluck('token');
 
         if ($tokens->isEmpty()) {
@@ -47,11 +55,12 @@ class NotificationController extends Controller
                         "title" => $title,
                         "body" => $body,
                         "icon" => url('logo.jpg'),
+                        "link" => $topic_url
                     ],
 
                     "webpush" => [
                         "fcm_options" => [
-                            "link" => url("/"),
+                            "link" => $topic_url,
                         ]
                     ]
                 ]
