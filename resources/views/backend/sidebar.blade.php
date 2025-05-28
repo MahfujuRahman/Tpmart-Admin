@@ -177,8 +177,7 @@
 
 
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-shopping-cart"></i><span>Manage
-                Orders</span></a>
+        <a href="javascript: void(0);" class="has-arrow"><i class="feather-shopping-cart"></i><span>Manage Orders</span></a>
         <ul class="sub-menu" aria-expanded="false">
             <li><a style="color: white !important;" href="{{ url('/view/orders') }}">All Orders (@php echo
                     DB::table('orders')->count(); @endphp)</a>
@@ -218,6 +217,12 @@
                     (@php
                         echo DB::table('orders')
                             ->where('order_status', 4)
+                            ->count();
+                    @endphp)</a></li>
+            <li><a style="color: red !important;" href="{{ url('view/trash/orders') }}">Trashed Orders
+                    (@php
+                        echo DB::table('orders')
+                            ->where('deleted_at', '!=', null)
                             ->count();
                     @endphp)</a></li>
         </ul>
