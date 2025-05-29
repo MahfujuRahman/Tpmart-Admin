@@ -233,10 +233,10 @@
                                                 </td>
 
                                                 <td class="text-center" style="vertical-align: middle;">
-                                                    @if($details->color_id) Color: {{$colorInfo->name}} | @endif
-                                                    @if($details->size_id) Size: {{$sizeInfo->name}} | @endif
-                                                    @if($details->storage_id) Storage: {{$storageInfo->ram}}/{{$storageInfo->rom}} | @endif
-                                                    @if($details->sim_id) SIM: {{$simInfo->name}} @endif
+                                                    @if($details->color_id) Color: {{$colorInfo?->name}} | @endif
+                                                    @if($details->size_id) Size: {{$sizeInfo?->name}} | @endif
+                                                    @if($details->storage_id) Storage: {{$storageInfo?->ram}}/{{$storageInfo?->rom}} | @endif
+                                                    @if($details->sim_id) SIM: {{$simInfo?->name}} @endif
 
                                                     <br>
                                                     @if($details->region_id) Region: {{$regionInfo->name}} | @endif

@@ -784,8 +784,7 @@ class OrderController extends Controller
         $countries = DB::table('country')->get();
         $upazilas = DB::table('upazilas')->get();
 
-        return view(
-            'backend.orders.edit',
+        return view('backend.orders.edit',
             compact('order', 'shippingInfo', 'billingAddress', 'orderDetails', 'userInfo', 'generalInfo', 'districts', 'countries', 'upazilas')
         );
     }
