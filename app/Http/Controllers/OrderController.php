@@ -108,18 +108,18 @@ class OrderController extends Controller
     {
         if ($request->ajax()) {
 
-           $data = Order::onlyTrashed()
-            ->leftJoin('shipping_infos', 'shipping_infos.order_id', '=', 'orders.id')
-            ->leftJoin('order_details', 'order_details.order_id', '=', 'orders.id')
-            ->select(
-                'orders.*',
-                'shipping_infos.full_name as customer_name',
-                'shipping_infos.email as customer_email',
-                'shipping_infos.phone as customer_phone',
-                'order_details.qty as quantity'
-            )
-            ->orderByDesc('orders.id')
-            ->get();
+            $data = Order::onlyTrashed()
+                ->leftJoin('shipping_infos', 'shipping_infos.order_id', '=', 'orders.id')
+                ->leftJoin('order_details', 'order_details.order_id', '=', 'orders.id')
+                ->select(
+                    'orders.*',
+                    'shipping_infos.full_name as customer_name',
+                    'shipping_infos.email as customer_email',
+                    'shipping_infos.phone as customer_phone',
+                    'order_details.qty as quantity'
+                )
+                ->orderByDesc('orders.id')
+                ->get();
 
             return Datatables::of($data)
                 ->editColumn('order_status', function ($data) {
@@ -165,8 +165,8 @@ class OrderController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
 
-                   $btn = '';
-                
+                    $btn = '';
+
                     if (Auth::user()->user_type == 1) {
                         $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" data-id="' . $data->slug . '" data-original-title="Delete" class="d-inline-block btn-sm btn-danger rounded deleteBtn"><i class="fas fa-undo"></i></a>';
                     }
@@ -743,7 +743,20 @@ class OrderController extends Controller
             }
 
             $data->order_remarks = $request->order_remarks;
+
+            if ($request->order_status == 4) {
+                $order_details = DB::table('order_details')->where('order_id', $data->id)->select('product_id', 'qty')->get();
+
+                foreach ($order_details as $order_detail) {
+                    $product = Product::find($order_detail->product_id);
+                    if ($product) {
+                        $product->increment('stock', $order_detail->qty);
+                    }
+                }
+            }
+
             $data->order_status = $request->order_status;
+
             $data->estimated_dd = $request->estimated_dd;
             $data->updated_at = Carbon::now();
             $data->save();
@@ -784,7 +797,8 @@ class OrderController extends Controller
         $countries = DB::table('country')->get();
         $upazilas = DB::table('upazilas')->get();
 
-        return view('backend.orders.edit',
+        return view(
+            'backend.orders.edit',
             compact('order', 'shippingInfo', 'billingAddress', 'orderDetails', 'userInfo', 'generalInfo', 'districts', 'countries', 'upazilas')
         );
     }
