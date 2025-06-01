@@ -1,4 +1,9 @@
 <!-- Left Menu Start -->
+<div style="padding: 10px;">
+    <input type="text" id="menuSearch" placeholder="Search menu..."
+        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;">
+</div>
+
 <ul class="metismenu list-unstyled" id="side-menu">
     <li>
         <a href="{{ url('/home') }}">
@@ -177,7 +182,8 @@
 
 
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-shopping-cart"></i><span>Manage Orders</span></a>
+        <a href="javascript: void(0);" class="has-arrow"><i class="feather-shopping-cart"></i><span>Manage
+                Orders</span></a>
         <ul class="sub-menu" aria-expanded="false">
             <li><a style="color: white !important;" href="{{ url('/view/orders') }}">All Orders (@php echo
                     DB::table('orders')->count(); @endphp)</a>
@@ -330,6 +336,7 @@
             </span>
         </a>
     </li>
+
 
     <li>
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Product Purchase</span></a>
@@ -535,7 +542,7 @@
     <li><a href="{{ url('/view/system/users') }}"><i class="fas fa-user-shield"></i><span>System Users</span></a></li>
     <li><a href="{{ url('/view/user/roles') }}"><i class="feather-user-plus"></i><span>User Roles</span></a></li>
     <li><a href="{{ url('/view/user/role/permission') }}"><i class="mdi mdi-security"></i><span>Assign Role
-        Permission</span></a></li>
+                Permission</span></a></li>
     <li><a href="{{ url('/view/permission/routes') }}"><i class="feather-git-merge"></i><span>Permission
                 Routes</span></a></li>
 
@@ -688,3 +695,126 @@
     </li>
 
 </ul>
+
+<script>
+    document.getElementById('menuSearch').addEventListener('input', function () {
+        const query = this.value.toLowerCase().trim();
+        const menuItems = document.querySelectorAll('#side-menu > li');
+        const sideMenu = document.getElementById('side-menu');
+        const sectionsWithVisibleItems = new Set();
+
+        menuItems.forEach(item => {
+            const mainLink = item.querySelector('a');
+            const submenu = item.querySelector('.sub-menu');
+            const mainText = mainLink?.innerText.toLowerCase() || '';
+            const mainMatch = mainText.includes(query);
+            let subMatch = false;
+
+            if (submenu) {
+                const subItems = submenu.querySelectorAll('li');
+                subItems.forEach(subItem => {
+                    const subText = subItem.innerText.toLowerCase();
+                    const match = subText.includes(query);
+                    subItem.style.display = match || mainMatch ? '' : 'none';
+                    if (match) subMatch = true;
+                });
+
+                if (mainMatch || subMatch) {
+                    item.style.display = '';
+                    submenu.style.display = '';
+                    item.classList.add('mm-active');
+                    submenu.classList.add('mm-show');
+                    sectionsWithVisibleItems.add(getMenuSection(item));
+                } else {
+                    item.style.display = 'none';
+                    submenu.style.display = 'none';
+                    item.classList.remove('mm-active');
+                    submenu.classList.remove('mm-show');
+                }
+            } else {
+                const match = mainText.includes(query);
+                item.style.display = match ? '' : 'none';
+                if (match) sectionsWithVisibleItems.add(getMenuSection(item));
+            }
+        });
+
+        // Show/hide .menu-title and <hr> based on visible section items
+        const children = Array.from(sideMenu.children);
+        for (let i = 0; i < children.length; i++) {
+            const node = children[i];
+
+            // Handle <hr>
+            if (node.tagName === 'HR') {
+                const nextTitle = getNextMenuTitle(children, i);
+                const showHr = nextTitle && sectionsWithVisibleItems.has(nextTitle.textContent.trim());
+                node.style.display = showHr ? '' : 'none';
+            }
+
+            // Handle .menu-title
+            if (node.classList?.contains('menu-title')) {
+                const sectionText = node.textContent.trim();
+                node.style.display = sectionsWithVisibleItems.has(sectionText) ? '' : 'none';
+            }
+        }
+    });
+
+    function getMenuSection(item) {
+        let prev = item.previousElementSibling;
+        while (prev) {
+            if (prev.classList?.contains('menu-title')) {
+                return prev.textContent.trim();
+            }
+            prev = prev.previousElementSibling;
+        }
+        return '';
+    }
+
+    function getNextMenuTitle(children, index) {
+        for (let j = index + 1; j < children.length; j++) {
+            const next = children[j];
+            if (next.classList?.contains('menu-title')) {
+                return next;
+            }
+            if (next.tagName === 'LI') {
+                const section = getMenuSection(next);
+                if (section) return children.find(el => el.classList?.contains('menu-title') && el.textContent.trim() === section);
+            }
+        }
+        return null;
+    }
+</script>
+
+<style>
+    /* Enhanced Menu Search Styles */
+
+    /* Search container styling */
+    .menu-search-container {
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    #menuSearch {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #555;
+        border-radius: 5px;
+        background: #444;
+        color: white;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    #menuSearch::placeholder {
+        color: #aaa;
+    }
+
+    #menuSearch:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
+</style>
