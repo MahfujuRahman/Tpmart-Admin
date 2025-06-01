@@ -88,14 +88,16 @@
     </li>
 
     <li>
-        <a href="{{ url('/view/all/category') }}">
+        <a href="{{ url('/view/all/category') }}"
+            data-active-paths="{{ url('/view/all/category') }},{{ url('/add/new/category') }},{{ url('/edit/category/*') }},{{ url('/rearrange/category') }}">
             <i class="feather-sliders"></i>
             <span>Category</span>
             <span style="color:lightgreen" title="Total Products">
-                ({{DB::table('categories')->count()}})
+                ({{ DB::table('categories')->count() }})
             </span>
         </a>
     </li>
+
     <li>
         <a href="{{ url('/view/all/subcategory') }}"><i class="feather-command"></i>
             <span>Subcategory</span>
@@ -109,8 +111,8 @@
         </ul> --}}
     </li>
     <li>
-        <a href="{{ url('/view/all/childcategory') }}"><i class="feather-git-pull-request"></i><span>Child
-                Category</span>
+        <a href="{{ url('/view/all/childcategory') }}">
+            <i class="feather-git-pull-request"></i><span>Child Category</span>
             <span style="color:lightgreen" title="Total Products">
                 ({{DB::table('child_categories')->count()}})
             </span>
