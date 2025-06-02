@@ -153,7 +153,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
 
 <ul class="metismenu list-unstyled" id="side-menu">
     <li>
-        <a href="{{ url('/home') }}">
+        <a href="{{ url('/home') }}" data-active-paths="{{ url('/home') }}">
             <i class="feather-home"></i>
             <span> Ecommerce Dashboard</span>
         </a>
@@ -161,7 +161,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
 
     @if(checkAuth("crm-home"))
         <li>
-            <a href="{{ url('/crm-home') }}">
+            <a href="{{ url('/crm-home') }}" data-active-paths="{{ url('/crm-home') }}">
                 <i class="feather-home"></i>
                 <span> CRM Dashboard</span>
             </a>
@@ -170,7 +170,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
 
     @if(checkAuth("accounts-home"))
         <li>
-            <a href="{{ url('/accounts-home') }}">
+            <a href="{{ url('/accounts-home') }}" data-active-paths="{{ url('/accounts-home') }}">
                 <i class="feather-home"></i>
                 <span> Accounts Dashboard</span>
             </a>
@@ -201,13 +201,16 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
             @endif
             <ul class="sub-menu" aria-expanded="false">
                 @if(checkAuth("config/setup"))
-                    <li><a href="{{ url('/config/setup') }}">Setup Your Config</a></li>
+                    <li><a href="{{ url('/config/setup') }}" data-active-paths="{{ url('/config/setup') }}">Setup Your
+                            Config</a></li>
                 @endif
                 @if(checkAuth("view/email/credential"))
-                    <li><a href="{{ url('/view/email/credential') }}">Email Configure (SMTP)</a></li>
+                    <li><a href="{{ url('/view/email/credential') }}"
+                            data-active-paths="{{ url('/view/email/credential') }}">Email Configure (SMTP)</a></li>
                 @endif
                 @if(checkAuth("setup/payment/gateways"))
-                    <li><a href="{{ url('/setup/payment/gateways') }}">Payment Gateway</a></li>
+                    <li><a href="{{ url('/setup/payment/gateways') }}"
+                            data-active-paths="{{ url('/setup/payment/gateways') }}">Payment Gateway</a></li>
                 @endif
 
             </ul>
@@ -231,39 +234,68 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
                 }
             @endphp
             @if($isAttributeActive)
-                <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>Product
-                        Attributes</span></a>
+                <a href="javascript: void(0);" class="has-arrow">
+                    <i class="feather-settings"></i>
+                    <span>Product Attributes</span></a>
             @endif
             <ul class="sub-menu" aria-expanded="false">
                 {{-- Fashion Industry --}}
                 @if(DB::table('config_setups')->where('code', 'product_size')->first() && checkAuth('view-all-sizes'))
-                    <li><a href="{{ url('/view/all/sizes') }}">Product Sizes</a></li>
+                    <li>
+                        <a href="{{ url('/view/all/sizes') }}"
+                            data-active-paths="{{ url('/view/all/sizes') }},{{ url('/rearrange/size') }}">
+                            Product Sizes
+                        </a>
+                    </li>
                 @endif
 
                 {{-- Common --}}
                 @if(DB::table('config_setups')->where('code', 'color')->first() && checkAuth('view-all-colors'))
-                    <li><a href="{{ url('/view/all/colors') }}">Product Colors</a></li>
+                    <li>
+                        <a href="{{ url('/view/all/colors') }}" data-active-paths="{{ url('/view/all/colors') }}">
+                            Product Colors
+                        </a>
+                    </li>
                 @endif
 
                 @if(DB::table('config_setups')->where('code', 'measurement_unit')->first() && checkAuth('view-all-units'))
-                    <li><a href="{{ url('/view/all/units') }}">Measurement Units</a></li>
+                    <li>
+                        <a href="{{ url('/view/all/units') }}" data-active-paths="{{ url('/view/all/units') }}">
+                            Measurement Units
+                        </a>
+                    </li>
                 @endif
 
                 @if(checkAuth('view/all/brands'))
-                    <li><a href="{{ url('/view/all/brands') }}">Product Brands</a></li>
+                    <li>
+                        <a href="{{ url('/view/all/brands') }}"
+                            data-active-paths="{{ url('/view/all/brands') }},{{ url('/add/new/brand') }},{{ url('/rearrange/brands') }},{{ url('edit/brand/*') }}">
+                            Product Brands
+                        </a>
+                    </li>
                 @endif
                 @if(checkAuth('view/all/models'))
-                    <li><a href="{{ url('/view/all/models') }}">Models of Brand</a></li>
+                    <li>
+                        <a href="{{ url('/view/all/models') }}"
+                            data-active-paths="{{ url('/view/all/models') }}, {{ url('add/new/model') }},{{ url('edit/model/*') }}">
+                            Models of Brand
+                        </a>
+                    </li>
                 @endif
                 @if(checkAuth('view/all/flags'))
-                    <li><a href="{{ url('/view/all/flags') }}">Product Flags</a></li>
+                    <li>
+                        <a href="{{ url('/view/all/flags') }}" data-active-paths="{{ url('/view/all/flags') }}">
+                            Product Flags
+                        </a>
+                    </li>
                 @endif
             </ul>
         </li>
 
         <li>
             @if(checkAuth("view/all/category"))
-                <a href="{{ url('/view/all/category') }}">
+                <a href="{{ url('/view/all/category') }}"
+                    data-active-paths="{{ url('/view/all/category') }},{{ url('/add/new/category') }},{{ url('/edit/category/*') }},{{ url('/rearrange/category') }}">
                     <i class="feather-sliders"></i>
                     <span>Category</span>
                     <span style="color:lightgreen" title="Total Products">
@@ -274,7 +306,9 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/subcategory"))
-                <a href="{{ url('/view/all/subcategory') }}"><i class="feather-command"></i>
+                <a href="{{ url('/view/all/subcategory') }}"
+                    data-active-paths="{{ url('/view/all/subcategory') }},{{ url('/add/new/subcategory') }},{{ url('/edit/subcategory/*') }},{{ url('/rearrange/subcategory') }}">
+                    <i class="feather-command"></i>
                     <span>Subcategory</span>
                     <span style="color:lightgreen" title="Total Products">
                         ({{DB::table('subcategories')->count()}})
@@ -284,7 +318,9 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/childcategory"))
-                <a href="{{ url('/view/all/childcategory') }}"><i class="feather-git-pull-request"></i><span>Child
+                <a href="{{ url('/view/all/childcategory') }}"
+                    data-active-paths="{{ url('/view/all/childcategory') }},{{ url('/add/new/childcategory') }},{{ url('/edit/childcategory/*') }},{{ url('/rearrange/childcategory') }}">
+                    <i class="feather-git-pull-request"></i><span>Child
                         Category</span>
                     <span style="color:lightgreen" title="Total Products">
                         ({{DB::table('child_categories')->count()}})
@@ -313,7 +349,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
             <ul class="sub-menu" aria-expanded="false">
                 @if(checkAuth('view/all/product'))
                     <li>
-                        <a href="{{ url('/view/all/product') }}">
+                        <a href="{{ url('/view/all/product') }}"
+                            data-active-paths="{{ url('/view/all/product') }},{{ url('/add/new/product') }},{{ url('/edit/product/*') }},{{ url('/rearrange/product') }}">
                             View All Products
                             <span style="color:lightgreen" title="Total Products">
                                 ({{DB::table('products')->count()}})
@@ -323,7 +360,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
                 @endif
                 @if(checkAuth('view/product/reviews'))
                     <li>
-                        <a href="{{ url('/view/product/reviews') }}">
+                        <a href="{{ url('/view/product/reviews') }}" data-active-paths="{{ url('/view/product/reviews') }}">
                             Products's Review
                             <span style="color:goldenrod" title="Indicate Pending Review">
                                 (@php
@@ -337,7 +374,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
                 @endif
                 @if(checkAuth('view/product/question/answer'))
                     <li>
-                        <a href="{{ url('/view/product/question/answer') }}">
+                        <a href="{{ url('/view/product/question/answer') }}"
+                            data-active-paths="{{ url('/view/product/question/answer') }}">
                             Product Ques/Ans
                             <span style="color:goldenrod" title="Indicate Unanswered Questions">
                                 (@php
@@ -379,64 +417,94 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
             @endif
             <ul class="sub-menu" aria-expanded="false">
                 @if(checkAuth('view/orders'))
-                    <li><a style="color: white !important;" href="{{ url('/view/orders') }}">All Orders (@php echo
-                            DB::table('orders')->count(); @endphp)</a></li>
+                    <li>
+                        <a style="color: white !important;" href="{{ url('/view/orders') }}"
+                            data-active-paths="{{ url('/view/orders') }}, {{ url('create/new/order') }},{{ url('order/details/*') }}">
+                            All Orders
+                            (@php echo DB::table('orders')->count(); @endphp)
+                        </a>
+                    </li>
                 @endif
                 @if(checkAuth('view/pending/orders'))
-                    <li><a style="color: skyblue !important;" href="{{ url('/view/pending/orders') }}">Pending Orders
+                    <li><a style="color: skyblue !important;" href="{{ url('/view/pending/orders') }}"
+                            data-active-paths="{{ url('/view/pending/orders') }}, {{ url('order/edit/*') }}">
+                            Pending Orders
                             (@php
                                 echo DB::table('orders')
                                     ->where('order_status', 0)
                                     ->count();
-                            @endphp)</a>
+                            @endphp)
+                        </a>
                     </li>
                 @endif
                 @if(checkAuth('view/approved/orders'))
-                    <li><a style="color: wheat !important;" href="{{ url('/view/approved/orders') }}">Approved Orders
+                    <li><a style="color: wheat !important;" href="{{ url('/view/approved/orders') }}"
+                            data-active-paths="{{ url('/view/approved/orders') }}">
+                            Approved Orders
                             (@php
                                 echo DB::table('orders')
                                     ->where('order_status', 1)
                                     ->count();
-                            @endphp)</a></li>
+                            @endphp)
+                        </a>
+                    </li>
                 @endif
                 @if(checkAuth('view/intransit/orders'))
-                    <li><a style="color: violet !important;" href="{{ url('/view/intransit/orders') }}">Intransit Orders
+                    <li><a style="color: violet !important;" href="{{ url('/view/intransit/orders') }}"
+                            data-active-paths="{{ url('/view/intransit/orders') }}">
+                            Intransit Orders
                             (@php
                                 echo DB::table('orders')
                                     ->where('order_status', 2)
                                     ->count();
-                            @endphp)</a></li>
+                            @endphp)
+                        </a>
+                    </li>
                 @endif
                 @if(checkAuth('view/delivered/orders'))
-                    <li><a style="color: #0c0 !important;" href="{{ url('/view/delivered/orders') }}">Delivered Orders
+                    <li><a style="color: #0c0 !important;" href="{{ url('/view/delivered/orders') }}"
+                            data-active-paths="{{ url('/view/delivered/orders') }}">
+                            Delivered Orders
                             (@php
                                 echo DB::table('orders')
                                     ->where('order_status', 3)
                                     ->count();
-                            @endphp)</a></li>
+                            @endphp)
+                        </a>
+                    </li>
                 @endif
                 @if(checkAuth('view/picked/orders'))
-                    <li><a style="color: tomato !important;" href="{{ url('/view/picked/orders') }}">Picked Orders
+                    <li><a style="color: tomato !important;" href="{{ url('/view/picked/orders') }}"
+                            data-active-paths="{{ url('/view/picked/orders') }}">
+                            Picked Orders
                             (@php
                                 echo DB::table('orders')
                                     ->where('order_status', 5)
                                     ->count();
-                            @endphp)</a></li>
+                            @endphp)
+                        </a>
+                    </li>
                 @endif
                 @if(checkAuth('view/cancelled/orders'))
-                    <li><a style="color: red !important;" href="{{ url('/view/cancelled/orders') }}">Cancelled Orders
+                    <li><a style="color: red !important;" href="{{ url('/view/cancelled/orders') }}"
+                            data-active-paths="{{ url('/view/cancelled/orders') }}">
+                            Cancelled Orders
                             (@php
                                 echo DB::table('orders')
                                     ->where('order_status', 4)
                                     ->count();
-                            @endphp)</a></li>
+                            @endphp)
+                        </a>
+                    </li>
                 @endif
             </ul>
         </li>
 
         <li>
             @if(checkAuth("view/all/promo/codes"))
-                <a href="{{ url('/view/all/promo/codes') }}"><i class="feather-gift"></i>
+                <a href="{{ url('/view/all/promo/codes') }}"
+                    data-active-paths="{{ url('/view/all/promo/codes') }},{{ url('/add/new/code') }},{{ url('/edit/promo/code/*') }}">
+                    <i class="feather-gift"></i>
                     <span>Promo Codes</span>
                     <span style="color:lightgreen" title="Total Products">
                         ({{DB::table('promo_codes')->count()}})
@@ -464,28 +532,34 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
             @endif
             <ul class="sub-menu" aria-expanded="false">
                 @if(checkAuth('send/notification/page'))
-                    <li><a href="{{ url('/send/notification/page') }}">Send Notification</a></li>
+                    <li><a href="{{ url('/send/notification/page') }}"
+                            data-active-paths="{{ url('/send/notification/page') }}">Send Notification</a></li>
                 @endif
                 @if(checkAuth('view/all/notifications'))
-                    <li><a href="{{ url('/view/all/notifications') }}">Previous Notifications</a></li>
+                    <li><a href="{{ url('/view/all/notifications') }}"
+                            data-active-paths="{{ url('/view/all/notifications') }}">Previous Notifications</a></li>
                 @endif
             </ul>
         </li>
 
         @if(checkAuth("view/customers/wishlist"))
-            <li><a href="{{ url('/view/customers/wishlist') }}"><i class="feather-heart"></i><span>Customer's
+            <li><a href="{{ url('/view/customers/wishlist') }}" data-active-paths="{{ url('/view/customers/wishlist') }}"><i
+                        class="feather-heart"></i><span>Customer's
                         Wishlist</span></a></li>
         @endif
         @if(checkAuth("view/delivery/charges"))
-            <li><a href="{{ url('/view/delivery/charges') }}"><i class="feather-truck"></i><span>Delivery Charges</span></a>
+            <li><a href="{{ url('/view/delivery/charges') }}" data-active-paths="{{ url('/view/delivery/charges') }}"><i
+                        class="feather-truck"></i><span>Delivery Charges</span></a>
             </li>
         @endif
         @if(checkAuth("view/upazila/thana"))
-            <li><a href="{{ url('/view/upazila/thana') }}"><i class="dripicons-location"></i><span>Upazila & Thana</span></a>
+            <li><a href="{{ url('/view/upazila/thana') }}" data-active-paths="{{ url('/view/upazila/thana') }}"><i
+                        class="dripicons-location"></i><span>Upazila & Thana</span></a>
             </li>
         @endif
         @if(checkAuth("view/payment/history"))
-            <li><a href="{{ url('/view/payment/history') }}"><i class="feather-dollar-sign"></i><span>Payment History</span></a>
+            <li><a href="{{ url('/view/payment/history') }}" data-active-paths="{{ url('/view/payment/history') }}"><i
+                        class="feather-dollar-sign"></i><span>Payment History</span></a>
             </li>
         @endif
 
@@ -507,7 +581,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
             @endif
             <ul class="sub-menu" aria-expanded="false">
                 @if(checkAuth('sales/report'))
-                    <li><a href="{{ url('/sales/report') }}">Sales Report</a></li>
+                    <li><a href="{{ url('/sales/report') }}" data-active-paths="{{ url('/sales/report') }}">Sales Report</a>
+                    </li>
                 @endif
             </ul>
         </li>
@@ -519,7 +594,9 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Inventory Modules</li>
         <li>
             @if(checkAuth("view/all/product-warehouse"))
-                <a href="{{ url('/view/all/product-warehouse') }}"><i class="feather-box"></i>
+                <a href="{{ url('/view/all/product-warehouse') }}"
+                    data-active-paths="{{ url('/view/all/product-warehouse') }}, {{ url('/add/new/product-warehouse') }}, {{ url('/edit/product-warehouse/*') }}">
+                    <i class="feather-box"></i>
                     <span>Product Warehouse</span>
                     <span style="color:lightgreen" title="Total Product Warehouses">
                         ({{DB::table('product_warehouses')->count()}})
@@ -529,7 +606,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/product-warehouse-room"))
-                <a href="{{ url('/view/all/product-warehouse-room') }}">
+                <a href="{{ url('/view/all/product-warehouse-room') }}"
+                    data-active-paths="{{ url('/view/all/product-warehouse-room') }}, {{ url('/add/new/product-warehouse-room') }}, {{ url('/edit/product-warehouse-room/*') }}">
                     <i class="feather-box"></i>Warehouse Room
                     <span style="color:lightgreen" title="Total Product Warehouse Rooms">
                         ({{DB::table('product_warehouse_rooms')->count()}})
@@ -539,7 +617,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/product-warehouse-room-cartoon"))
-                <a href="{{ url('/view/all/product-warehouse-room-cartoon') }}">
+                <a href="{{ url('/view/all/product-warehouse-room-cartoon') }}"
+                    data-active-paths="{{ url('/view/all/product-warehouse-room-cartoon') }}, {{ url('/add/new/product-warehouse-room-cartoon') }}, {{ url('/edit/product-warehouse-room-cartoon/*') }}">>
                     <i class="feather-box"></i> Room Cartoon
                     <span style="color:lightgreen" title="Total Product Warehouse Room cartoons">
                         ({{DB::table('product_warehouse_room_cartoons')->count()}})
@@ -549,7 +628,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/supplier-source"))
-                <a href="{{ url('/view/all/supplier-source') }}">
+                <a href="{{ url('/view/all/supplier-source') }}"
+                    data-active-paths="{{ url('/view/all/supplier-source') }}, {{ url('/add/new/supplier-source') }}, {{ url('/edit/supplier-source/*') }}">
                     <i class="feather-box"></i> Supplier Src Type
                     <span style="color:lightgreen" title="Total CS Types">
                         ({{DB::table('supplier_source_types')->count()}})
@@ -560,7 +640,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
 
         <li>
             @if(checkAuth("view/all/product-supplier"))
-                <a href="{{ url('/view/all/product-supplier') }}">
+                <a href="{{ url('/view/all/product-supplier') }}"
+                    data-active-paths="{{ url('/view/all/product-supplier') }}, {{ url('/add/new/product-supplier') }}, {{ url('/edit/product-supplier/*') }}">
                     <i class="feather-box"></i> Product Suppliers
                     <span style="color:lightgreen" title="Total Product Suppliers">
                         ({{DB::table('product_suppliers')->count()}})
@@ -589,11 +670,16 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
             @endif
             <ul class="sub-menu" aria-expanded="false">
                 @if(checkAuth('view/all/purchase-product/charge'))
-                    <li><a href="{{ url('/view/all/purchase-product/charge') }}">Other Charge Types</a></li>
+                    <li><a href="{{ url('/view/all/purchase-product/charge') }}"
+                            data-active-paths="{{ url('/view/all/purchase-product/charge') }}, {{ url('/add/new/purchase-product/charge') }}, {{ url('/edit/purchase-product/charge/*') }}">
+                            Other Charge Types
+                        </a>
+                    </li>
                 @endif
                 @if(checkAuth('view/all/purchase-product/quotation'))
                     <li>
-                        <a href="{{ url('/view/all/purchase-product/quotation') }}">
+                        <a href="{{ url('/view/all/purchase-product/quotation') }}"
+                            data-active-paths="{{ url('/view/all/purchase-product/quotation') }}, {{ url('/add/new/purchase-product/quotation') }}, {{ url('/edit/purchase-product/quotation/*') }}, {{ url('edit/purchase-product/sales/quotation/*') }}">
                             View All Quotations
                             <span style="color:lightgreen" title="Total Product Purchase Quotations">
                                 ({{DB::table('product_purchase_quotations')->count()}})
@@ -603,7 +689,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
                 @endif
                 @if(checkAuth('view/all/purchase-product/order'))
                     <li>
-                        <a href="{{ url('/view/all/purchase-product/order') }}">
+                        <a href="{{ url('/view/all/purchase-product/order') }}"
+                            data-active-paths="{{ url('/view/all/purchase-product/order') }}, {{ url('/add/new/purchase-product/order') }}, {{ url('/edit/purchase-product/order/*') }}, {{ url('edit/purchase-product/sales/order/*') }}">
                             View All Orders
                             <span style="color:lightgreen" title="Total Product Purchase Orders">
                                 ({{DB::table('product_purchase_orders')->count()}})
@@ -632,7 +719,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
             @endif
             <ul class="sub-menu" aria-expanded="false">
                 @if(checkAuth('product/purchase/report'))
-                    <li><a href="{{ url('product/purchase/report') }}">Product Purchase Report</a></li>
+                    <li><a href="{{ url('product/purchase/report') }}"
+                            data-active-paths="{{ url('/product/purchase/report') }}">Product Purchase Report</a></li>
                 @endif
             </ul>
         </li>
@@ -645,7 +733,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
 
         <li>
             @if(checkAuth("view/all/payment-type"))
-                <a href="{{ url('/view/all/payment-type') }}">
+                <a href="{{ url('/view/all/payment-type') }}"
+                    data-active-paths="{{ url('/view/all/payment-type') }}, {{ url('/add/new/payment-type') }}, {{ url('/edit/payment-type/*') }}">
                     <i class="feather-box"></i> Payment Types
                     <span style="color:lightgreen" title="Total CS Types">
                         ({{DB::table('db_paymenttypes')->count()}})
@@ -656,7 +745,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         <li>
 
             @if(checkAuth("view/all/expense-category"))
-                <a href="{{ url('/view/all/expense-category') }}">
+                <a href="{{ url('/view/all/expense-category') }}"
+                    data-active-paths="{{ url('/view/all/expense-category') }}, {{ url('/add/new/expense-category') }}, {{ url('/edit/expense-category/*') }}">
                     <i class="feather-box"></i> Expense Categories
                     <span style="color:lightgreen" title="Total Categories">
                         ({{DB::table('db_expense_categories')->count()}})
@@ -667,7 +757,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/ac-account"))
-                <a href="{{ url('/view/all/ac-account') }}">
+                <a href="{{ url('/view/all/ac-account') }}"
+                    data-active-paths="{{ url('/view/all/ac-account') }}, {{ url('/add/new/ac-account') }}, {{ url('/edit/ac-account/*') }}">
                     <i class="feather-box"></i> All Accounts
                     <span style="color:lightgreen" title="Total Accounts">
                         ({{DB::table('ac_accounts')->count()}})
@@ -677,7 +768,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/expense"))
-                <a href="{{ route('ViewAllExpense') }}">
+                <a href="{{ route('ViewAllExpense') }}"
+                    data-active-paths="{{ route('ViewAllExpense') }}, {{ url('/add/new/expense') }}, {{ url('/edit/expense/*') }}">
                     <i class="feather-box"></i> All Expenses
                     <span style="color:lightgreen" title="Total Expenses">
                         ({{DB::table('db_expenses')->count()}})
@@ -687,7 +779,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/deposit"))
-                <a href="{{ route('ViewAllDeposit') }}">
+                <a href="{{ route('ViewAllDeposit') }}"
+                    data-active-paths="{{ route('ViewAllDeposit') }}, {{ url('/add/new/deposit') }}, {{ url('/edit/deposit/*') }}">
                     <i class="feather-box"></i> All Deposits
                     <span style="color:lightgreen" title="Total Deposits">
                         ({{DB::table('ac_transactions')->count()}})
@@ -719,7 +812,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
             <ul class="sub-menu" aria-expanded="false">
                 @if(checkAuth('ledger/journal'))
                     <li>
-                        <a href="{{ route('journal.index') }}">
+                        <a href="{{ route('journal.index') }}" data-active-paths="{{ route('journal.index') }}">
                             <i class="feather-box"></i>
                             <span>Journal</span>
                         </a>
@@ -727,7 +820,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
                 @endif
                 @if(checkAuth('ledger'))
                     <li>
-                        <a href="{{ route('ledger.index') }}">
+                        <a href="{{ route('ledger.index') }}" data-active-paths="{{ route('ledger.index') }}">
                             <i class="feather-box"></i>
                             <span>Ledger</span>
                         </a>
@@ -735,7 +828,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
                 @endif
                 @if(checkAuth('ledger/balance-sheet'))
                     <li>
-                        <a href="{{ route('ledger.balance_sheet') }}">
+                        <a href="{{ route('ledger.balance_sheet') }}" data-active-paths="{{ route('ledger.balance_sheet') }}">
                             <i class="feather-box"></i>
                             <span>Balance Sheet</span>
                         </a>
@@ -743,7 +836,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
                 @endif
                 @if(checkAuth('ledger/income/statement'))
                     <li>
-                        <a href="{{ route('ledger.income_statement') }}">
+                        <a href="{{ route('ledger.income_statement') }}"
+                            data-active-paths="{{ route('ledger.income_statement') }}">
                             <i class="feather-box"></i>
                             <span>Income Statement</span>
                         </a>
@@ -759,7 +853,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">CRM Modules</li>
         <li>
             @if(checkAuth("view/all/customer-source"))
-                <a href="{{ url('/view/all/customer-source') }}">
+                <a href="{{ url('/view/all/customer-source') }}"
+                    data-active-paths="{{ url('/view/all/customer-source') }}, {{ url('/add/new/customer-source') }}, {{ url('/edit/customer-source/*') }}">
                     <i class="feather-box"></i> Customer Src Type
                     <span style="color:lightgreen" title="Total CS Types">
                         ({{DB::table('customer_source_types')->count()}})
@@ -770,7 +865,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         <li>
 
             @if(checkAuth("view/all/customer-category"))
-                <a href="{{ url('/view/all/customer-category') }}">
+                <a href="{{ url('/view/all/customer-category') }}"
+                    data-active-paths="{{ url('/view/all/customer-category') }}, {{ url('/add/new/customer-category') }}, {{ url('/edit/customer-category/*') }}">
                     <i class="feather-box"></i> Customer Category
                     <span style="color:lightgreen" title="Total Categories">
                         ({{DB::table('customer_categories')->count()}})
@@ -781,7 +877,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/customer"))
-                <a href="{{ url('/view/all/customer') }}">
+                <a href="{{ url('/view/all/customer') }}"
+                    data-active-paths="{{ url('/view/all/customer') }}, {{ url('/add/new/customers') }}, {{ url('/edit/customers/*') }}">
                     <i class="feather-box"></i> Customers
                     <span style="color:lightgreen" title="Total Customers">
                         ({{DB::table('customers')->count()}})
@@ -791,7 +888,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/customer-ecommerce"))
-                <a href="{{ route('ViewAllCustomerEcommerce') }}">
+                <a href="{{ route('ViewAllCustomerEcommerce') }}"
+                    data-active-paths="{{ route('ViewAllCustomerEcommerce') }}, {{ url('/add/new/customer-ecommerce') }}, {{ url('/edit/customer-ecommerce/*') }}">
                     <i class="feather-box"></i> E-Customer
                     <span style="color:lightgreen" title="Total Contact Histories">
                         ({{DB::table('users')->where('user_type', 3)->count()}})
@@ -801,7 +899,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/customer-contact-history"))
-                <a href="{{ route('ViewAllCustomerContactHistories') }}">
+                <a href="{{ route('ViewAllCustomerContactHistories') }}"
+                    data-active-paths="{{ route('ViewAllCustomerContactHistories') }}, {{ url('/add/new/customer-contact-history') }}, {{ url('/edit/customer-contact-history/*') }}">
                     <i class="feather-box"></i> Contacts History
                     <span style="color:lightgreen" title="Total Contact Histories">
                         ({{DB::table('customer_contact_histories')->count()}})
@@ -811,7 +910,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/customer-next-contact-date"))
-                <a href="{{ url('/view/all/customer-next-contact-date') }}">
+                <a href="{{ url('/view/all/customer-next-contact-date') }}"
+                    data-active-paths="{{ url('/view/all/customer-next-contact-date') }}, {{ url('/add/new/customer-next-contact-date') }}, {{ url('/edit/customer-next-contact-date/*') }}">
                     <i class="feather-box"></i> Next Date Contacts
                     <span style="color:lightgreen" title="Total Contact Histories">
                         ({{DB::table('customer_next_contact_dates')->count()}})
@@ -842,7 +942,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
             <ul class="sub-menu" aria-expanded="false">
                 @if(checkAuth('pending/support/tickets'))
                     <li>
-                        <a style="color: skyblue !important;" href="{{ url('/pending/support/tickets') }}">
+                        <a style="color: skyblue !important;" href="{{ url('/pending/support/tickets') }}"
+                            data-active-paths="{{ url('/pending/support/tickets') }}, {{ url('view/support/messages/*') }}">
                             Pending Supports
                             (@php
                                 echo DB::table('support_tickets')
@@ -855,7 +956,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
                 @endif
                 @if(checkAuth('solved/support/tickets'))
                     <li>
-                        <a style="color: #0c0 !important;" href="{{ url('/solved/support/tickets') }}">
+                        <a style="color: #0c0 !important;" href="{{ url('/solved/support/tickets') }}"
+                            data-active-paths="{{ url('/solved/support/tickets') }},{{ url('view/support/messages/*') }}">
                             Solved Supports
                             (@php
                                 echo DB::table('support_tickets')
@@ -867,7 +969,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
                 @endif
                 @if(checkAuth('on/hold/support/tickets'))
                     <li>
-                        <a style="color: goldenrod !important;" href="{{ url('/on/hold/support/tickets') }}">
+                        <a style="color: goldenrod !important;" href="{{ url('/on/hold/support/tickets') }}"
+                            data-active-paths="{{ url('/on/hold/support/tickets') }},{{ url('view/support/messages/*') }}">
                             On Hold Supports
                             (@php
                                 echo DB::table('support_tickets')
@@ -879,7 +982,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
                 @endif
                 @if(checkAuth('rejected/support/tickets'))
                     <li>
-                        <a style="color: red !important;" href="{{ url('/rejected/support/tickets') }}">
+                        <a style="color: red !important;" href="{{ url('/rejected/support/tickets') }}"
+                            data-active-paths="{{ url('/rejected/support/tickets') }},{{ url('view/support/messages/*') }}">
                             Rejected Supports
                             (@php
                                 echo DB::table('support_tickets')
@@ -893,7 +997,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         @if(checkAuth("view/all/contact/requests"))
             <li>
-                <a href="{{ url('/view/all/contact/requests') }}">
+                <a href="{{ url('/view/all/contact/requests') }}" data-active-paths="{{ url('/view/all/contact/requests') }}">
                     <i class="feather-phone-forwarded"></i>
                     <span>Contact Request</span>
                 </a>
@@ -901,7 +1005,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         @endif
         @if(checkAuth("view/all/subscribed/users"))
             <li>
-                <a href="{{ url('/view/all/subscribed/users') }}">
+                <a href="{{ url('/view/all/subscribed/users') }}" data-active-paths="{{ url('/view/all/subscribed/users') }}">
                     <i class="feather-user-check"></i>
                     <span>Subscribed Users</span>
                 </a>
@@ -915,7 +1019,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">User Role Permission</li>
         @if(checkAuth("view/system/users"))
             <li>
-                <a href="{{ url('/view/system/users') }}">
+                <a href="{{ url('/view/system/users') }}"
+                    data-active-paths="{{ url('/view/system/users') }}, {{ url('add/new/system/user') }}, {{ url('edit/system/user/*') }}">
                     <i class="fas fa-user-shield"></i>
                     <span>System Users</span>
                 </a>
@@ -923,7 +1028,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         @endif
         @if(checkAuth("view/user/roles"))
             <li>
-                <a href="{{ url('/view/user/roles') }}">
+                <a href="{{ url('/view/user/roles') }}"
+                    data-active-paths="{{ url('/view/user/roles') }}, {{ url('/new/user/role') }}, {{ url('/edit/user/role/*') }}">
                     <i class="feather-user-plus"></i>
                     <span>User Roles</span>
                 </a>
@@ -931,7 +1037,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         @endif
         @if(checkAuth("view/user/role/permission"))
             <li>
-                <a href="{{ url('/view/user/role/permission') }}">
+                <a href="{{ url('/view/user/role/permission') }}"
+                    data-active-paths="{{ url('/view/user/role/permission') }}, {{ url('/assign/role/permission/*') }}">
                     <i class="mdi mdi-security"></i>
                     <span>Assign Role Permission</span>
                 </a>
@@ -939,7 +1046,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         @endif
         @if(checkAuth("view/permission/routes"))
             <li>
-                <a href="{{ url('/view/permission/routes') }}">
+                <a href="{{ url('/view/permission/routes') }}" data-active-paths="{{ url('/view/permission/routes') }}">
                     <i class="feather-git-merge"></i>
                     <span>Permission Routes</span>
                 </a>
@@ -954,7 +1061,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
 
         @if(checkAuth("general/info"))
             <li>
-                <a href="{{ url('/general/info') }}">
+                <a href="{{ url('/general/info') }}" data-active-paths="{{ url('/general/info') }}">
                     <i class="feather-grid"></i>
                     <span>General Info</span>
                 </a>
@@ -962,7 +1069,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         @endif
         @if(checkAuth("website/theme/page"))
             <li>
-                <a href="{{ url('/website/theme/page') }}">
+                <a href="{{ url('/website/theme/page') }}" data-active-paths="{{ url('/website/theme/page') }}">
                     <i class="mdi mdi-format-color-fill" style="font-size: 18px"></i>
                     <span>Website Theme Color</span>
                 </a>
@@ -970,7 +1077,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         @endif
         @if(checkAuth("social/media/page"))
             <li>
-                <a href="{{ url('/social/media/page') }}">
+                <a href="{{ url('/social/media/page') }}" data-active-paths="{{ url('/social/media/page') }}">
                     <i class="mdi mdi-link-variant" style="font-size: 17px"></i>
                     <span>Social Media Links</span>
                 </a>
@@ -978,7 +1085,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         @endif
         @if(checkAuth("seo/homepage"))
             <li>
-                <a href="{{ url('/seo/homepage') }}">
+                <a href="{{ url('/seo/homepage') }}" data-active-paths="{{ url('/seo/homepage') }}">
                     <i class="dripicons-search"></i>
                     <span>Home Page SEO</span>
                 </a>
@@ -986,7 +1093,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         @endif
         @if(checkAuth("custom/css/js"))
             <li>
-                <a href="{{ url('/custom/css/js') }}">
+                <a href="{{ url('/custom/css/js') }}" data-active-paths="{{ url('/custom/css/js') }}">
                     <i class="feather-code"></i>
                     <span>Custom CSS & JS</span>
                 </a>
@@ -994,7 +1101,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         @endif
         @if(checkAuth("social/chat/script/page"))
             <li>
-                <a href="{{ url('/social/chat/script/page') }}">
+                <a href="{{ url('/social/chat/script/page') }}" data-active-paths="{{ url('/social/chat/script/page') }}">
                     <i class="mdi mdi-code-brackets"></i>
                     <span>Social & Chat Scripts</span>
                 </a>
@@ -1028,22 +1135,43 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
             @endif
             <ul class="sub-menu" aria-expanded="false">
                 @if(checkAuth('view/all/sliders'))
-                    <li><a href="{{ url('/view/all/sliders') }}">View All Sliders</a></li>
+                    <li>
+                        <a href="{{ url('/view/all/sliders') }}" data-active-paths="{{ url('/view/all/sliders') }}, {{ url('/add/new/slider') }}, 
+                                                                {{ url('/edit/slider/*') }}, {{ url('/rearrange/slider') }}">
+                            View All Sliders
+                        </a>
+                    </li>
                 @endif
                 @if(checkAuth('view/all/banners'))
-                    <li><a href="{{ url('/view/all/banners') }}">View All Banners</a></li>
+                    <li>
+                        <a href="{{ url('/view/all/banners') }}" data-active-paths="{{ url('/view/all/banners') }}, {{ url('/add/new/banner') }}, 
+                                                 {{ url('/edit/banner/*') }}, {{ url('/rearrange/banners') }}">
+                            View All Banners
+                        </a>
+                    </li>
                 @endif
                 @if(checkAuth('view/promotional/banner'))
-                    <li><a href="{{ url('/view/promotional/banner') }}">Promotional Banner</a></li>
+                    <li>
+                        <a href="{{ url('/view/promotional/banner') }}"
+                            data-active-paths="{{ url('/view/promotional/banner') }}">
+                            Promotional Banner
+                        </a>
+                    </li>
                 @endif
                 @if(checkAuth('view/all/side-banner'))
-                    <li><a href="{{ url('/view/all/side-banner') }}">Side Banner</a></li>
+                    <li>
+                        <a href="{{ url('/view/all/side-banner') }}"
+                            data-active-paths="{{ url('/view/all/side-banner') }}, {{ url('/add/new/side-banner') }}, {{ url('edit/side-banner/*') }}">
+                            Side Banner
+                        </a>
+                    </li>
                 @endif
             </ul>
         </li>
         <li>
             @if(checkAuth("view/testimonials"))
-                <a href="{{ url('/view/testimonials') }}">
+                <a href="{{ url('/view/testimonials') }}" data-active-paths="{{ url('/view/testimonials') }}, 
+                        {{ url('/add/testimonial') }}, {{ url('/edit/testimonial/*') }}">
                     <i class="feather-message-square"></i>
                     <span>Testimonials</span>
                 </a>
@@ -1069,13 +1197,17 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
             @endif
             <ul class="sub-menu" aria-expanded="false">
                 @if(checkAuth("blog/categories"))
-                    <li><a href="{{ url('/blog/categories') }}">Blog Categories</a></li>
+                    <li><a href="{{ url('/blog/categories') }}"
+                            data-active-paths="{{ url('/blog/categories') }}, {{ url('/rearrange/blog/category') }}">Blog
+                            Categories</a></li>
                 @endif
                 @if(checkAuth("add/new/blog"))
-                    <li><a href="{{ url('/add/new/blog') }}">Write a Blog</a></li>
+                    <li><a href="{{ url('/add/new/blog') }}" data-active-paths="{{ url('/add/new/blog') }}">Write a Blog</a>
+                    </li>
                 @endif
                 @if(checkAuth("view/all/blogs"))
-                    <li><a href="{{ url('/view/all/blogs') }}">View All Blogs</a></li>
+                    <li><a href="{{ url('/view/all/blogs') }}"
+                            data-active-paths="{{ url('/view/all/blogs') }}, {{ url('/edit/blog/*') }}">View All Blogs</a></li>
                 @endif
             </ul>
         </li>
@@ -1101,22 +1233,28 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
             @endif
             <ul class="sub-menu" aria-expanded="false">
                 @if(checkAuth('terms/and/condition'))
-                    <li><a href="{{ url('/terms/and/condition') }}">Terms & Condition</a></li>
+                    <li><a href="{{ url('/terms/and/condition') }}" data-active-paths="{{ url('/terms/and/condition') }}">Terms
+                            & Condition</a></li>
                 @endif
                 @if(checkAuth('view/privacy/policy'))
-                    <li><a href="{{ url('/view/privacy/policy') }}">Privacy Policy</a></li>
+                    <li><a href="{{ url('/view/privacy/policy') }}"
+                            data-active-paths="{{ url('/view/privacy/policy') }}">Privacy Policy</a></li>
                 @endif
                 @if(checkAuth('view/shipping/policy'))
-                    <li><a href="{{ url('/view/shipping/policy') }}">Shipping Policy</a></li>
+                    <li><a href="{{ url('/view/shipping/policy') }}"
+                            data-active-paths="{{ url('/view/shipping/policy') }}">Shipping Policy</a></li>
                 @endif
                 @if(checkAuth('view/return/policy'))
-                    <li><a href="{{ url('/view/return/policy') }}">Return Policy</a></li>
+                    <li><a href="{{ url('/view/return/policy') }}" data-active-paths="{{ url('/view/return/policy') }}">Return
+                            Policy</a></li>
                 @endif
             </ul>
         </li>
         <li>
             @if(checkAuth("view/all/pages"))
-                <a href="{{ url('/view/all/pages') }}"><i class="feather-file-plus"></i>
+                <a href="{{ url('/view/all/pages') }}"
+                    data-active-paths="{{ url('/view/all/pages') }}, {{ url('/create/new/page') }}, {{ url('edit/custom/page/*') }}">
+                    <i class="feather-file-plus"></i>
                     <span>Custom Pages</span>
                     <span style="color:lightgreen" title="Total Outlets">
                         ({{DB::table('custom_pages')->count()}})
@@ -1126,7 +1264,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/outlet"))
-                <a href="{{ url('/view/all/outlet') }}">
+                <a href="{{ url('/view/all/outlet') }}"
+                    data-active-paths="{{ url('/view/all/outlet') }}, {{ url('/add/new/outlet') }}, {{ url('/edit/outlet/*') }}">
                     <i class="feather-box"></i> View All Outlets
                     <span style="color:lightgreen" title="Total Outlets">
                         ({{DB::table('outlets')->count()}})
@@ -1136,7 +1275,8 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
         <li>
             @if(checkAuth("view/all/video-gallery"))
-                <a href="{{ url('/view/all/video-gallery') }}">
+                <a href="{{ url('/view/all/video-gallery') }}" data-active-paths="{{ url('/view/all/video-gallery') }}, {{ url('/add/new/video-gallery') }}, 
+                    {{ url('/edit/video-gallery/*') }}">
                     <i class="feather-box"></i> View All Videos
                     <span style="color:lightgreen" title="Total Videos">
                         ({{DB::table('video_galleries')->count()}})
@@ -1147,7 +1287,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
 
         @if(checkAuth("about/us/page"))
             <li>
-                <a href="{{ url('/about/us/page') }}">
+                <a href="{{ url('/about/us/page') }}" data-active-paths="{{ url('/about/us/page') }}">
                     <i class="feather-globe"></i>
                     <span>About Us</span>
                 </a>
@@ -1155,7 +1295,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         @endif
         @if(checkAuth("view/all/faqs"))
             <li>
-                <a href="{{ url('/view/all/faqs') }}">
+                <a href="{{ url('/view/all/faqs') }}" data-active-paths="{{ url('/view/all/faqs') }}, {{ url('/add/new/faq') }}, {{ url('/edit/faq/*') }}">
                     <i class="far fa-question-circle"></i>
                     <span>FAQ's</span>
                 </a>
@@ -1275,15 +1415,15 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         <ul class="sub-menu" aria-expanded="false">
             @if(checkAuth("generate/demo/products"))
                 <li>
-                    <a href="{{ url('/generate/demo/products') }}">
+                    <a href="{{ url('/generate/demo/products') }}"  data-active-paths="{{ url('/generate/demo/products') }}">
                         Generate Products
                     </a>
                 </li>
             @endif
             @if(checkAuth("remove/demo/products/page"))
                 <li>
-                    <a href="{{ url('/remove/demo/products/page') }}">
-                         Products
+                    <a href="{{ url('/remove/demo/products/page') }}" data-active-paths="{{ url('/remove/demo/products/page') }}">
+                        Products
                     </a>
                 </li>
             @endif

@@ -296,7 +296,8 @@
                     @endphp)
                 </a>
             </li>
-            <li><a style="color: red !important;" href="{{ url('/view/cancelled/orders') }}"
+            <li>
+                <a style="color: red !important;" href="{{ url('/view/cancelled/orders') }}"
                     data-active-paths="{{ url('/view/cancelled/orders') }}">
                     Cancelled Orders
                     (@php
