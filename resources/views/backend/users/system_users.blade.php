@@ -79,6 +79,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">SL</th>
+                                    <th class="text-center">Active Status</th>
                                     <th class="text-center">Name</th>
                                     <th class="text-center">Email</th>
                                     <th class="text-center">Phone</th>
@@ -130,6 +131,7 @@
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
                 },
+                { data: 'active_status', name: 'active_status', orderable: false, searchable: false },
                 {
                     data: 'name',
                     name: 'name'
@@ -156,6 +158,9 @@
                 });
             }
         });
+
+    
+
 
         $(".dataTables_filter").append($("#customFilter"));
     </script>

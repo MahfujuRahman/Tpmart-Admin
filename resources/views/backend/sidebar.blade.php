@@ -1026,7 +1026,6 @@
             <i class="feather-log-out"></i><span>Logout</span>
         </a>
     </li>
-
 </ul>
 
 <script>
