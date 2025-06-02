@@ -223,7 +223,6 @@ class HomeController extends Controller
     }
     public function inventory_dashboard()
     {
-
         $total_warehouses = DB::table('product_warehouses')->count();
         $total_active_warehouses = DB::table('product_warehouses')->where('status', 'active')->count();
         $total_inactive_warehouses = DB::table('product_warehouses')->where('status', 'inactive')->count();
