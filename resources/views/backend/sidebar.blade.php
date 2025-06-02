@@ -727,15 +727,38 @@
     </li>
     {{-- End Crm Modules --}}
 
-
+    {{-- Start User Role Permission Module --}}
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 5px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">User Role Permission</li>
-    <li><a href="{{ url('/view/system/users') }}"><i class="fas fa-user-shield"></i><span>System Users</span></a></li>
-    <li><a href="{{ url('/view/user/roles') }}"><i class="feather-user-plus"></i><span>User Roles</span></a></li>
-    <li><a href="{{ url('/view/user/role/permission') }}"><i class="mdi mdi-security"></i><span>Assign Role
-                Permission</span></a></li>
-    <li><a href="{{ url('/view/permission/routes') }}"><i class="feather-git-merge"></i><span>Permission
-                Routes</span></a></li>
+
+    <li>
+        <a href="{{ url('/view/system/users') }}"
+            data-active-paths="{{ url('/view/system/users') }}, {{ url('add/new/system/user') }}, {{ url('edit/system/user/*') }}">
+            <i class="fas fa-user-shield"></i>
+            <span>System Users</span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ url('/view/user/roles') }}"
+            data-active-paths="{{ url('/view/user/roles') }}, {{ url('/new/user/role') }}, {{ url('/edit/user/role/*') }}">
+            <i class="feather-user-plus"></i>
+            <span>User Roles</span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ url('/view/user/role/permission') }}"
+            data-active-paths="{{ url('/view/user/role/permission') }}, {{ url('/assign/role/permission/*') }}">
+            <i class="mdi mdi-security"></i>
+            <span>Assign Role Permission</span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ url('/view/permission/routes') }}" data-active-paths="{{ url('/view/permission/routes') }}">
+            <i class="feather-git-merge"></i>
+            <span>Permission Routes</span>
+        </a>
+    </li>
+    {{-- End User Role Permission Module --}}
 
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 5px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Website Config</li>
