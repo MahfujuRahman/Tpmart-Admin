@@ -521,7 +521,8 @@
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Accounts Modules</li>
 
     <li>
-        <a href="{{ url('/view/all/payment-type') }}" data-active-paths="{{ url('/view/all/payment-type') }}, {{ url('/add/new/payment-type') }}, {{ url('/edit/payment-type/*') }}">
+        <a href="{{ url('/view/all/payment-type') }}"
+            data-active-paths="{{ url('/view/all/payment-type') }}, {{ url('/add/new/payment-type') }}, {{ url('/edit/payment-type/*') }}">
             <i class="feather-box"></i> Payment Types
             <span style="color:lightgreen" title="Total CS Types">
                 ({{DB::table('db_paymenttypes')->count()}})
@@ -530,7 +531,8 @@
     </li>
     <li>
 
-        <a href="{{ url('/view/all/expense-category') }}" data-active-paths="{{ url('/view/all/expense-category') }}, {{ url('/add/new/expense-category') }}, {{ url('/edit/expense-category/*') }}">
+        <a href="{{ url('/view/all/expense-category') }}"
+            data-active-paths="{{ url('/view/all/expense-category') }}, {{ url('/add/new/expense-category') }}, {{ url('/edit/expense-category/*') }}">
             <i class="feather-box"></i> Expense Categories
             <span style="color:lightgreen" title="Total Categories">
                 ({{DB::table('db_expense_categories')->count()}})
@@ -539,7 +541,8 @@
 
     </li>
     <li>
-        <a href="{{ url('/view/all/ac-account') }}" data-active-paths="{{ url('/view/all/ac-account') }}, {{ url('/add/new/ac-account') }}, {{ url('/edit/ac-account/*') }}">
+        <a href="{{ url('/view/all/ac-account') }}"
+            data-active-paths="{{ url('/view/all/ac-account') }}, {{ url('/add/new/ac-account') }}, {{ url('/edit/ac-account/*') }}">
             <i class="feather-box"></i> All Accounts
             <span style="color:lightgreen" title="Total Accounts">
                 ({{DB::table('ac_accounts')->count()}})
@@ -547,7 +550,8 @@
         </a>
     </li>
     <li>
-        <a href="{{ route('ViewAllExpense') }}" data-active-paths="{{ route('ViewAllExpense') }}, {{ url('/add/new/expense') }}, {{ url('/edit/expense/*') }}">
+        <a href="{{ route('ViewAllExpense') }}"
+            data-active-paths="{{ route('ViewAllExpense') }}, {{ url('/add/new/expense') }}, {{ url('/edit/expense/*') }}">
             <i class="feather-box"></i> All Expenses
             <span style="color:lightgreen" title="Total Expenses">
                 ({{DB::table('db_expenses')->count()}})
@@ -555,7 +559,8 @@
         </a>
     </li>
     <li>
-        <a href="{{ route('ViewAllDeposit') }}" data-active-paths="{{ route('ViewAllDeposit') }}, {{ url('/add/new/deposit') }}, {{ url('/edit/deposit/*') }}">
+        <a href="{{ route('ViewAllDeposit') }}"
+            data-active-paths="{{ route('ViewAllDeposit') }}, {{ url('/add/new/deposit') }}, {{ url('/edit/deposit/*') }}">
             <i class="feather-box"></i> All Deposits
             <span style="color:lightgreen" title="Total Deposits">
                 ({{DB::table('ac_transactions')->count()}})
@@ -585,18 +590,22 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('ledger.income_statement') }}" data-active-paths="{{ route('ledger.income_statement') }}">
+                <a href="{{ route('ledger.income_statement') }}"
+                    data-active-paths="{{ route('ledger.income_statement') }}">
                     <i class="feather-box"></i>
                     <span>Income Statement</span>
                 </a>
             </li>
         </ul>
     </li>
+    {{-- End Accounts Module --}}
 
+    {{-- Start Crm Module --}}
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">CRM Modules</li>
     <li>
-        <a href="{{ url('/view/all/customer-source') }}">
+        <a href="{{ url('/view/all/customer-source') }}"
+            data-active-paths="{{ url('/view/all/customer-source') }}, {{ url('/add/new/customer-source') }}, {{ url('/edit/customer-source/*') }}">
             <i class="feather-box"></i> Customer Src Type
             <span style="color:lightgreen" title="Total CS Types">
                 ({{DB::table('customer_source_types')->count()}})
@@ -605,7 +614,8 @@
     </li>
     <li>
 
-        <a href="{{ url('/view/all/customer-category') }}">
+        <a href="{{ url('/view/all/customer-category') }}"
+            data-active-paths="{{ url('/view/all/customer-category') }}, {{ url('/add/new/customer-category') }}, {{ url('/edit/customer-category/*') }}">
             <i class="feather-box"></i> Customer Category
             <span style="color:lightgreen" title="Total Categories">
                 ({{DB::table('customer_categories')->count()}})
@@ -614,7 +624,8 @@
 
     </li>
     <li>
-        <a href="{{ url('/view/all/customer') }}">
+        <a href="{{ url('/view/all/customer') }}"
+            data-active-paths="{{ url('/view/all/customer') }}, {{ url('/add/new/customers') }}, {{ url('/edit/customers/*') }}">
             <i class="feather-box"></i> Customers
             <span style="color:lightgreen" title="Total Customers">
                 ({{DB::table('customers')->count()}})
@@ -622,7 +633,8 @@
         </a>
     </li>
     <li>
-        <a href="{{ route('ViewAllCustomerEcommerce') }}">
+        <a href="{{ route('ViewAllCustomerEcommerce') }}"
+            data-active-paths="{{ route('ViewAllCustomerEcommerce') }}, {{ url('/add/new/customer-ecommerce') }}, {{ url('/edit/customer-ecommerce/*') }}">
             <i class="feather-box"></i> E-Customer
             <span style="color:lightgreen" title="Total Contact Histories">
                 ({{DB::table('users')->where('user_type', 3)->count()}})
@@ -630,7 +642,8 @@
         </a>
     </li>
     <li>
-        <a href="{{ route('ViewAllCustomerContactHistories') }}">
+        <a href="{{ route('ViewAllCustomerContactHistories') }}"
+            data-active-paths="{{ route('ViewAllCustomerContactHistories') }}, {{ url('/add/new/customer-contact-history') }}, {{ url('/edit/customer-contact-history/*') }}">
             <i class="feather-box"></i> Contacts History
             <span style="color:lightgreen" title="Total Contact Histories">
                 ({{DB::table('customer_contact_histories')->count()}})
@@ -638,7 +651,8 @@
         </a>
     </li>
     <li>
-        <a href="{{ url('/view/all/customer-next-contact-date') }}">
+        <a href="{{ url('/view/all/customer-next-contact-date') }}"
+            data-active-paths="{{ url('/view/all/customer-next-contact-date') }}, {{ url('/add/new/customer-next-contact-date') }}, {{ url('/edit/customer-next-contact-date/*') }}">
             <i class="feather-box"></i> Next Date Contacts
             <span style="color:lightgreen" title="Total Contact Histories">
                 ({{DB::table('customer_next_contact_dates')->count()}})
@@ -647,40 +661,72 @@
     </li>
 
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="fas fa-headset"></i><span>Support
-                Ticket</span></a>
+        <a href="javascript: void(0);" class="has-arrow">
+            <i class="fas fa-headset"></i>
+            <span>Support Ticket</span>
+        </a>
         <ul class="sub-menu" aria-expanded="false">
-            <li><a style="color: skyblue !important;" href="{{ url('/pending/support/tickets') }}">Pending Supports
+            <li>
+                <a style="color: skyblue !important;" href="{{ url('/pending/support/tickets') }}"
+                    data-active-paths="{{ url('/pending/support/tickets') }}, {{ url('view/support/messages/*') }}">
+                    Pending Supports
                     (@php
                         echo DB::table('support_tickets')
                             ->where('status', 0)
                             ->orWhere('status', 1)
                             ->count();
-                    @endphp)</a></li>
-            <li><a style="color: #0c0 !important;" href="{{ url('/solved/support/tickets') }}">Solved Supports
+                    @endphp)
+                </a>
+            </li>
+            <li>
+                <a style="color: #0c0 !important;" href="{{ url('/solved/support/tickets') }}"
+                    data-active-paths="{{ url('/solved/support/tickets') }},{{ url('view/support/messages/*') }}">
+                    Solved Supports
                     (@php
                         echo DB::table('support_tickets')
                             ->where('status', 2)
                             ->count();
-                    @endphp)</a></li>
-            <li><a style="color: goldenrod !important;" href="{{ url('/on/hold/support/tickets') }}">On Hold Supports
+                    @endphp)
+                </a>
+            </li>
+            <li>
+                <a style="color: goldenrod !important;" href="{{ url('/on/hold/support/tickets') }}"
+                    data-active-paths="{{ url('/on/hold/support/tickets') }},{{ url('view/support/messages/*') }}">
+                    On Hold Supports
                     (@php
                         echo DB::table('support_tickets')
                             ->where('status', 4)
                             ->count();
-                    @endphp)</a></li>
-            <li><a style="color: red !important;" href="{{ url('/rejected/support/tickets') }}">Rejected Supports
+                    @endphp)
+                </a>
+            </li>
+            <li>
+                <a style="color: red !important;" href="{{ url('/rejected/support/tickets') }}"
+                    data-active-paths="{{ url('/rejected/support/tickets') }},{{ url('view/support/messages/*') }}">
+                    Rejected Supports
                     (@php
                         echo DB::table('support_tickets')
                             ->where('status', 3)
                             ->count();
-                    @endphp)</a></li>
+                    @endphp)
+                </a>
+            </li>
         </ul>
     </li>
-    <li><a href="{{ url('/view/all/contact/requests') }}"><i class="feather-phone-forwarded"></i><span>Contact
-                Request</span></a></li>
-    <li><a href="{{ url('/view/all/subscribed/users') }}"><i class="feather-user-check"></i><span>Subscribed
-                Users</span></a></li>
+    <li>
+        <a href="{{ url('/view/all/contact/requests') }}" data-active-paths="{{ url('/view/all/contact/requests') }}">
+            <i class="feather-phone-forwarded"></i>
+            <span>Contact Request</span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ url('/view/all/subscribed/users') }}" data-active-paths="{{ url('/view/all/subscribed/users') }}">
+            <i class="feather-user-check"></i>
+            <span>Subscribed Users</span>
+        </a>
+    </li>
+    {{-- End Crm Modules --}}
+
 
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 5px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">User Role Permission</li>
