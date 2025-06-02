@@ -49,7 +49,7 @@
 
                     <div class="table-responsive">
                         <label id="customFilter">
-                            <a href="{{url('/add/new/product')}}" class="btn btn-primary btn-sm"
+                            <a href="{{url('/add/testimonial')}}" class="btn btn-primary btn-sm"
                                 style="margin-left: 5px"><b><i class="fas fa-plus"></i> Add New Testimonial</b></a>
                         </label>
                         <table class="table table-bordered mb-0 data-table">

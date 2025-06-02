@@ -764,7 +764,7 @@
     {{-- Start Website Config Module --}}
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 5px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Website Config</li>
-    
+
     <li>
         <a href="{{ url('/general/info') }}" data-active-paths="{{ url('/general/info') }}">
             <i class="feather-grid"></i>
@@ -774,9 +774,9 @@
     <li>
         <a href="{{ url('/website/theme/page') }}" data-active-paths="{{ url('/website/theme/page') }}">
             <i class="mdi mdi-format-color-fill" style="font-size: 18px"></i>
-                <span>Website Theme Color</span>
-            </a>
-        </li>
+            <span>Website Theme Color</span>
+        </a>
+    </li>
     <li>
         <a href="{{ url('/social/media/page') }}" data-active-paths="{{ url('/social/media/page') }}">
             <i class="mdi mdi-link-variant" style="font-size: 17px"></i>
@@ -803,20 +803,42 @@
     </li>
     {{-- End Website Config Module --}}
 
-
+    {{-- Start Content Management Module --}}
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Content Management</li>
+
     <li>
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-image"></i><span>Sliders & Banners</span></a>
         <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/view/all/sliders') }}">View All Sliders</a></li>
-            <li><a href="{{ url('/view/all/banners') }}">View All Banners</a></li>
-            <li><a href="{{ url('/view/promotional/banner') }}">Promotional Banner</a></li>
-            <li><a href="{{ url('/view/all/side-banner') }}">Side Banner</a></li>
+            <li>
+                <a href="{{ url('/view/all/sliders') }}" data-active-paths="{{ url('/view/all/sliders') }}, {{ url('/add/new/slider') }}, 
+                {{ url('/edit/slider/*') }}, {{ url('/rearrange/slider') }}">
+                    View All Sliders
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/view/all/banners') }}" data-active-paths="{{ url('/view/all/banners') }}, {{ url('/add/new/banner') }}, 
+                 {{ url('/edit/banner/*') }}, {{ url('/rearrange/banners') }}">
+                    View All Banners
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/view/promotional/banner') }}"
+                    data-active-paths="{{ url('/view/promotional/banner') }}">
+                    Promotional Banner
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/view/all/side-banner') }}"
+                    data-active-paths="{{ url('/view/all/side-banner') }}, {{ url('/add/new/side-banner') }}, {{ url('edit/side-banner/*') }}">
+                    Side Banner
+                </a>
+            </li>
         </ul>
     </li>
     <li>
-        <a href="{{ url('/view/testimonials') }}">
+        <a href="{{ url('/view/testimonials') }}" data-active-paths="{{ url('/view/testimonials') }}, 
+        {{ url('/add/testimonial') }}, {{ url('/edit/testimonial/*') }}">
             <i class="feather-message-square"></i>
             <span>Testimonials</span>
         </a>
@@ -824,23 +846,57 @@
     <li>
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-file-text"></i><span>Manage Blogs</span></a>
         <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/blog/categories') }}">Blog Categories</a></li>
-            <li><a href="{{ url('/add/new/blog') }}">Write a Blog</a></li>
-            <li><a href="{{ url('/view/all/blogs') }}">View All Blogs</a></li>
+            <li>
+                <a href="{{ url('/blog/categories') }}"
+                    data-active-paths="{{ url('/blog/categories') }}, {{ url('/rearrange/blog/category') }}">
+                    Blog Categories
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/add/new/blog') }}" data-active-paths="{{ url('/add/new/blog') }}">
+                    Write a Blog
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/view/all/blogs') }}"
+                    data-active-paths="{{ url('/view/all/blogs') }}, {{ url('/edit/blog/*') }}">
+                    View All Blogs
+                </a>
+            </li>
         </ul>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-alert-triangle"></i><span>Terms &
-                Policies</span></a>
+        <a href="javascript: void(0);" class="has-arrow">
+            <i class="feather-alert-triangle"></i>
+            <span>Terms & Policies</span>
+        </a>
         <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/terms/and/condition') }}">Terms & Condition</a></li>
-            <li><a href="{{ url('/view/privacy/policy') }}">Privacy Policy</a></li>
-            <li><a href="{{ url('/view/shipping/policy') }}">Shipping Policy</a></li>
-            <li><a href="{{ url('/view/return/policy') }}">Return Policy</a></li>
+            <li>
+                <a href="{{ url('/terms/and/condition') }}" data-active-paths="{{ url('/terms/and/condition') }}">
+                    Terms & Condition
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/view/privacy/policy') }}" data-active-paths="{{ url('/view/privacy/policy') }}">
+                    Privacy Policy
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/view/shipping/policy') }}" data-active-paths="{{ url('/view/shipping/policy') }}">
+                    Shipping Policy
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/view/return/policy') }}" data-active-paths="{{ url('/view/return/policy') }}">
+                    Return Policy
+                </a>
+            </li>
         </ul>
     </li>
     <li>
-        <a href="{{ url('/view/all/pages') }}"><i class="feather-file-plus"></i>
+        <a href="{{ url('/view/all/pages') }}"
+            data-active-paths="{{ url('/view/all/pages') }}, {{ url('/create/new/page') }}, {{ url('edit/custom/page/*') }}">
+            <i class="feather-file-plus"></i>
             <span>Custom Pages</span>
             <span style="color:lightgreen" title="Total Outlets">
                 ({{DB::table('custom_pages')->count()}})
@@ -848,7 +904,8 @@
         </a>
     </li>
     <li>
-        <a href="{{ url('/view/all/outlet') }}">
+        <a href="{{ url('/view/all/outlet') }}"
+            data-active-paths="{{ url('/view/all/outlet') }}, {{ url('/add/new/outlet') }}, {{ url('/edit/outlet/*') }}">
             <i class="feather-box"></i> View All Outlets
             <span style="color:lightgreen" title="Total Outlets">
                 ({{DB::table('outlets')->count()}})
@@ -856,15 +913,29 @@
         </a>
     </li>
     <li>
-        <a href="{{ url('/view/all/video-gallery') }}">
+        <a href="{{ url('/view/all/video-gallery') }}" data-active-paths="{{ url('/view/all/video-gallery') }}, {{ url('/add/new/video-gallery') }}, 
+            {{ url('/edit/video-gallery/*') }}">
             <i class="feather-box"></i> View All Videos
             <span style="color:lightgreen" title="Total Videos">
                 ({{DB::table('video_galleries')->count()}})
             </span>
         </a>
     </li>
-    <li><a href="{{ url('/about/us/page') }}"><i class="feather-globe"></i><span>About Us</span></a></li>
-    <li><a href="{{ url('/view/all/faqs') }}"><i class="far fa-question-circle"></i><span>FAQ's</span></a></li>
+    <li>
+        <a href="{{ url('/about/us/page') }}" data-active-paths="{{ url('/about/us/page') }}">
+            <i class="feather-globe"></i>
+            <span>About Us</span>
+        </a>
+    </li>
+    <li>
+        <a href="{{ url('/view/all/faqs') }}"
+            data-active-paths="{{ url('/view/all/faqs') }}, {{ url('/add/new/faq') }}, {{ url('/edit/faq/*') }}">
+            <i class="far fa-question-circle"></i>
+            <span>FAQ's</span>
+        </a>
+    </li>
+    {{-- End Content Management Module --}}
+
 
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Download & Backup</li>
