@@ -60,8 +60,8 @@
                 <tr>
                     <th colspan="7" class="text-right">Total : </th>
                     <th class="text-right">৳ {{number_format($grandSubTotal, 2)}}</th>
-                    <th class="text-right">৳ {{number_format($grandDiscount, 2)}}</th>
                     <th class="text-right">৳ {{number_format($grandDeliveryFee, 2)}}</th>
+                    <th class="text-right">৳ {{number_format($grandDiscount, 2)}}</th>
                     <th class="text-right">৳ {{number_format($grandTotal, 2)}}</th>
                 </tr>
             </tbody>

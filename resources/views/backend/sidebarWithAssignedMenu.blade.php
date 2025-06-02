@@ -177,6 +177,15 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
     @endif
 
+    @if(checkAuth("inventory-home"))
+        <li>
+            <a href="{{ url('/inventory-home') }}" data-active-paths="{{ url('/inventory-home') }}">
+                <i class="feather-home"></i>
+                <span> Inventory Dashboard</span>
+            </a>
+        </li>
+    @endif
+
     {{-- E commerce module --}}
     @if ($eCommerceModule->count())
         <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
@@ -1376,7 +1385,7 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
             @endif
         </li>
         <li>
-            @if(checkAuth("download/blog/files/backup"))
+            @if(checkAuth("download/blog/files/backup"))about:blank#blocked
                 <a href="{{ url('/download/blog/files/backup') }}"
                     onclick="return confirm('Are you sure you want to download the blog files backup?');">
                     <i class="feather-file-text"></i>Blog Files Backup

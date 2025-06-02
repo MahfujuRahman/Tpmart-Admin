@@ -20,6 +20,7 @@ use App\Http\Controllers\Customer\Models\CustomerNextContactDate;
 use App\Http\Controllers\Outlet\Models\CustomerSourceType;
 use App\Http\Controllers\Account\Models\AcAccount;
 use App\Http\Controllers\Account\Models\AcTransaction;
+use App\Http\Controllers\Inventory\Models\ProductPurchaseOrder;
 
 class HomeController extends Controller
 {
@@ -129,7 +130,8 @@ class HomeController extends Controller
             ->get();
 
 
-        return view('backend.dashboard',
+        return view(
+            'backend.dashboard',
             compact(
                 'recentCustomers',
                 'orderPayments',
@@ -216,6 +218,130 @@ class HomeController extends Controller
                 'pendingContactCustomers',
                 'missedContactCustomers',
                 'doneContactCustomers'
+            )
+        );
+    }
+    public function inventory_dashboard()
+    {
+
+        $total_warehouses = DB::table('product_warehouses')->count();
+        $total_active_warehouses = DB::table('product_warehouses')->where('status', 'active')->count();
+        $total_inactive_warehouses = DB::table('product_warehouses')->where('status', 'inactive')->count();
+
+        $total_warehouses_room = DB::table('product_warehouse_rooms')->count();
+        $total_active_warehouses_room = DB::table('product_warehouse_rooms')->where('status', 'active')->count();
+        $total_inactive_warehouses_room = DB::table('product_warehouse_rooms')->where('status', 'inactive')->count();
+
+        $total_warehouses_room_cartoons = DB::table('product_warehouse_room_cartoons')->count();
+        $total_active_warehouses_room_cartoons = DB::table('product_warehouse_room_cartoons')->where('status', 'active')->count();
+        $total_inactive_warehouses_room_cartoons = DB::table('product_warehouse_room_cartoons')->where('status', 'inactive')->count();
+
+        $total_suppier_src_type = DB::table('supplier_source_types')->count();
+        $total_product_suppliers = DB::table('product_suppliers')->count();
+        $total_active_product_suppliers = DB::table('product_suppliers')->where('status', 'active')->count();
+        $total_inactive_product_suppliers = DB::table('product_suppliers')->where('status', 'inactive')->count();
+
+        $total_purchase_orders = DB::table('product_purchase_orders')->sum('total');
+        $total_subtotal_orders = DB::table('product_purchase_orders')->sum('subtotal');
+        $total_discount_orders = DB::table('product_purchase_orders')->sum('calculated_discount_amount');
+        $total_other_charges = DB::table('product_purchase_orders')->sum('other_charge_amount');
+
+        $pending_quotations = DB::table('product_purchase_quotations')
+            ->where('is_ordered', 0)
+            ->count();
+
+        // Last 30 days (daily)
+        $start30 = Carbon::now('Asia/Dhaka')->subDays(29)->startOfDay();
+        $end30 = Carbon::now('Asia/Dhaka')->endOfDay();
+        $rawDaily = ProductPurchaseOrder::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->whereBetween('created_at', [$start30, $end30])
+            ->groupBy('date')
+            ->orderBy('date')
+            ->pluck('count', 'date');
+
+        // Fill missing days
+        $dailyCounts = collect();
+        for ($i = 0; $i < 30; $i++) {
+            $day = $start30->copy()->addDays($i)->format('Y-m-d');
+            $dailyCounts[$day] = $rawDaily[$day] ?? 0;
+        }
+
+        // Last 6 months (monthly)
+        $startMonth = Carbon::now('Asia/Dhaka')->subMonths(5)->startOfMonth(); // include current month
+        $endMonth = Carbon::now('Asia/Dhaka')->endOfMonth();
+        $rawMonthly = ProductPurchaseOrder::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
+            ->whereBetween('created_at', [$startMonth, $endMonth])
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('count', 'month');
+
+        // Fill missing months
+        $monthlyCounts = collect();
+        for ($i = 0; $i < 6; $i++) {
+            $month = $startMonth->copy()->addMonths($i)->format('Y-m');
+            $monthlyCounts[$month] = $rawMonthly[$month] ?? 0;
+        }
+
+        $baseQuery = ProductPurchaseOrder::query()
+            ->leftJoin('product_warehouses', 'product_purchase_orders.product_warehouse_id', '=', 'product_warehouses.id')
+            ->leftJoin('product_warehouse_rooms', 'product_purchase_orders.product_warehouse_room_id', '=', 'product_warehouse_rooms.id')
+            ->leftJoin('product_warehouse_room_cartoons', 'product_purchase_orders.product_warehouse_room_cartoon_id', '=', 'product_warehouse_room_cartoons.id')
+            ->leftJoin('product_suppliers', 'product_purchase_orders.product_supplier_id', '=', 'product_suppliers.id')
+            ->select(
+                'product_purchase_orders.*',
+                'product_warehouses.title as warehouse_name',
+                'product_warehouse_rooms.title as room_name',
+                'product_warehouse_room_cartoons.title as cartoon_name',
+                'product_suppliers.name as supplier_name'
+            );
+
+        // Clone base query for total calculation
+        $totals = (clone $baseQuery)->get();
+
+        $grandSubTotal = $totals->sum('subtotal');
+        $grandDeliveryFee = $totals->sum('other_charge_amount');
+        $grandDiscount = $totals->sum('calculated_discount_amount');
+        $grandTotal = $totals->sum('total');
+
+        $recent_purchase_orders = $baseQuery
+            ->orderByDesc('product_purchase_orders.created_at')
+            ->paginate(10);
+
+        return view(
+            'backend.inventory-dashboard',
+            compact(
+                'total_warehouses',
+                'total_active_warehouses',
+                'total_inactive_warehouses',
+
+                'total_warehouses_room',
+                'total_active_warehouses_room',
+                'total_inactive_warehouses_room',
+
+                'total_warehouses_room_cartoons',
+                'total_active_warehouses_room_cartoons',
+                'total_inactive_warehouses_room_cartoons',
+
+                'total_suppier_src_type',
+                'total_product_suppliers',
+                'total_active_product_suppliers',
+                'total_inactive_product_suppliers',
+
+                'total_purchase_orders',
+                'total_discount_orders',
+                'total_other_charges',
+                'pending_quotations',
+                'total_subtotal_orders',
+
+                'dailyCounts',
+                'monthlyCounts',
+
+                'recent_purchase_orders',
+                'grandSubTotal',
+                'grandDeliveryFee',
+                'grandDiscount',
+                'grandTotal'
+
             )
         );
     }
@@ -592,7 +718,7 @@ class HomeController extends Controller
     }
 
     public function clearCache()
-    {   
+    {
         Artisan::call('cache:clear');
         Artisan::call('config:clear');
         Artisan::call('view:clear');

@@ -23,6 +23,12 @@
             <span> Accounts Dashboard</span>
         </a>
     </li>
+    <li>
+        <a href="{{ url('/inventory-home') }}" data-active-paths="{{ url('/inventory-home') }}">
+            <i class="feather-home"></i>
+            <span> Inventory Dashboard</span>
+        </a>
+    </li>
 
     {{-- Start E-commerce Module --}}
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
