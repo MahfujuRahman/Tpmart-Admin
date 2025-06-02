@@ -6,32 +6,37 @@
 
 <ul class="metismenu list-unstyled" id="side-menu">
     <li>
-        <a href="{{ url('/home') }}">
+        <a href="{{ url('/home') }}" data-active-paths="{{ url('/home') }}">
             <i class="feather-home"></i>
             <span> Ecommerce Dashboard</span>
         </a>
     </li>
     <li>
-        <a href="{{ url('/crm-home') }}">
+        <a href="{{ url('/crm-home') }}" data-active-paths="{{ url('/crm-home') }}">
             <i class="feather-home"></i>
             <span> CRM Dashboard</span>
         </a>
     </li>
     <li>
-        <a href="{{ url('/accounts-home') }}">
+        <a href="{{ url('/accounts-home') }}" data-active-paths="{{ url('/accounts-home') }}">
             <i class="feather-home"></i>
             <span> Accounts Dashboard</span>
         </a>
     </li>
 
-
+    {{-- Start E-commerce Module --}}
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">E-commerce Modules</li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>Config</span></a>
+        <a href="javascript: void(0);" class="has-arrow">
+            <i class="feather-settings"></i>
+            <span>Config</span>
+        </a>
         <ul class="sub-menu" aria-expanded="false">
-
-            <li><a href="{{ url('/config/setup') }}">Setup Your Config</a></li>
+            <li>
+                <a href="{{ url('/config/setup') }}" data-active-paths="{{ url('/config/setup') }}">Setup Your
+                    Config</a>
+            </li>
 
             {{-- tech industry --}}
             {{-- @if(DB::table('config_setups')->where('code', 'storage')->first())
@@ -53,10 +58,17 @@
                 </ul>
             </li> --}}
 
-            <li><a href="{{ url('/view/email/credential') }}">Email Configure (SMTP)</a></li>
+            <li>
+                <a href="{{ url('/view/email/credential') }}" data-active-paths="{{ url('/view/email/credential') }}">
+                    Email Configure (SMTP)
+                </a>
+            </li>
             {{-- <li><a href="{{ url('/view/email/templates') }}">Email Templates</a></li> --}}
             {{-- <li><a href="{{ url('/setup/sms/gateways') }}">SMS Gateway</a></li> --}}
-            <li><a href="{{ url('/setup/payment/gateways') }}">Payment Gateway</a></li>
+            <li><a href="{{ url('/setup/payment/gateways') }}" data-active-paths="{{ url('/setup/payment/gateways') }}">
+                    Payment Gateway
+                </a>
+            </li>
 
         </ul>
     </li>
@@ -67,23 +79,48 @@
 
             {{-- Fshion Insdustry --}}
             @if(DB::table('config_setups')->where('code', 'product_size')->first())
-                <li><a href="{{ url('/view/all/sizes') }}">Product Sizes</a></li>
+                <li>
+                    <a href="{{ url('/view/all/sizes') }}"
+                        data-active-paths="{{ url('/view/all/sizes') }},{{ url('/rearrange/size') }}">
+                        Product Sizes
+                    </a>
+                </li>
             @endif
 
             {{-- common --}}
             @if(DB::table('config_setups')->where('code', 'color')->first())
-                <li><a href="{{ url('/view/all/colors') }}">Product Colors</a></li>
+                <li>
+                    <a href="{{ url('/view/all/colors') }}" data-active-paths="{{ url('/view/all/colors') }}">
+                        Product Colors
+                    </a>
+                </li>
             @endif
 
             @if(DB::table('config_setups')->where('code', 'measurement_unit')->first())
-                <li><a href="{{ url('/view/all/units') }}">Measurement Units</a></li>
+                <li>
+                    <a href="{{ url('/view/all/units') }}" data-active-paths="{{ url('/view/all/units') }}">
+                        Measurement Units
+                    </a>
+                </li>
             @endif
 
-
-            <li><a href="{{ url('/view/all/brands') }}">Product Brands</a></li>
-            <li><a href="{{ url('/view/all/models') }}">Models of Brand</a></li>
-            <li><a href="{{ url('/view/all/flags') }}">Product Flags</a></li>
-
+            <li>
+                <a href="{{ url('/view/all/brands') }}"
+                    data-active-paths="{{ url('/view/all/brands') }},{{ url('/add/new/brand') }},{{ url('/rearrange/brands') }},{{ url('edit/brand/*') }}">
+                    Product Brands
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/view/all/models') }}"
+                    data-active-paths="{{ url('/view/all/models') }}, {{ url('add/new/model') }},{{ url('edit/model/*') }}">
+                    Models of Brand
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/view/all/flags') }}" data-active-paths="{{ url('/view/all/flags') }}">
+                    Product Flags
+                </a>
+            </li>
         </ul>
     </li>
 
@@ -99,7 +136,9 @@
     </li>
 
     <li>
-        <a href="{{ url('/view/all/subcategory') }}"><i class="feather-command"></i>
+        <a href="{{ url('/view/all/subcategory') }}"
+            data-active-paths="{{ url('/view/all/subcategory') }},{{ url('/add/new/subcategory') }},{{ url('/edit/subcategory/*') }},{{ url('/rearrange/subcategory') }}">
+            <i class="feather-command"></i>
             <span>Subcategory</span>
             <span style="color:lightgreen" title="Total Products">
                 ({{DB::table('subcategories')->count()}})
@@ -111,7 +150,8 @@
         </ul> --}}
     </li>
     <li>
-        <a href="{{ url('/view/all/childcategory') }}">
+        <a href="{{ url('/view/all/childcategory') }}"
+            data-active-paths="{{ url('/view/all/childcategory') }},{{ url('/add/new/childcategory') }},{{ url('/edit/childcategory/*') }},{{ url('/rearrange/childcategory') }}">
             <i class="feather-git-pull-request"></i><span>Child Category</span>
             <span style="color:lightgreen" title="Total Products">
                 ({{DB::table('child_categories')->count()}})
@@ -120,7 +160,10 @@
         </a>
     </li>
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Manage Products</span></a>
+        <a href="javascript: void(0);" class="has-arrow">
+            <i class="feather-box"></i>
+            <span>Manage Products</span>
+        </a>
         <ul class="sub-menu" aria-expanded="false">
             {{-- <li>
                 <a href="{{ url('view/all/product-color') }}">
@@ -147,7 +190,8 @@
                 </a>
             </li> --}}
             <li>
-                <a href="{{ url('/view/all/product') }}">
+                <a href="{{ url('/view/all/product') }}"
+                    data-active-paths="{{ url('/view/all/product') }},{{ url('/add/new/product') }},{{ url('/edit/product/*') }},{{ url('/rearrange/product') }}">
                     View All Products
                     <span style="color:lightgreen" title="Total Products">
                         ({{DB::table('products')->count()}})
@@ -155,7 +199,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ url('/view/product/reviews') }}">
+                <a href="{{ url('/view/product/reviews') }}" data-active-paths="{{ url('/view/product/reviews') }}">
                     Products's Review
                     <span style="color:goldenrod" title="Indicate Pending Review">
                         (@php
@@ -167,7 +211,8 @@
                 </a>
             </li>
             <li>
-                <a href="{{ url('/view/product/question/answer') }}">
+                <a href="{{ url('/view/product/question/answer') }}"
+                    data-active-paths="{{ url('/view/product/question/answer') }}">
                     Product Ques/Ans
                     <span style="color:goldenrod" title="Indicate Unanswered Questions">
                         (@php
@@ -184,55 +229,94 @@
 
 
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-shopping-cart"></i><span>Manage
-                Orders</span></a>
+        <a href="javascript: void(0);" class="has-arrow">
+            <i class="feather-shopping-cart"></i>
+            <span>Manage Orders</span>
+        </a>
         <ul class="sub-menu" aria-expanded="false">
-            <li><a style="color: white !important;" href="{{ url('/view/orders') }}">All Orders (@php echo
-                    DB::table('orders')->count(); @endphp)</a>
+            <li>
+                <a style="color: white !important;" href="{{ url('/view/orders') }}"
+                    data-active-paths="{{ url('/view/orders') }}, {{ url('create/new/order') }},{{ url('order/details/*') }}">
+                    All Orders
+                    (@php echo DB::table('orders')->count(); @endphp)
+                </a>
             </li>
-            <li><a style="color: skyblue !important;" href="{{ url('/view/pending/orders') }}">Pending Orders
+            <li>
+                <a style="color: skyblue !important;" href="{{ url('/view/pending/orders') }}"
+                    data-active-paths="{{ url('/view/pending/orders') }}, {{ url('order/edit/*') }}">
+                    Pending Orders
                     (@php
                         echo DB::table('orders')
                             ->where('order_status', 0)
                             ->count();
-                    @endphp)</a>
+                    @endphp)
+                </a>
             </li>
-            <li><a style="color: wheat !important;" href="{{ url('/view/approved/orders') }}">Approved Orders
+            <li>
+                <a style="color: wheat !important;" href="{{ url('/view/approved/orders') }}"
+                    data-active-paths="{{ url('/view/approved/orders') }}">
+                    Approved Orders
                     (@php
                         echo DB::table('orders')
                             ->where('order_status', 1)
                             ->count();
-                    @endphp)</a></li>
-            <li><a style="color: violet !important;" href="{{ url('/view/intransit/orders') }}">Intransit Orders
+                    @endphp)
+                </a>
+            </li>
+            <li>
+                <a style="color: violet !important;" href="{{ url('/view/intransit/orders') }}"
+                    data-active-paths="{{ url('/view/intransit/orders') }}">
+                    Intransit Orders
                     (@php
                         echo DB::table('orders')
                             ->where('order_status', 2)
                             ->count();
-                    @endphp)</a></li>
-            <li><a style="color: #0c0 !important;" href="{{ url('/view/delivered/orders') }}">Delivered Orders
+                    @endphp)
+                </a>
+            </li>
+            <li>
+                <a style="color: #0c0 !important;" href="{{ url('/view/delivered/orders') }}"
+                    data-active-paths="{{ url('/view/delivered/orders') }}">
+                    Delivered Orders
                     (@php
                         echo DB::table('orders')
                             ->where('order_status', 3)
                             ->count();
-                    @endphp)</a></li>
-            <li><a style="color: tomato !important;" href="{{ url('/view/picked/orders') }}">Picked Orders
+                    @endphp)
+                </a>
+            </li>
+            <li>
+                <a style="color: tomato !important;" href="{{ url('/view/picked/orders') }}"
+                    data-active-paths="{{ url('/view/picked/orders') }}">
+                    Picked Orders
                     (@php
                         echo DB::table('orders')
                             ->where('order_status', 5)
                             ->count();
-                    @endphp)</a></li>
-            <li><a style="color: red !important;" href="{{ url('/view/cancelled/orders') }}">Cancelled Orders
+                    @endphp)
+                </a>
+            </li>
+            <li><a style="color: red !important;" href="{{ url('/view/cancelled/orders') }}"
+                    data-active-paths="{{ url('/view/cancelled/orders') }}">
+                    Cancelled Orders
                     (@php
                         echo DB::table('orders')
                             ->where('order_status', 4)
                             ->count();
-                    @endphp)</a></li>
-            <li><a style="color: red !important;" href="{{ url('view/trash/orders') }}">Trashed Orders
+                    @endphp)
+                </a>
+            </li>
+            <li>
+                <a style="color: red !important;" href="{{ url('view/trash/orders') }}"
+                    data-active-paths="{{ url('view/trash/orders') }}">
+                    Trashed Orders
                     (@php
                         echo DB::table('orders')
                             ->where('deleted_at', '!=', null)
                             ->count();
-                    @endphp)</a></li>
+                    @endphp)
+                </a>
+            </li>
         </ul>
     </li>
     {{-- <li>
@@ -260,7 +344,9 @@
         </ul>
     </li> --}}
     <li>
-        <a href="{{ url('/view/all/promo/codes') }}"><i class="feather-gift"></i>
+        <a href="{{ url('/view/all/promo/codes') }}"
+            data-active-paths="{{ url('/view/all/promo/codes') }},{{ url('/add/new/code') }},{{ url('/edit/promo/code/*') }}">
+            <i class="feather-gift"></i>
             <span>Promo Codes</span>
             <span style="color:lightgreen" title="Total Products">
                 ({{DB::table('promo_codes')->count()}})
@@ -272,33 +358,66 @@
     --}}
 
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-bell"></i><span>Push Notification</span></a>
+        <a href="javascript: void(0);" class="has-arrow">
+            <i class="feather-bell"></i>
+            <span>Push Notification</span>
+        </a>
         <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/send/notification/page') }}">Send Notification</a></li>
-            <li><a href="{{ url('/view/all/notifications') }}">Prevoious Notifications</a></li>
+            <li>
+                <a href="{{ url('/send/notification/page') }}" data-active-paths="{{ url('/send/notification/page') }}">
+                    Send Notification
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/view/all/notifications') }}" data-active-paths="{{ url('/view/all/notifications') }}">
+                    Prevoious Notifications
+                </a>
+            </li>
         </ul>
     </li>
 
-    <li><a href="{{ url('/view/customers/wishlist') }}"><i class="feather-heart"></i><span>Customer's
-                Wishlist</span></a></li>
-    <li><a href="{{ url('/view/delivery/charges') }}"><i class="feather-truck"></i><span>Delivery Charges</span></a>
+    <li>
+        <a href="{{ url('/view/customers/wishlist') }}" data-active-paths="{{ url('/view/customers/wishlist') }}">
+            <i class="feather-heart"></i>
+            <span>Customer's Wishlist</span>
+        </a>
     </li>
-    <li><a href="{{ url('/view/upazila/thana') }}"><i class="dripicons-location"></i><span>Upazila & Thana</span></a>
+    <li>
+        <a href="{{ url('/view/delivery/charges') }}" data-active-paths="{{ url('/view/delivery/charges') }}">
+            <i class="feather-truck"></i>
+            <span>Delivery Charges</span>
+        </a>
     </li>
-    <li><a href="{{ url('/view/payment/history') }}"><i class="feather-dollar-sign"></i><span>Payment History</span></a>
+    <li>
+        <a href="{{ url('/view/upazila/thana') }}" data-active-paths="{{ url('/view/upazila/thana') }}">
+            <i class="dripicons-location"></i>
+            <span>Upazila & Thana</span>
+        </a>
+    </li>
+    <li><a href="{{ url('/view/payment/history') }}" data-active-paths="{{ url('/view/payment/history') }}">
+            <i class="feather-dollar-sign"></i>
+            <span>Payment History</span>
+        </a>
     </li>
 
     <li>
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-printer"></i><span>Generate Report</span></a>
         <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/sales/report') }}">Sales Report</a></li>
+            <li>
+                <a href="{{ url('/sales/report') }}" data-active-paths="{{ url('/sales/report') }}">Sales Report</a>
+            </li>
         </ul>
     </li>
+    {{-- End E-commerce Module --}}
 
+
+    {{-- Start Inventory Module --}}
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Inventory Modules</li>
     <li>
-        <a href="{{ url('/view/all/product-warehouse') }}"><i class="feather-box"></i>
+        <a href="{{ url('/view/all/product-warehouse') }}"
+            data-active-paths="{{ url('/view/all/product-warehouse') }}, {{ url('/add/new/product-warehouse') }}, {{ url('/edit/product-warehouse/*') }}">
+            <i class="feather-box"></i>
             <span>Product Warehouse</span>
             <span style="color:lightgreen" title="Total Product Warehouses">
                 ({{DB::table('product_warehouses')->count()}})
@@ -306,7 +425,8 @@
         </a>
     </li>
     <li>
-        <a href="{{ url('/view/all/product-warehouse-room') }}">
+        <a href="{{ url('/view/all/product-warehouse-room') }}"
+            data-active-paths="{{ url('/view/all/product-warehouse-room') }}, {{ url('/add/new/product-warehouse-room') }}, {{ url('/edit/product-warehouse-room/*') }}">
             <i class="feather-box"></i>Warehouse Room
             <span style="color:lightgreen" title="Total Product Warehouse Rooms">
                 ({{DB::table('product_warehouse_rooms')->count()}})
@@ -314,7 +434,8 @@
         </a>
     </li>
     <li>
-        <a href="{{ url('/view/all/product-warehouse-room-cartoon') }}">
+        <a href="{{ url('/view/all/product-warehouse-room-cartoon') }}"
+            data-active-paths="{{ url('/view/all/product-warehouse-room-cartoon') }}, {{ url('/add/new/product-warehouse-room-cartoon') }}, {{ url('/edit/product-warehouse-room-cartoon/*') }}">
             <i class="feather-box"></i> Room Cartoon
             <span style="color:lightgreen" title="Total Product Warehouse Room cartoons">
                 ({{DB::table('product_warehouse_room_cartoons')->count()}})
@@ -322,7 +443,8 @@
         </a>
     </li>
     <li>
-        <a href="{{ url('/view/all/supplier-source') }}">
+        <a href="{{ url('/view/all/supplier-source') }}"
+            data-active-paths="{{ url('/view/all/supplier-source') }}, {{ url('/add/new/supplier-source') }}, {{ url('/edit/supplier-source/*') }}">
             <i class="feather-box"></i> Supplier Src Type
             <span style="color:lightgreen" title="Total CS Types">
                 ({{DB::table('supplier_source_types')->count()}})
@@ -331,7 +453,8 @@
     </li>
 
     <li>
-        <a href="{{ url('/view/all/product-supplier') }}">
+        <a href="{{ url('/view/all/product-supplier') }}"
+            data-active-paths="{{ url('/view/all/product-supplier') }}, {{ url('/add/new/product-supplier') }}, {{ url('/edit/product-supplier/*') }}">
             <i class="feather-box"></i> Product Suppliers
             <span style="color:lightgreen" title="Total Product Suppliers">
                 ({{DB::table('product_suppliers')->count()}})
@@ -341,11 +464,20 @@
 
 
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Product Purchase</span></a>
+        <a href="javascript: void(0);" class="has-arrow">
+            <i class="feather-box"></i>
+            <span>Product Purchase</span>
+        </a>
         <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('/view/all/purchase-product/charge') }}">Other Charge Types</a></li>
             <li>
-                <a href="{{ url('/view/all/purchase-product/quotation') }}">
+                <a href="{{ url('/view/all/purchase-product/charge') }}"
+                    data-active-paths="{{ url('/view/all/purchase-product/charge') }}, {{ url('/add/new/purchase-product/charge') }}, {{ url('/edit/purchase-product/charge/*') }}">
+                    Other Charge Types
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/view/all/purchase-product/quotation') }}"
+                    data-active-paths="{{ url('/view/all/purchase-product/quotation') }}, {{ url('/add/new/purchase-product/quotation') }}, {{ url('/edit/purchase-product/quotation/*') }}, {{ url('edit/purchase-product/sales/quotation/*') }}">
                     View All Quotations
                     <span style="color:lightgreen" title="Total Product Purchase Quotations">
                         ({{DB::table('product_purchase_quotations')->count()}})
@@ -355,7 +487,8 @@
             {{-- <a href="javascript: void(0);" class="has-arrow"><i class="feather-box"></i><span>Order</span></a> --}}
 
             <li>
-                <a href="{{ url('/view/all/purchase-product/order') }}">
+                <a href="{{ url('/view/all/purchase-product/order') }}"
+                    data-active-paths="{{ url('/view/all/purchase-product/order') }}, {{ url('/add/new/purchase-product/order') }}, {{ url('/edit/purchase-product/order/*') }}, {{ url('edit/purchase-product/sales/order/*') }}">
                     View All Orders
                     <span style="color:lightgreen" title="Total Product Purchase Orders">
                         ({{DB::table('product_purchase_orders')->count()}})
@@ -367,12 +500,20 @@
     </li>
 
     <li>
-        <a href="javascript: void(0);" class="has-arrow"><i class="feather-printer"></i><span>Generate Report</span></a>
+        <a href="javascript: void(0);" class="has-arrow">
+            <i class="feather-printer"></i>
+            <span>Generate Report</span>
+        </a>
         <ul class="sub-menu" aria-expanded="false">
-            <li><a href="{{ url('product/purchase/report') }}">Product Purchase Report</a></li>
+            <li>
+                <a href="{{ url('/product/purchase/report') }}"
+                    data-active-paths="{{ url('/product/purchase/report') }}">
+                    Product Purchase Report
+                </a>
+            </li>
         </ul>
     </li>
-
+    {{-- End Inventory Module --}}
 
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Accounts Modules</li>
