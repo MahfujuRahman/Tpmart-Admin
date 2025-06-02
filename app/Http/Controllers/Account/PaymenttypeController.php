@@ -129,7 +129,7 @@ class PaymenttypeController extends Controller
 
     public function editPaymentType($slug)
     {
-        $data = DbPaymentType::where('status', 'active')->where('slug', $slug)->first();
+        $data = DbPaymentType::where('slug', $slug)->first();
         return view('backend.paymenttype.edit', compact('data'));
     }
 

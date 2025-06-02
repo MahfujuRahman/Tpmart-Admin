@@ -91,7 +91,7 @@ class ExpenseCategoryController extends Controller
 
     public function editExpenseCategory($slug)
     {
-        $data = DbExpenseCategory::where('status', 'active')->where('slug', $slug)->first();
+        $data = DbExpenseCategory::where('slug', $slug)->first();
         return view('backend.expensecategory.edit', compact('data'));
     }
 

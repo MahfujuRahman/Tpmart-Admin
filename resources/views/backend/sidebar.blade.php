@@ -515,11 +515,13 @@
     </li>
     {{-- End Inventory Module --}}
 
+
+    {{-- Start Accounts Module --}}
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Accounts Modules</li>
 
     <li>
-        <a href="{{ url('/view/all/payment-type') }}">
+        <a href="{{ url('/view/all/payment-type') }}" data-active-paths="{{ url('/view/all/payment-type') }}, {{ url('/add/new/payment-type') }}, {{ url('/edit/payment-type/*') }}">
             <i class="feather-box"></i> Payment Types
             <span style="color:lightgreen" title="Total CS Types">
                 ({{DB::table('db_paymenttypes')->count()}})
@@ -528,7 +530,7 @@
     </li>
     <li>
 
-        <a href="{{ url('/view/all/expense-category') }}">
+        <a href="{{ url('/view/all/expense-category') }}" data-active-paths="{{ url('/view/all/expense-category') }}, {{ url('/add/new/expense-category') }}, {{ url('/edit/expense-category/*') }}">
             <i class="feather-box"></i> Expense Categories
             <span style="color:lightgreen" title="Total Categories">
                 ({{DB::table('db_expense_categories')->count()}})
@@ -537,7 +539,7 @@
 
     </li>
     <li>
-        <a href="{{ url('/view/all/ac-account') }}">
+        <a href="{{ url('/view/all/ac-account') }}" data-active-paths="{{ url('/view/all/ac-account') }}, {{ url('/add/new/ac-account') }}, {{ url('/edit/ac-account/*') }}">
             <i class="feather-box"></i> All Accounts
             <span style="color:lightgreen" title="Total Accounts">
                 ({{DB::table('ac_accounts')->count()}})
@@ -545,7 +547,7 @@
         </a>
     </li>
     <li>
-        <a href="{{ route('ViewAllExpense') }}">
+        <a href="{{ route('ViewAllExpense') }}" data-active-paths="{{ route('ViewAllExpense') }}, {{ url('/add/new/expense') }}, {{ url('/edit/expense/*') }}">
             <i class="feather-box"></i> All Expenses
             <span style="color:lightgreen" title="Total Expenses">
                 ({{DB::table('db_expenses')->count()}})
@@ -553,7 +555,7 @@
         </a>
     </li>
     <li>
-        <a href="{{ route('ViewAllDeposit') }}">
+        <a href="{{ route('ViewAllDeposit') }}" data-active-paths="{{ route('ViewAllDeposit') }}, {{ url('/add/new/deposit') }}, {{ url('/edit/deposit/*') }}">
             <i class="feather-box"></i> All Deposits
             <span style="color:lightgreen" title="Total Deposits">
                 ({{DB::table('ac_transactions')->count()}})
@@ -566,24 +568,24 @@
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>Reports</span></a>
         <ul class="sub-menu" aria-expanded="false">
             <li>
-                <a href="{{ route('journal.index') }}">
+                <a href="{{ route('journal.index') }}" data-active-paths="{{ route('journal.index') }}">
                     <i class="feather-box"></i>
                     <span>Journal</span>
                 </a>
             </li>
             <li>
-                <a href="{{ route('ledger.index') }}">
+                <a href="{{ route('ledger.index') }}" data-active-paths="{{ route('ledger.index') }}">
                     <i class="feather-box"></i>
                     <span>Ledger</span></a>
             </li>
             <li>
-                <a href="{{ route('ledger.balance_sheet') }}">
+                <a href="{{ route('ledger.balance_sheet') }}" data-active-paths="{{ route('ledger.balance_sheet') }}">
                     <i class="feather-box"></i>
                     <span>Balance Sheet</span>
                 </a>
             </li>
             <li>
-                <a href="{{ route('ledger.income_statement') }}">
+                <a href="{{ route('ledger.income_statement') }}" data-active-paths="{{ route('ledger.income_statement') }}">
                     <i class="feather-box"></i>
                     <span>Income Statement</span>
                 </a>
