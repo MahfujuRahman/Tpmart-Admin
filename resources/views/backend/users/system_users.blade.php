@@ -72,6 +72,12 @@
                     <h4 class="card-title mb-3">System Users List</h4>
                     <div class="table-responsive">
                         <label id="customFilter">
+                            <select id="userTypeFilter" class="form-control form-control-sm"
+                                style="width: 180px; display: inline-block; margin-left: 10px;">
+                                <option value="">All Users</option>
+                                <option value="system_user">System User</option>
+                                <option value="delivery_man">Delivery Man</option>
+                            </select>
                             <a href="{{url('add/new/system/user')}}" class="btn btn-success btn-sm" id="addNewFlag"
                                 style="margin-left: 5px"><i class="feather-plus"></i> Add New User</a>
                         </label>
@@ -125,7 +131,12 @@
         var table = $(".data-table").DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('view/system/users') }}",
+            ajax: {
+                url: "{{ url('view/system/users') }}",
+                data: function (d) {
+                    d.user_type = $('#userTypeFilter').val(); // send selected user type
+                }
+            },
             columns: [
                 {
                     data: 'DT_RowIndex',
@@ -159,10 +170,11 @@
             }
         });
 
-    
-
-
         $(".dataTables_filter").append($("#customFilter"));
+        $('#userTypeFilter').on('change', function () {
+            table.ajax.reload();
+        });
+
     </script>
 
 

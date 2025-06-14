@@ -23,7 +23,7 @@
         <div class="col-lg-12 col-xl-12">
             <div class="card">
                 <div class="card-body">
-                  
+
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="card-title mb-3">System User Update Form</h4>
                         <a href="{{ route('ViewAllSystemUsers')}}" class="btn btn-secondary">
@@ -31,13 +31,16 @@
                         </a>
                     </div>
 
-                    <form class="needs-validation" method="POST" action="{{url('update/system/user')}}" enctype="multipart/form-data">
+                    <form class="needs-validation" method="POST" action="{{url('update/system/user')}}"
+                        enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="user_id" value="{{$userInfo->id}}">
                         <div class="form-group row">
-                            <label for="colFormLabel" class="col-sm-2 col-form-label">Name <span class="text-danger">*</span></label>
+                            <label for="colFormLabel" class="col-sm-2 col-form-label">Name <span
+                                    class="text-danger">*</span></label>
                             <div class="col-sm-10">
-                                <input type="text" name="name" class="form-control" id="colFormLabel" value="{{$userInfo->name}}" placeholder="Full Name" required>
+                                <input type="text" name="name" class="form-control" id="colFormLabel"
+                                    value="{{$userInfo->name}}" placeholder="Full Name" required>
                                 <div class="invalid-feedback" style="display: block;">
                                     @error('name')
                                         {{ $message }}
@@ -47,9 +50,11 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="email" class="col-sm-2 col-form-label">Email <span class="text-danger">*</span></label>
+                            <label for="email" class="col-sm-2 col-form-label">Email <span
+                                    class="text-danger">*</span></label>
                             <div class="col-sm-10">
-                                <input type="email" name="email" class="form-control" id="email" value="{{$userInfo->email}}" placeholder="example@GenericCommerceV1.com" required>
+                                <input type="email" name="email" class="form-control" id="email"
+                                    value="{{$userInfo->email}}" placeholder="example@GenericCommerceV1.com" required>
                                 <div class="invalid-feedback" style="display: block;">
                                     @error('email')
                                         {{ $message }}
@@ -61,7 +66,8 @@
                         <div class="form-group row">
                             <label for="phone" class="col-sm-2 col-form-label">Phone</label>
                             <div class="col-sm-10">
-                                <input type="phone" name="phone" class="form-control" id="phone" value="{{$userInfo->phone}}" placeholder="+8801*********">
+                                <input type="phone" name="phone" class="form-control" id="phone"
+                                    value="{{$userInfo->phone}}" placeholder="+8801*********">
                                 <div class="invalid-feedback" style="display: block;">
                                     @error('phone')
                                         {{ $message }}
@@ -73,7 +79,8 @@
                         <div class="form-group row">
                             <label for="address" class="col-sm-2 col-form-label">Address</label>
                             <div class="col-sm-10">
-                                <input type="address" name="address" class="form-control" value="{{$userInfo->address}}" id="address" placeholder="Dhaka, Bangladesh">
+                                <input type="address" name="address" class="form-control" value="{{$userInfo->address}}"
+                                    id="address" placeholder="Dhaka, Bangladesh">
                                 <div class="invalid-feedback" style="display: block;">
                                     @error('address')
                                         {{ $message }}
@@ -85,7 +92,8 @@
                         <div class="form-group row">
                             <label for="password" class="col-sm-2 col-form-label">Password</label>
                             <div class="col-sm-10">
-                                <input type="password" name="password" class="form-control d-inline-block" id="password" placeholder="********">
+                                <input type="password" name="password" class="form-control d-inline-block" id="password"
+                                    placeholder="********">
                                 <i class="bi bi-eye-slash" id="togglePassword"></i>
                                 <div class="invalid-feedback" style="display: block;">
                                     @error('password')
@@ -94,6 +102,26 @@
                                 </div>
                             </div>
                         </div>
+
+                        @if ($userInfo->user_type == 2 || $userInfo->user_type == 4)
+                            <div class="form-group row">
+                                <label for="user_type" class="col-sm-2 col-form-label">User Type <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-sm-10">
+                                    <select name="user_type" id="user_type" class="form-control" required>
+                                        <option value="">Select User Type</option>
+                                        <option value="2" {{ $userInfo->user_type == 2 ? 'selected' : '' }}>System User</option>
+                                        <option value="4" {{ $userInfo->user_type == 4 ? 'selected' : '' }}>Delivery Man</option>
+                                    </select>
+                                    <div class="invalid-feedback" style="display: block;">
+                                        @error('user_type')
+                                            {{ $message }}
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
 
                         <div class="form-group">
                             <button class="btn btn-primary" type="submit">Update User Info</button>
@@ -126,4 +154,3 @@
         });
     </script>
 @endsection
-

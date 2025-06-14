@@ -94,6 +94,22 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label for="user_type" class="col-sm-2 col-form-label">User Type <span class="text-danger">*</span></label>
+                            <div class="col-sm-10">
+                                <select name="user_type" id="user_type" class="form-control" required>
+                                    <option value="">Select User Type</option>
+                                    <option value="2">System User</option>
+                                    <option value="4">Delivery Man</option>
+                                </select>
+                                <div class="invalid-feedback" style="display: block;">
+                                    @error('user_type')
+                                        {{ $message }}
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <button class="btn btn-primary" type="submit">Create User</button>
                         </div>

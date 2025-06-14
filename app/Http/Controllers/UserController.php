@@ -54,7 +54,20 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
 
-            $data = User::whereIn('user_type', [1, 2])->where('id', '!=', 1)->orderBy('id', 'desc')->get();
+            $query = User::whereIn('user_type', [1, 2, 4])
+                ->where('id', '!=', 1)
+                ->orderBy('id', 'desc');
+
+            // Apply filter if user_type is passed
+            if ($request->has('user_type') && $request->user_type != '') {
+                if ($request->user_type == 'system_user') {
+                    $query->where('user_type', 2);
+                } elseif ($request->user_type == 'delivery_man') {
+                    $query->where('user_type', 4);
+                }
+            }
+
+            $data = $query->get();
 
             return Datatables::of($data)
                 ->addColumn('active_status', function ($data) {
@@ -107,11 +120,11 @@ class UserController extends Controller
 
     public function createSystemUsers(Request $request)
     {
-
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string'],
+            'user_type' => ['required', 'integer', 'in:2,4'],
         ]);
 
         User::insert([
@@ -120,8 +133,9 @@ class UserController extends Controller
             'phone' => $request->phone,
             'address' => $request->address,
             'password' => Hash::make($request->password),
-            'user_type' => 2,
+            'user_type' => $request->user_type,
             'balance' => 0,
+            'email_verified_at' => Carbon::now(),
             'created_at' => Carbon::now()
         ]);
 
@@ -148,6 +162,8 @@ class UserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
+            'user_type' => ['required', 'integer', 'in:2,4'],
+
         ]);
 
         User::where('id', $request->user_id)->update([
@@ -155,7 +171,7 @@ class UserController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,
-            // 'user_type' => 2,
+            'user_type' => $request->user_type,
             'updated_at' => Carbon::now()
         ]);
 
