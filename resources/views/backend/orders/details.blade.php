@@ -343,7 +343,7 @@
                                     Approved
                                 </option>
                                 <option value="2" @if($order->order_status == 2) selected @endif
-                                    @if(!in_array($order->order_status, [1])) disabled @endif>
+                                    @if(!in_array($order->order_status, [1,2])) disabled @endif>
                                     Dispatch
                                 </option>
                                 <option value="3" @if($order->order_status == 3) selected @endif
@@ -371,7 +371,7 @@
                                 <option value="">Select Delivery Man</option>
                                 @foreach($delivery_man as $deliveryMan)
                                     <option value="{{ $deliveryMan->id }}" 
-                                        @if($order->orderDeliveryMen->delivery_man_id == $deliveryMan->id) selected @endif>
+                                        @if($order->orderDeliveryMen?->delivery_man_id == $deliveryMan->id) selected @endif>
                                         {{ $deliveryMan->name }}
                                     </option>
                                 @endforeach

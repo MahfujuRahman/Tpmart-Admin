@@ -117,7 +117,7 @@
                         <div class="col">
                             <h6 class="text-uppercase font-size-12 text-muted mb-3">Total Delivered Orders</h6>
                             <span class="h3 mb-0">
-                                ৳ {{ number_format(DB::table('orders')->where('order_status', 3)->sum('total'), 2) }}
+                                ৳ {{ number_format(DB::table('orders')->where('order_status', 4)->sum('total'), 2) }}
                             </span>
                         </div>
                     </div> <!-- end row -->
@@ -135,7 +135,7 @@
                         <div class="col">
                             <h6 class="text-uppercase font-size-12 text-muted mb-3">Total Cancelled Orders</h6>
                             <span class="h3 mb-0">
-                                ৳ {{ number_format(DB::table('orders')->where('order_status', 4)->sum('total'), 2) }}
+                                ৳ {{ number_format(DB::table('orders')->where('order_status', 6)->sum('total'), 2) }}
                             </span>
                         </div>
                     </div> <!-- end row -->

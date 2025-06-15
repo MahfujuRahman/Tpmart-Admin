@@ -68,85 +68,10 @@
     Orders
 @endsection
 @section('page_heading')
-    View All Orders
+    View Dispatch Orders
 @endsection
 
 @section('content')
-
-    <div class="row">
-        <div class="col-lg-6 col-xl-3">
-            <div class="card graph_card">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="text-uppercase font-size-12 text-muted mb-3">Total Pending Orders</h6>
-                            <span class="h3 mb-0">
-                                ৳ {{ number_format(DB::table('orders')->where('order_status', 0)->sum('total'), 2) }}
-                            </span>
-                        </div>
-                    </div> <!-- end row -->
-
-                    <div id="sparkline1" class="mt-3"></div>
-                </div> <!-- end card-body-->
-                <i class="feather-shopping-cart" style="color: #c28a00; background: #daa5202e;"></i>
-            </div> <!-- end card-->
-        </div> <!-- end col-->
-
-        <div class="col-lg-6 col-xl-3">
-            <div class="card graph_card">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="text-uppercase font-size-12 text-muted mb-3">Total Approved Orders</h6>
-                            <span class="h3 mb-0">
-                                ৳
-                                {{ number_format(DB::table('orders')->where('order_status', 1)->orWhere('order_status', 2)->sum('total'), 2) }}
-                            </span>
-                        </div>
-                    </div> <!-- end row -->
-                    <div id="sparkline2" class="mt-3"></div>
-                </div> <!-- end card-body-->
-                <i class="feather-trending-up" style="color: #0074E4; background: #0074E42E;"></i>
-            </div> <!-- end card-->
-        </div> <!-- end col-->
-
-        <div class="col-lg-6 col-xl-3">
-            <div class="card graph_card">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="text-uppercase font-size-12 text-muted mb-3">Total Delivered Orders</h6>
-                            <span class="h3 mb-0">
-                                ৳ {{ number_format(DB::table('orders')->where('order_status', 4)->sum('total'), 2) }}
-                            </span>
-                        </div>
-                    </div> <!-- end row -->
-
-                    <div id="sparkline3" class="mt-3"></div>
-                </div> <!-- end card-body-->
-                <i class="feather-package" style="color: #027e02; background: #027e0238;"></i>
-            </div> <!-- end card-->
-        </div> <!-- end col-->
-
-        <div class="col-lg-6 col-xl-3">
-            <div class="card graph_card">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="text-uppercase font-size-12 text-muted mb-3">Total Cancelled Orders</h6>
-                            <span class="h3 mb-0">
-                                ৳ {{ number_format(DB::table('orders')->where('order_status', 6)->sum('total'), 2) }}
-                            </span>
-                        </div>
-                    </div> <!-- end row -->
-
-                    <div id="sparkline4" class="mt-3"></div>
-                </div> <!-- end card-body-->
-                <i class="feather-trash-2" style="color: #a60000; background: #a6000026;"></i>
-            </div> <!-- end card-->
-        </div> <!-- end col-->
-    </div>
-
 
     <div class="row">
         <div class="col-lg-12 col-xl-12">
@@ -169,7 +94,6 @@
                                     <th class="text-center">Name</th>
                                     <th class="text-center">Email</th>
                                     <th class="text-center">Phone</th>
-                                    <th class="text-center">Quantity</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Payment</th>
                                     <th class="text-center">Total</th>
@@ -200,7 +124,7 @@
             processing: true,
             serverSide: true,
             pageLength: 10,
-            ajax: "{{ url('view/orders') }}",
+            ajax: "{{ url('view/dispatch/orders') }}",
             columns: [
                 {
                     data: 'DT_RowIndex',
@@ -217,10 +141,6 @@
                 { data: 'customer_name', name: 'customer_name' },
                 { data: 'customer_email', name: 'customer_email' },
                 { data: 'customer_phone', name: 'customer_phone' },
-                {
-                    data: 'quantity',
-                    name: 'quantity'
-                },
                 {
                     data: 'order_status',
                     name: 'order_status'

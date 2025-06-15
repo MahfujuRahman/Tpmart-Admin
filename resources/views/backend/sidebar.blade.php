@@ -248,7 +248,7 @@
                 </a>
             </li>
             <li>
-                <a style="color: skyblue !important;" href="{{ url('/view/pending/orders') }}"
+                <a style="color: wheat !important;" href="{{ url('/view/pending/orders') }}"
                     data-active-paths="{{ url('/view/pending/orders') }}, {{ url('order/edit/*') }}">
                     Pending Orders
                     (@php
@@ -259,9 +259,20 @@
                 </a>
             </li>
             <li>
-                <a style="color: wheat !important;" href="{{ url('/view/approved/orders') }}"
+                <a style="color: skyblue !important;" href="{{ url('/view/approved/orders') }}"
                     data-active-paths="{{ url('/view/approved/orders') }}">
                     Approved Orders
+                    (@php
+                        echo DB::table('orders')
+                            ->where('order_status', 1)
+                            ->count();
+                    @endphp)
+                </a>
+            </li>
+            <li>
+                <a style="color: wheat !important;" href="{{ url('/view/dispatch/orders') }}"
+                    data-active-paths="{{ url('/view/dispatch/orders') }}">
+                    Dispatch Orders
                     (@php
                         echo DB::table('orders')
                             ->where('order_status', 1)
@@ -294,7 +305,7 @@
             <li>
                 <a style="color: tomato !important;" href="{{ url('/view/picked/orders') }}"
                     data-active-paths="{{ url('/view/picked/orders') }}">
-                    Picked Orders
+                    Return Orders
                     (@php
                         echo DB::table('orders')
                             ->where('order_status', 5)
