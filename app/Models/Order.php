@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\ShippingInfo;
+use App\Models\OrderDeliveyMan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Controllers\Outlet\Models\Outlet;
@@ -45,5 +46,8 @@ class Order extends Model
     //     return $this->belongsTo(CustomerSourceType::class, 'customer_src_type_id');
     // }
 
+    public function orderDeliveryMen() {
+        return $this->hasOne(OrderDeliveyMan::class, 'order_id');
+    }
 
 }

@@ -626,7 +626,7 @@ class OrderController extends Controller
 
     public function orderDetails($slug)
     {
-        $order = Order::where('slug', $slug)->first();
+        $order = Order::where('slug', $slug)->with('orderDeliveryMen')->first();
 
         $userInfo = User::where('id', $order->user_id)->first();
         $shippingInfo = ShippingInfo::where('order_id', $order->id)->first();
@@ -650,8 +650,9 @@ class OrderController extends Controller
             ->where('order_details.order_id', $order->id)
             ->get();
         $generalInfo = DB::table('general_infos')->select('logo', 'logo_dark', 'company_name')->first();
+        $delivery_man = User::where('user_type',4)->get();
 
-        return view('backend.orders.details', compact('order', 'shippingInfo', 'billingAddress', 'orderDetails', 'userInfo', 'generalInfo'));
+        return view('backend.orders.details', compact('order', 'shippingInfo', 'billingAddress', 'orderDetails', 'userInfo', 'generalInfo','delivery_man'));
     }
 
     public function cancelOrder($slug)
@@ -734,17 +735,17 @@ class OrderController extends Controller
 
     public function orderInfoUpdate(Request $request)
     {
-
         $data = Order::where('id', $request->order_id)->first();
+   
         if ($data->order_status != $request->order_status) {
 
-            if ($request->order_status == 5 && $data->payment_method == 1) {
+            if ($request->order_status == 4 && $data->payment_method == 1) {
                 $data->payment_status = 1;
             }
 
             $data->order_remarks = $request->order_remarks;
 
-            if ($request->order_status == 4) {
+            if ($request->order_status == 6) {
                 $order_details = DB::table('order_details')->where('order_id', $data->id)->select('product_id', 'qty')->get();
 
                 foreach ($order_details as $order_detail) {
@@ -755,7 +756,7 @@ class OrderController extends Controller
                 }
             }
 
-            $data->order_status = $request->order_status;
+            $data->order_status = $request->order_status ?? $data->order_status;
 
             $data->estimated_dd = $request->estimated_dd;
             $data->updated_at = Carbon::now();
@@ -763,8 +764,14 @@ class OrderController extends Controller
 
             OrderProgress::insert([
                 'order_id' => $request->order_id,
-                'order_status' => $request->order_status,
+                'order_status' => $request->order_status ?? $data->order_status,
                 'created_at' => Carbon::now()
+            ]);
+
+            DB::table('order_delivey_men')->insert([
+                'order_id' => $request->order_id,
+                'delivery_man_id' => $request->delivery_man_id,
+                'status' => 'pending',
             ]);
         } else {
             $data->order_remarks = $request->order_remarks;
