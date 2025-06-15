@@ -84,14 +84,19 @@
                                 {{date("jS F, Y", strtotime($order->order_date))}}</p>
                             <p class="mb-1"><strong>Order Status: </strong>
                                 @php
+                            
                                     if ($order->order_status == 0) {
                                         echo '<span class="badge badge-soft-warning" style="padding: 2px 10px !important;">Pending</span>';
                                     } elseif ($order->order_status == 1) {
                                         echo '<span class="badge badge-soft-info" style="padding: 2px 10px !important;">Approved</span>';
                                     } elseif ($order->order_status == 2) {
-                                        echo '<span class="badge badge-soft-info" style="padding: 2px 10px !important;">Intransit</span>';
+                                        echo '<span class="badge badge-soft-primary" style="padding: 2px 10px !important;">Dispatch</span>';
                                     } elseif ($order->order_status == 3) {
+                                        echo '<span class="badge badge-soft-info" style="padding: 2px 10px !important;">Intransit</span>';
+                                    } elseif ($order->order_status == 4) {
                                         echo '<span class="badge badge-soft-success" style="padding: 2px 10px !important;">Delivered</span>';
+                                    } elseif ($order->order_status == 5) {
+                                        echo '<span class="badge badge-soft-dark" style="padding: 2px 10px !important;">Return</span>';
                                     } else {
                                         echo '<span class="badge badge-soft-danger" style="padding: 2px 10px !important;">Cancelled</span>';
                                     }

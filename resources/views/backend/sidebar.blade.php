@@ -275,7 +275,7 @@
                     Dispatch Orders
                     (@php
                         echo DB::table('orders')
-                            ->where('order_status', 1)
+                            ->where('order_status', 2)
                             ->count();
                     @endphp)
                 </a>
@@ -286,7 +286,7 @@
                     Intransit Orders
                     (@php
                         echo DB::table('orders')
-                            ->where('order_status', 2)
+                            ->where('order_status', 3)
                             ->count();
                     @endphp)
                 </a>
@@ -297,7 +297,7 @@
                     Delivered Orders
                     (@php
                         echo DB::table('orders')
-                            ->where('order_status', 3)
+                            ->where('order_status', 4)
                             ->count();
                     @endphp)
                 </a>
@@ -319,7 +319,7 @@
                     Cancelled Orders
                     (@php
                         echo DB::table('orders')
-                            ->where('order_status', 4)
+                            ->where('order_status', 6)
                             ->count();
                     @endphp)
                 </a>

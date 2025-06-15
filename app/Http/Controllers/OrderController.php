@@ -820,9 +820,10 @@ class OrderController extends Controller
 
     public function orderInfoUpdate(Request $request)
     {
+
         $data = Order::where('id', $request->order_id)->first();
 
-        if ($data->order_status != $request->order_status) {
+        if ($request->order_status) {
 
             if ($request->order_status == 4 && $data->payment_method == 1) {
                 $data->payment_status = 1;
@@ -841,7 +842,7 @@ class OrderController extends Controller
                 }
             }
 
-            $data->order_status = $request->order_status ?? $data->order_status;
+            $data->order_status = $request->order_status;
 
             $data->estimated_dd = $request->estimated_dd;
             $data->updated_at = Carbon::now();
@@ -853,11 +854,22 @@ class OrderController extends Controller
                 'created_at' => Carbon::now()
             ]);
 
-            DB::table('order_delivey_men')->insert([
-                'order_id' => $request->order_id,
-                'delivery_man_id' => $request->delivery_man_id,
-                'status' => 'pending',
-            ]);
+            $existingDeliveryMan = DB::table('order_delivey_men')->where('order_id', $request->order_id)->first();
+
+            if ($existingDeliveryMan) {
+                DB::table('order_delivey_men')
+                    ->where('order_id', $request->order_id)
+                    ->update([
+                        'delivery_man_id' => $request->delivery_man_id,
+                        'status' => 'pending',
+                    ]);
+            } else {
+                DB::table('order_delivey_men')->insert([
+                    'order_id' => $request->order_id,
+                    'delivery_man_id' => $request->delivery_man_id,
+                    'status' => 'pending',
+                ]);
+            }
         } else {
             $data->order_remarks = $request->order_remarks;
             $data->estimated_dd = $request->estimated_dd;
