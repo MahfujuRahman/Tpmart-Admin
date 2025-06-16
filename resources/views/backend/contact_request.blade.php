@@ -55,7 +55,6 @@
                                     <th class="text-center">Name</th>
                                     <th class="text-center">Email</th>
                                     <th class="text-center">Phone</th>
-                                    <th class="text-center">Company</th>
                                     <th class="text-center">Message</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Action</th>
@@ -76,6 +75,40 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for composing email -->
+    <div class="modal fade" id="composeEmailModal" tabindex="-1" role="dialog" aria-labelledby="composeEmailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="composeEmailModalLabel">Send Email</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="composeEmailForm">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="recipient-email">To</label>
+                            <input type="email" class="form-control" id="recipient-email" name="email" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email-subject">Subject</label>
+                            <input type="text" class="form-control" id="email-subject" name="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email-message">Message</label>
+                            <textarea class="form-control" id="email-message" name="message" rows="4" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send Email</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -108,7 +141,6 @@
                     name: 'email'
                 },
                 { data: 'phone', name: 'phone' },
-                { data: 'company_name', name: 'company_name' },
                 { data: 'message', name: 'message' },
                 { data: 'status', name: 'status' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
@@ -147,19 +179,38 @@
 
         $('body').on('click', '.changeStatus', function () {
             var id = $(this).data("id");
-            if (confirm("Are You sure want to Change the Status ?")) {
-                $.ajax({
-                    type: "GET",
-                    url: "{{ url('change/request/status') }}" + '/' + id,
-                    success: function (data) {
-                        table.draw(false);
-                        toastr.success("Status has been Changed", "Changed Successfully");
-                    },
-                    error: function (data) {
-                        console.log('Error:', data);
-                    }
-                });
+            // Get email from the closest row's email cell if not present in data-email
+            var email = $(this).data("email");
+            if (!email) {
+                var row = $(this).closest('tr');
+                email = row.find('td').eq(2).text().trim(); // 3rd column is email
             }
+            $('#recipient-email').val(email ? email : '');
+            $('#composeEmailModal').modal('show');
+            $('#composeEmailForm').data('id', id);
+        });
+
+        $('#composeEmailForm').on('submit', function(e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            var form = $(this);
+            var submitBtn = form.find('button[type="submit"]');
+            submitBtn.prop('disabled', true).text('Sending...');
+            var formData = form.serialize();
+            $.ajax({
+                type: "GET",
+                url: "{{ url('change/request/status') }}" + '/' + id + '?' + formData,
+                success: function (data) {
+                    $('#composeEmailModal').modal('hide');
+                    toastr.success("Email sent and status changed.", "Success");
+                    table.draw(false);
+                    submitBtn.prop('disabled', false).text('Send Email');
+                },
+                error: function (data) {
+                    toastr.error("Failed to send email.", "Error");
+                    submitBtn.prop('disabled', false).text('Send Email');
+                }
+            });
         });
     </script>
 @endsection

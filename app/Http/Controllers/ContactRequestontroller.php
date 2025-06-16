@@ -7,6 +7,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 use DataTables;
+use App\Mail\ContactRequestReply;
+use Illuminate\Support\Facades\Mail;
 
 class ContactRequestontroller extends Controller
 {
@@ -39,11 +41,20 @@ class ContactRequestontroller extends Controller
         return response()->json(['success' => 'Deleted successfully.']);
     }
 
-    public function changeRequestStatus($id){
+    public function changeRequestStatus($id, Request $request){
+        // Update status
         ContactRequest::where('id', $id)->update([
             'status' => 1,
             'updated_at' => Carbon::now()
         ]);
-        return response()->json(['success' => 'Changed successfully.']);
+
+        // Send email if email, subject, and message are present
+        $email = $request->query('email');
+        $subject = $request->query('subject');
+        $message = $request->query('message');
+        if ($email && $subject && $message) {
+            Mail::to($email)->queue(new ContactRequestReply($subject, $message));
+        }
+        return response()->json(['success' => 'Changed successfully and email sent if provided.']);
     }
 }
