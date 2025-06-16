@@ -46,11 +46,10 @@
             gap: 8px;
             background: #f9f9f9;
         }
+
         .select2-container .select2-selection--multiple .select2-selection__choice {
- 
-    color: #000;
- 
-}
+            color: #000;
+        }
     </style>
 @endsection
 
@@ -108,9 +107,10 @@
             $('.option-container').each(function() {
                 var email = $(this).data('email');
                 var $checkmarkPlaceholder = $(this).find('.checkmark-placeholder');
-                
+
                 if (selectedValues.indexOf(email) !== -1) {
-                    $checkmarkPlaceholder.html('<span class="checkmark" style="color: green; font-size: 18px;">✓</span>');
+                    $checkmarkPlaceholder.html(
+                        '<span class="checkmark" style="color: green; font-size: 18px;">✓</span>');
                 } else {
                     $checkmarkPlaceholder.html('');
                 }
@@ -135,12 +135,14 @@
                 dropdownParent: $('#emails-select').parent(),
                 templateResult: function(data) {
                     if (!data.id) return data.text;
-                    
-                    var $result = $('<div class="option-container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;" data-email="' + data.id + '">' +
+
+                    var $result = $(
+                        '<div class="option-container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;" data-email="' +
+                        data.id + '">' +
                         '<span>' + data.text + '</span>' +
                         '<span class="checkmark-placeholder" style="width: 20px; text-align: right;"></span>' +
                         '</div>');
-                    
+
                     return $result;
                 },
                 templateSelection: function(data) {
@@ -163,15 +165,15 @@
                     allVals.push($(this).val());
                 });
                 $('#emails-select').val(allVals).trigger('change');
-                
+
                 // Update checkmarks without refreshing dropdown
                 setTimeout(updateCheckmarks, 50);
             });
-            
+
             $(document).on('click', '#deselectAllEmails', function(e) {
                 e.preventDefault();
                 $('#emails-select').val(null).trigger('change');
-                
+
                 // Update checkmarks without refreshing dropdown
                 setTimeout(updateCheckmarks, 50);
             });
