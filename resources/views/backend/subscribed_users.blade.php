@@ -66,12 +66,14 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title mb-3">Subscribed Users List</h4>
+                    
                     <div class="table-responsive">
 
                         <label id="customFilter">
                             <a href="{{url('download/subscribed/users/excel')}}"
                                 class="btn btn-sm btn-success rounded ml-3"><i class="feather-download"></i> Download As
                                 Excel</a>
+                            <a href="{{ url('subscribed/users/send-email') }}" class="btn btn-sm btn-primary rounded ml-3"><i class="feather-mail"></i> Send Email</a>
                         </label>
 
                         <table class="table table-bordered mb-0 data-table">
