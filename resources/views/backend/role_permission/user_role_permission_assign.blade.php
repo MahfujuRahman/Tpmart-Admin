@@ -157,7 +157,8 @@
                             @endforeach
                         </div>
 
-                        <div class="form-group text-center pt-3">
+                        <div class="form-group text-center py-3 mb-0"
+                            style="position: fixed; bottom: 0; left: 0; right: 50px; background-color: #fff; z-index: 1000; display: flex; justify-content: end; align-items: center; box-shadow: 0 -2px 4px rgba(0,0,0,0.1);">
                             <button class="btn btn-primary m-2" type="submit"><i class="fas fa-save"></i>&nbsp; Assign Role
                                 Permission</button>
                         </div>
@@ -189,13 +190,14 @@
                 var $groupSwitch = $(this)[0].switchery;
                 var $groupCheckbox = $(this);
                 var $groupItems = $('.' + groupClass + ' .group-item-checkbox');
-                
+
                 // Set initial state: if all checked, group switch is on
-                var allChecked = $groupItems.length > 0 && $groupItems.filter(':checked').length === $groupItems.length;
+                var allChecked = $groupItems.length > 0 && $groupItems.filter(':checked').length ===
+                    $groupItems.length;
                 if (allChecked && $groupSwitch) {
                     $groupSwitch.setPosition(true);
                 }
-                
+
                 // On group switch change
                 $groupCheckbox.on('change', function() {
                     var checked = $groupCheckbox.is(':checked');
@@ -212,10 +214,11 @@
                         }
                     });
                 });
-                
+
                 // If any item in group is unchecked, turn off group switch
                 $groupItems.on('change', function() {
-                    var allChecked = $groupItems.length > 0 && $groupItems.filter(':checked').length === $groupItems.length;
+                    var allChecked = $groupItems.length > 0 && $groupItems.filter(':checked')
+                        .length === $groupItems.length;
                     if ($groupSwitch) {
                         $groupSwitch.setPosition(allChecked);
                     }

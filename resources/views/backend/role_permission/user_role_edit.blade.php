@@ -146,11 +146,12 @@
                             @endforeach
                         </div>
 
-                        <div class="form-group text-center pt-3">
-                            <button class="btn btn-primary m-2" type="submit"><i class="fas fa-save"></i>&nbsp; Update User
+
+                        <div class="form-group text-center py-3 mb-0"
+                            style="position: fixed; bottom: 0; left: 0; right: 50px; background-color: #fff; z-index: 1000; display: flex; justify-content: end; align-items: center; box-shadow: 0 -2px 4px rgba(0,0,0,0.1);">
+                             <button class="btn btn-primary m-2" type="submit"><i class="fas fa-save"></i>&nbsp; Update User
                                 Role</button>
                         </div>
-
                     </form>
                 </div>
             </div>
