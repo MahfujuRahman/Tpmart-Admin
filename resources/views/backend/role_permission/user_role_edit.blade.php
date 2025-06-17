@@ -82,29 +82,33 @@
                                             <div class="card-body">
                                                 @foreach($moduleData['groups'] as $groupName => $groupData)
                                                     <div class="mb-4">
-                                                        <h6 class="text-info">
-                                                            <i class="fas fa-layer-group"></i>
-                                                            {{ $groupName }} Group
-                                                            <span class="badge badge-info ml-2">{{ $groupData['count'] }} routes</span>
-                                                        </h6>
-                                                        <div class="row">
+                                                        <div class="d-flex align-items-center mb-2 ">
+                                                            <h6 class="text-info mb-0 mr-2">
+                                                                <i class="fas fa-layer-group"></i>
+                                                                {{ $groupName }} Group
+                                                                <span class="badge badge-info ml-2">{{ $groupData['count'] }} routes</span>
+                                                            </h6>
+                                                            <input type="checkbox" class="ml-3 group-switchery" data-group="group-{{ Str::slug($moduleName.'-'.$groupName) }}" data-size="small" data-toggle="switchery" data-color="#08da82" data-secondary-color="#df3554" style="margin-left: 15px;"/>
+                                                            <span class="ml-2 text-muted" style="font-size:13px;">All</span>
+                                                        </div>
+                                                        <div class="row group-{{ Str::slug($moduleName.'-'.$groupName) }}">
                                                             @foreach($groupData['routes'] as $index => $permissionRoute)
                                                                 @if($permissionRoute->route == 'home')
                                                                     @continue
                                                                 @endif
-                                                                
                                                                 <div class="col-md-6 mb-2">
                                                                     <div class="form-group border-bottom pb-2">
                                                                         <div class="d-flex align-items-center">
-                                                                            <input type="checkbox" 
-                                                                                   @if(App\Models\RolePermission::where('role_id', $userRoleInfo->id)->where('permission_id', $permissionRoute->id)->exists()) checked @endif
-                                                                                   data-size="small" 
-                                                                                   id="per{{$permissionRoute->id}}" 
-                                                                                   value="{{$permissionRoute->id}}" 
-                                                                                   name="permission_id[]" 
-                                                                                   data-toggle="switchery" 
-                                                                                   data-color="#08da82" 
-                                                                                   data-secondary-color="#df3554"/>
+                                                                            <input type="checkbox"
+                                                                                @if(isset($selectedPermissions) && in_array($permissionRoute->id, $selectedPermissions)) checked @endif
+                                                                                data-size="small"
+                                                                                id="per{{$permissionRoute->id}}"
+                                                                                value="{{$permissionRoute->id}}"
+                                                                                name="permission_id[]"
+                                                                                class="group-item-checkbox"
+                                                                                data-toggle="switchery"
+                                                                                data-color="#08da82"
+                                                                                data-secondary-color="#df3554"/>
                                                                             <div class="ml-3">
                                                                                 <label for="per{{$permissionRoute->id}}" style="cursor: pointer; margin-bottom: 0;">
                                                                                     <small class="text-muted">Route:</small> <strong>{{$permissionRoute->route}}</strong><br>
@@ -137,35 +141,42 @@
 
 
 @section('footer_js')
+    @parent
     <script src="{{url('assets')}}/plugins/switchery/switchery.min.js"></script>
     <script type="text/javascript">
-        function initializeSwitchery() {
-            $('[data-toggle="switchery"]').each(function (idx, obj) {
-                if (!$(this).data('switchery-initialized')) {
-                    new Switchery($(this)[0], $(this).data());
-                    $(this).data('switchery-initialized', true);
-                }
+        // Initialize all switchery toggles
+        $('[data-toggle="switchery"]').each(function (idx, obj) {
+            new Switchery($(this)[0], $(this).data());
+        });
+        // Keep all accordions open by default
+        $(document).ready(function(){
+            $('.collapse').addClass('show');
+        });
+        // Group Switchery logic (fixed for native Switchery UI)
+        $('.group-switchery').each(function(){
+            var groupClass = $(this).data('group');
+            var $groupSwitch = $(this)[0].switchery;
+            var $groupCheckbox = $(this);
+            var $groupItems = $('.' + groupClass + ' .group-item-checkbox');
+            // Set initial state: if all checked, group switch is on
+            var allChecked = $groupItems.length > 0 && $groupItems.filter(':checked').length === $groupItems.length;
+            if(allChecked) {
+                $groupSwitch.setPosition(true);
+            }
+            // On group switch change
+            $groupCheckbox.on('change', function(){
+                var checked = $groupCheckbox.is(':checked');
+                $groupItems.each(function(){
+                    if($(this).is(':checked') !== checked) {
+                        // Use native click to sync Switchery UI
+                        $(this).next('.switchery').length ? $(this)[0].click() : $(this).prop('checked', checked);
+                    }
+                });
             });
-        }
-
-        // Initialize switchery on page load
-        $(document).ready(function() {
-            initializeSwitchery();
-            
-            // Handle chevron icon changes on collapse/expand
-            $('.collapse').on('show.bs.collapse', function() {
-                $(this).prev('.card-header').find('.fa-chevron-down').removeClass('fa-chevron-down').addClass('fa-chevron-up');
-            });
-            
-            $('.collapse').on('hide.bs.collapse', function() {
-                $(this).prev('.card-header').find('.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down');
-            });
-            
-            // Re-initialize switchery when accordion items are shown (for any dynamically loaded content)
-            $('.collapse').on('shown.bs.collapse', function () {
-                setTimeout(function() {
-                    initializeSwitchery();
-                }, 100);
+            // If any item in group is unchecked, turn off group switch
+            $groupItems.on('change', function(){
+                var allChecked = $groupItems.length > 0 && $groupItems.filter(':checked').length === $groupItems.length;
+                $groupSwitch.setPosition(allChecked);
             });
         });
     </script>
