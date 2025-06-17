@@ -160,7 +160,7 @@
             var $groupItems = $('.' + groupClass + ' .group-item-checkbox');
             // Set initial state: if all checked, group switch is on
             var allChecked = $groupItems.length > 0 && $groupItems.filter(':checked').length === $groupItems.length;
-            if(allChecked) {
+            if(allChecked && $groupSwitch) {
                 $groupSwitch.setPosition(true);
             }
             // On group switch change
@@ -169,14 +169,20 @@
                 $groupItems.each(function(){
                     if($(this).is(':checked') !== checked) {
                         // Use native click to sync Switchery UI
-                        $(this).next('.switchery').length ? $(this)[0].click() : $(this).prop('checked', checked);
+                        if ($(this)[0] && $(this)[0].click) {
+                            $(this)[0].click();
+                        } else {
+                            $(this).prop('checked', checked);
+                        }
                     }
                 });
             });
             // If any item in group is unchecked, turn off group switch
             $groupItems.on('change', function(){
                 var allChecked = $groupItems.length > 0 && $groupItems.filter(':checked').length === $groupItems.length;
-                $groupSwitch.setPosition(allChecked);
+                if($groupSwitch) {
+                    $groupSwitch.setPosition(allChecked);
+                }
             });
         });
     </script>

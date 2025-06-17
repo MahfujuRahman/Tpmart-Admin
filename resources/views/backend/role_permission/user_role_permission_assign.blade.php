@@ -115,6 +115,7 @@
                                                             data-group="group-{{ Str::slug($moduleName . '-' . $groupName) }}"
                                                             data-size="small" data-toggle="switchery" data-color="#08da82"
                                                             data-secondary-color="#df3554" style="margin-left: 15px;" />
+                                                        <span class="ml-2 text-muted" style="font-size:13px;">All</span>
 
                                                     </div>
                                                     <div class="row group-{{ Str::slug($moduleName . '-' . $groupName) }}">
@@ -181,34 +182,45 @@
         $(document).ready(function() {
             $('.collapse').addClass('show');
         });
-        // Group Switchery logic (fixed for native Switchery UI)
-        $('.group-switchery').each(function() {
-            var groupClass = $(this).data('group');
-            var $groupSwitch = $(this)[0].switchery;
-            var $groupCheckbox = $(this);
-            var $groupItems = $('.' + groupClass + ' .group-item-checkbox');
-            // Set initial state: if all checked, group switch is on
-            var allChecked = $groupItems.length > 0 && $groupItems.filter(':checked').length === $groupItems.length;
-            if (allChecked) {
-                $groupSwitch.setPosition(true);
-            }
-            // On group switch change
-            $groupCheckbox.on('change', function() {
-                var checked = $groupCheckbox.is(':checked');
-                $groupItems.each(function() {
-                    if ($(this).is(':checked') !== checked) {
-                        // Use native click to sync Switchery UI
-                        $(this).next('.switchery').length ? $(this)[0].click() : $(this).prop(
-                            'checked', checked);
+        // Group Switchery logic (fixed for robust UI sync)
+        setTimeout(function() {
+            $('.group-switchery').each(function() {
+                var groupClass = $(this).data('group');
+                var $groupSwitch = $(this)[0].switchery;
+                var $groupCheckbox = $(this);
+                var $groupItems = $('.' + groupClass + ' .group-item-checkbox');
+                
+                // Set initial state: if all checked, group switch is on
+                var allChecked = $groupItems.length > 0 && $groupItems.filter(':checked').length === $groupItems.length;
+                if (allChecked && $groupSwitch) {
+                    $groupSwitch.setPosition(true);
+                }
+                
+                // On group switch change
+                $groupCheckbox.on('change', function() {
+                    var checked = $groupCheckbox.is(':checked');
+                    $groupItems.each(function() {
+                        var currentCheckbox = this;
+                        var currentSwitchery = currentCheckbox.switchery;
+                        if ($(currentCheckbox).is(':checked') !== checked) {
+                            // Use native click to sync Switchery UI
+                            if (currentCheckbox && currentCheckbox.click) {
+                                currentCheckbox.click();
+                            } else {
+                                $(currentCheckbox).prop('checked', checked);
+                            }
+                        }
+                    });
+                });
+                
+                // If any item in group is unchecked, turn off group switch
+                $groupItems.on('change', function() {
+                    var allChecked = $groupItems.length > 0 && $groupItems.filter(':checked').length === $groupItems.length;
+                    if ($groupSwitch) {
+                        $groupSwitch.setPosition(allChecked);
                     }
                 });
             });
-            // If any item in group is unchecked, turn off group switch
-            $groupItems.on('change', function() {
-                var allChecked = $groupItems.length > 0 && $groupItems.filter(':checked').length ===
-                    $groupItems.length;
-                $groupSwitch.setPosition(allChecked);
-            });
-        });
+        }, 100); // Small delay to ensure all Switchery instances are initialized
     </script>
 @endsection

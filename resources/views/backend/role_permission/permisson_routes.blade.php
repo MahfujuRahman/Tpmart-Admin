@@ -103,7 +103,7 @@
 
     <script type="text/javascript">
         var table = $(".data-table").DataTable({
-            pageLength: 15,
+            pageLength: 10,
             processing: true,
             serverSide: true,
             ajax: "{{ url('/view/permission/routes') }}",
