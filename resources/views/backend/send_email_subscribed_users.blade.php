@@ -4,6 +4,7 @@
     <link href="{{ url('dataTable') }}/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="{{ url('dataTable') }}/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    {{-- <link href="{{url('assets')}}/plugins/select2/select2.min.css" rel="stylesheet" type="text/css" /> --}}
     <style>
         .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0px;
@@ -101,6 +102,7 @@
     <script src="{{ url('dataTable') }}/js/jquery.dataTables.min.js"></script>
     <script src="{{ url('dataTable') }}/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        {{-- <script src="{{url('assets')}}/plugins/select2/select2.min.js"></script> --}}
     <script>
         function updateCheckmarks() {
             var selectedValues = $('#emails-select').val() || [];

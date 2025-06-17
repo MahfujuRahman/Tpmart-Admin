@@ -190,7 +190,5 @@ Route::group(['middleware' => ['auth', 'CheckUserType', 'DemoMode']], function (
     // generate report
     Route::get('sales/report', [ReportController::class, 'salesReport'])->name('SalesReport');
     Route::post('generate/sales/report', [ReportController::class, 'generateSalesReport'])->name('GenerateSalesReport');
-
-
     Route::get('/view/payment/history', [HomeController::class, 'viewPaymentHistory'])->name('ViewPaymentHistory');
 });

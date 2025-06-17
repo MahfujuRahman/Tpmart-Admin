@@ -29,6 +29,12 @@
             <span> Inventory Dashboard</span>
         </a>
     </li>
+    <li>
+        <a href="{{ url('/create/new/order') }}" data-active-paths="{{ url('/create/new/order') }}">
+            <i class="feather-home"></i>
+            <span> Pos System</span>
+        </a>
+    </li>
 
     {{-- Start E-commerce Module --}}
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">

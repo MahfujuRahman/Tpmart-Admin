@@ -62,6 +62,8 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">SL</th>
+                                    <th class="text-center">Group</th>
+                                    <th class="text-center">Module</th>
                                     <th class="text-center">Route</th>
                                     <th class="text-center">Name</th>
                                     <th class="text-center">Method</th>
@@ -98,6 +100,14 @@
                 {
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
+                },
+                {
+                    data: 'route_group_name',
+                    name: 'route_group_name'
+                },
+                {
+                    data: 'route_module_name',
+                    name: 'route_module_name'
                 },
                 {
                     data: 'route',

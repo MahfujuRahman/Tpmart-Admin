@@ -48,82 +48,80 @@
                             <hr>
 
                             @php
-                                // Fetching all permission routes
-                                $all_permissionRoutes = App\Models\PermissionRoutes::orderBy('id', 'asc')->orderBy('route', 'asc')->count();
-                                $chunkSize = ceil($all_permissionRoutes / 3);
-                                $permissionRoutes1 = App\Models\PermissionRoutes::orderBy('id', 'asc')->orderBy('route', 'asc')->skip(0)->limit($chunkSize)->get();
-                                $permissionRoutes2 = App\Models\PermissionRoutes::orderBy('id', 'asc')->orderBy('route', 'asc')->skip($chunkSize)->limit($chunkSize)->get();
-                                $permissionRoutes3 = App\Models\PermissionRoutes::orderBy('id', 'asc')->orderBy('route', 'asc')->skip($chunkSize * 2)->limit($chunkSize)->get();
-
+                                use Illuminate\Support\Str;
+                                
+                                // Get routes organized by Module > Groups > Routes structure
+                                $permissionController = new App\Http\Controllers\PermissionRoutesController();
+                                $moduleGroupRoutes = $permissionController->getRoutesByModuleAndGroup();
+                                
                                 // Check if 'home' route exists and mark it as checked
                                 $homeRoute = App\Models\PermissionRoutes::where('route', 'home')->first();
                             @endphp
 
                             <h4 class="card-title mb-4 mt-4">Assign Permission to this Role</h4>
-                            <div class="row">
-                                <div class="col-lg-4 border-right">
-                                    @foreach ($permissionRoutes1 as $permissionRoute)
-
-                                    @if($permissionRoute->route == 'home')
-                                        <input type="checkbox" checked hidden id="per{{$permissionRoute->id}}" value="{{$permissionRoute->id}}" name="permission_id[]"/>
-                                    @continue
-                                    @endif
-
-                                    <div class="form-group border-bottom" style="margin-bottom: .3rem;">
-                                        <table>
-                                            <tr>
-                                                <td style="padding-right: 10px; vertical-align: middle;">
-                                                    <input type="checkbox" @if(App\Models\RolePermission::where('role_id', $userRoleInfo->id)->where('permission_id', $permissionRoute->id)->exists()) checked @endif data-size="small" id="per{{$permissionRoute->id}}" value="{{$permissionRoute->id}}" name="permission_id[]" data-toggle="switchery" data-color="#08da82" data-secondary-color="#df3554"/>
-                                                </td>
-                                                <td style="padding-top: 5px; vertical-align: middle;">
-                                                    <label for="per{{$permissionRoute->id}}" style="cursor: pointer">
-                                                        Route: {{$permissionRoute->route}}<br>
-                                                        Name: {{$permissionRoute->name}}
-                                                    </label>
-                                                </td>
-                                            </tr>
-                                        </table>
+                            
+                            <!-- Auto-check home route if exists -->
+                            @if($homeRoute && App\Models\RolePermission::where('role_id', $userRoleInfo->id)->where('permission_id', $homeRoute->id)->exists())
+                                <input type="checkbox" checked hidden id="per{{$homeRoute->id}}" value="{{$homeRoute->id}}" name="permission_id[]"/>
+                            @endif
+                            
+                            <div class="accordion" id="moduleAccordion">
+                                @foreach($moduleGroupRoutes as $moduleName => $moduleData)
+                                    <div class="card">
+                                        <div class="card-header" id="heading{{Str::slug($moduleName)}}">
+                                            <h5 class="mb-0">
+                                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{Str::slug($moduleName)}}" aria-expanded="true" aria-controls="collapse{{Str::slug($moduleName)}}">
+                                                    <i class="fas fa-cube text-primary"></i>
+                                                    <strong>{{ ucwords(str_replace(['-', '_'], ' ', $moduleName)) }} Module</strong>
+                                                    <span class="badge badge-primary ml-2">{{ $moduleData['total_count'] }} routes</span>
+                                                    <i class="fas fa-chevron-up float-right mt-1"></i>
+                                                </button>
+                                            </h5>
+                                        </div>
+                                        <div id="collapse{{Str::slug($moduleName)}}" class="collapse show" aria-labelledby="heading{{Str::slug($moduleName)}}">
+                                            <div class="card-body">
+                                                @foreach($moduleData['groups'] as $groupName => $groupData)
+                                                    <div class="mb-4">
+                                                        <h6 class="text-info">
+                                                            <i class="fas fa-layer-group"></i>
+                                                            {{ $groupName }} Group
+                                                            <span class="badge badge-info ml-2">{{ $groupData['count'] }} routes</span>
+                                                        </h6>
+                                                        <div class="row">
+                                                            @foreach($groupData['routes'] as $index => $permissionRoute)
+                                                                @if($permissionRoute->route == 'home')
+                                                                    @continue
+                                                                @endif
+                                                                
+                                                                <div class="col-md-6 mb-2">
+                                                                    <div class="form-group border-bottom pb-2">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <input type="checkbox" 
+                                                                                   @if(App\Models\RolePermission::where('role_id', $userRoleInfo->id)->where('permission_id', $permissionRoute->id)->exists()) checked @endif
+                                                                                   data-size="small" 
+                                                                                   id="per{{$permissionRoute->id}}" 
+                                                                                   value="{{$permissionRoute->id}}" 
+                                                                                   name="permission_id[]" 
+                                                                                   data-toggle="switchery" 
+                                                                                   data-color="#08da82" 
+                                                                                   data-secondary-color="#df3554"/>
+                                                                            <div class="ml-3">
+                                                                                <label for="per{{$permissionRoute->id}}" style="cursor: pointer; margin-bottom: 0;">
+                                                                                    <small class="text-muted">Route:</small> <strong>{{$permissionRoute->route}}</strong><br>
+                                                                                    <small class="text-muted">Name:</small> <code>{{$permissionRoute->name}}</code>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
                                     </div>
-                                    @endforeach
-                                </div>
-                                <div class="col-lg-4 border-right">
-                                    @foreach ($permissionRoutes2 as $permissionRoute)
-                                    <div class="form-group border-bottom" style="margin-bottom: .3rem;">
-                                        <table>
-                                            <tr>
-                                                <td style="padding-right: 10px; vertical-align: middle;">
-                                                    <input type="checkbox" @if(App\Models\RolePermission::where('role_id', $userRoleInfo->id)->where('permission_id', $permissionRoute->id)->exists()) checked @endif data-size="small" id="per{{$permissionRoute->id}}" value="{{$permissionRoute->id}}" name="permission_id[]" data-toggle="switchery" data-color="#08da82" data-secondary-color="#df3554"/>
-                                                </td>
-                                                <td style="padding-top: 5px; vertical-align: middle;">
-                                                    <label for="per{{$permissionRoute->id}}" style="cursor: pointer">
-                                                        Route: {{$permissionRoute->route}}<br>
-                                                        Name: {{$permissionRoute->name}}
-                                                    </label>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    @endforeach
-                                </div>
-                                <div class="col-lg-4">
-                                    @foreach ($permissionRoutes3 as $permissionRoute)
-                                    <div class="form-group border-bottom" style="margin-bottom: .3rem;">
-                                        <table>
-                                            <tr>
-                                                <td style="padding-right: 10px; vertical-align: middle;">
-                                                    <input type="checkbox" @if(App\Models\RolePermission::where('role_id', $userRoleInfo->id)->where('permission_id', $permissionRoute->id)->exists()) checked @endif data-size="small" id="per{{$permissionRoute->id}}" value="{{$permissionRoute->id}}" name="permission_id[]" data-toggle="switchery" data-color="#08da82" data-secondary-color="#df3554"/>
-                                                </td>
-                                                <td style="padding-top: 5px; vertical-align: middle;">
-                                                    <label for="per{{$permissionRoute->id}}" style="cursor: pointer">
-                                                        Route: {{$permissionRoute->route}}<br>
-                                                        Name: {{$permissionRoute->name}}
-                                                    </label>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    @endforeach
-                                </div>
+                                @endforeach
                             </div>
 
                         <div class="form-group text-center pt-3">
@@ -141,8 +139,34 @@
 @section('footer_js')
     <script src="{{url('assets')}}/plugins/switchery/switchery.min.js"></script>
     <script type="text/javascript">
-        $('[data-toggle="switchery"]').each(function (idx, obj) {
-            new Switchery($(this)[0], $(this).data());
+        function initializeSwitchery() {
+            $('[data-toggle="switchery"]').each(function (idx, obj) {
+                if (!$(this).data('switchery-initialized')) {
+                    new Switchery($(this)[0], $(this).data());
+                    $(this).data('switchery-initialized', true);
+                }
+            });
+        }
+
+        // Initialize switchery on page load
+        $(document).ready(function() {
+            initializeSwitchery();
+            
+            // Handle chevron icon changes on collapse/expand
+            $('.collapse').on('show.bs.collapse', function() {
+                $(this).prev('.card-header').find('.fa-chevron-down').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+            });
+            
+            $('.collapse').on('hide.bs.collapse', function() {
+                $(this).prev('.card-header').find('.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+            });
+            
+            // Re-initialize switchery when accordion items are shown (for any dynamically loaded content)
+            $('.collapse').on('shown.bs.collapse', function () {
+                setTimeout(function() {
+                    initializeSwitchery();
+                }, 100);
+            });
         });
     </script>
 @endsection
