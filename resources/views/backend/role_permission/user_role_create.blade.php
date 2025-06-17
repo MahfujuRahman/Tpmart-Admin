@@ -89,9 +89,9 @@
                                                         </h6>
                                                         <div class="row">
                                                             @foreach($groupData['routes'] as $index => $permissionRoute)
-                                                                {{-- @if($permissionRoute->route == 'home')
+                                                                @if($permissionRoute->route == 'home')
                                                                     @continue
-                                                                @endif --}}
+                                                                @endif
                                                                 
                                                                 <div class="col-md-6 mb-2">
                                                                     <div class="form-group border-bottom pb-2">
