@@ -907,5 +907,19 @@
                 }
             });
         });
+
+        // Show server-side validation errors for shipping and billing address fields
+        @if ($errors->any())
+            $(function() {
+                var errorMap = @json($errors->toArray());
+                $.each(errorMap, function(field, messages) {
+                    var input = $('[name="' + field + '"]');
+                    if(input.length) {
+                        input.addClass('is-invalid');
+                        input.closest('td, .form-group').find('.invalid-feedback').text(messages[0]).show();
+                    }
+                });
+            });
+        @endif
     </script>
 @endsection

@@ -4,50 +4,58 @@
             <tr>
                 <th style="width: 30%; line-height: 36px;">Full Name<span class="text-danger">*</span></th>
                 <td>
-                    <input type="text" name="shipping_name" id="shipping_name" class="form-control" placeholder="Full Name" required>
+                    <input type="text" name="shipping_name" id="shipping_name" class="form-control"
+                     placeholder="Full Name" >
+                    <div class="invalid-feedback"><strong></strong></div>
                 </td>
             </tr>
             <tr>
                 <th style="width: 30%; line-height: 36px;">Customer Email</th>
                 <td>
                     <input type="email" name="shipping_email" id="shipping_email" class="form-control" placeholder="Email">
+                    <div class="invalid-feedback"><strong></strong></div>
                 </td>
             </tr>
             <tr>
                 <th style="width: 30%; line-height: 36px;">Customer Phone<span class="text-danger">*</span></th>
                 <td>
-                    <input type="text" name="shipping_phone" id="shipping_phone" class="form-control" placeholder="Phone No" required>
+                    <input type="text" name="shipping_phone" id="shipping_phone" class="form-control" placeholder="Phone No" >
+                    <div class="invalid-feedback"><strong></strong></div>
                 </td>
             </tr>
             <tr>
                 <th style="width: 30%; line-height: 36px;">Customer Address</th>
                 <td>
                     <input type="text" name="shipping_address" id="shipping_address" class="form-control" placeholder="Street No/House No/Area">
+                    <div class="invalid-feedback"><strong></strong></div>
                 </td>
             </tr>
             <tr>
                 <th style="width: 30%; line-height: 36px;">Shipping City</th>
                 <td>
-                    <select class="form-control" name="shipping_district_id" id="shipping_district_id" data-toggle="select2" required>
+                    <select class="form-control" name="shipping_district_id" id="shipping_district_id" data-toggle="select2" >
                         <option value="">Select One</option>
                         @foreach($districts as $district)
                         <option value="{{$district->id}}">{{$district->name}}</option>
                         @endforeach
                     </select>
+                    <div class="invalid-feedback"><strong></strong></div>
                 </td>
             </tr>
             <tr>
                 <th style="width: 30%; line-height: 36px;">Sub-District/State</th>
                 <td>
-                    <select name="shipping_thana_id" data-toggle="select2" id="shipping_thana_id" required>
+                    <select name="shipping_thana_id" data-toggle="select2" id="shipping_thana_id" >
                         <option value="">Select One</option>
                     </select>
+                    <div class="invalid-feedback"><strong></strong></div>
                 </td>
             </tr>
             <tr>
                 <th style="width: 30%; line-height: 36px;">Post Code</th>
                 <td>
                     <input type="text" name="shipping_postal_code" id="shipping_postal_code" class="form-control" placeholder="Post Code">
+                    <div class="invalid-feedback"><strong></strong></div>
                 </td>
             </tr>
 
@@ -55,6 +63,7 @@
                 <th style="width: 30%; line-height: 36px;">Reference Code</th>
                 <td>
                     <input type="text" name="reference_code" id="reference_code" class="form-control" placeholder="Reference Code">
+                    <div class="invalid-feedback"><strong></strong></div>
                 </td>
             </tr>
 

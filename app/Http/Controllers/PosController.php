@@ -464,10 +464,35 @@ class PosController extends Controller
 
     public function placeOrder(Request $request)
     {
+        $request->validate([
+            'customer_id' => 'nullable|exists:users,id',
+            'shipping_name' => 'required|string|max:255',
+            'shipping_phone' => 'required|string|max:20',
+            'shipping_email' => 'required|email|max:255',
+            'shipping_address' => 'required|string|max:500',
+            'shipping_postal_code' => 'nullable|string|max:20',
+            'shipping_district_id' => 'required|exists:districts,id',
+            'shipping_thana_id' => 'required|exists:upazilas,id',
+            'delivery_method' => 'required|in:1,2', // 1 for pickup, 2 for delivery
+            'reference_code' => 'nullable|string|max:255',
+            'customer_source_type_id' => 'nullable|exists:customer_source_types,id',
+            'outlet_id' => 'nullable|exists:outlets,id',
+            'billing_address' => 'required|string|max:500',
+            'billing_district_id' => 'required|exists:districts,id',
+            'billing_thana_id' => 'required|exists:upazilas,id',
+            'billing_postal_code' => 'nullable|string|max:20',
+            'special_note' => 'nullable|string|max:1000',
+            'shipping_charge' => 'nullable|numeric',
+            'discount' => 'nullable|numeric',
+        ]);
 
-        // dd(request()->all());
 
         if (!session('cart') || (session('cart') && count(session('cart')) <= 0)) {
+            Toastr::error('No Products Found in Cart');
+            return back();
+        }
+
+        if (!is_array($request->product_id) || count($request->product_id) <= 0) {
             Toastr::error('No Products Found in Cart', 'Failed to Place Order');
             return back();
         }
