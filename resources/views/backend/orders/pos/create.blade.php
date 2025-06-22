@@ -162,7 +162,7 @@
                                 <div class="custom-control custom-radio mb-2">
                                     <input type="radio" id="store_pickup" name="delivery_method"
                                         onchange="changeOfDeliveryMetod(1)" value="1" class="custom-control-input"
-                                        required style="cursor: pointer" />
+                                        style="cursor: pointer" />
                                     <label class="custom-control-label" for="store_pickup" style="cursor: pointer">
                                         Store Pickup
                                     </label>
@@ -170,7 +170,7 @@
                                 <div class="custom-control custom-radio">
                                     <input type="radio" id="home_delivery" name="delivery_method"
                                         onchange="changeOfDeliveryMetod(2)" value="2" class="custom-control-input"
-                                        required style="cursor: pointer" />
+                                        style="cursor: pointer" />
                                     <label class="custom-control-label" for="home_delivery" style="cursor: pointer">
                                         Home Delivery
                                     </label>
@@ -890,8 +890,9 @@
                             var input = form.find('[name="' + field + '"]');
                             input.addClass('is-invalid');
                             // For radio buttons
-                            if(input.attr('type') === 'radio') {
-                                input.closest('.form-group').find('.invalid-feedback').text(messages[0]).show();
+                            if (input.attr('type') === 'radio') {
+                                input.closest('.form-group').find('.invalid-feedback').text(
+                                    messages[0]).show();
                             } else {
                                 input.siblings('.invalid-feedback').text(messages[0]).show();
                             }
@@ -914,7 +915,7 @@
                 var errorMap = @json($errors->toArray());
                 $.each(errorMap, function(field, messages) {
                     var input = $('[name="' + field + '"]');
-                    if(input.length) {
+                    if (input.length) {
                         input.addClass('is-invalid');
                         input.closest('td, .form-group').find('.invalid-feedback').text(messages[0]).show();
                     }
