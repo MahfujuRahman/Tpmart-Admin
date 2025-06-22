@@ -6,6 +6,7 @@ use DataTables;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use App\Models\EmailConfigure;
 use App\Mail\UserVerificationEmail;
@@ -105,6 +106,26 @@ class CustomerEcommerceController extends Controller
                         return 'Inactive';
                     }
                 })
+                ->addColumn('active_status', function ($data) {
+                    $activity = UserActivity::where('user_id', $data->id)->first();
+
+                    if ($activity && $activity->last_seen) {
+                        $diff = Carbon::now()->diffInMinutes($activity->last_seen);
+                        if ($diff < 1) {
+                            return '<span class="badge" style="background: linear-gradient(90deg, #00c853 0%, #43e97b 100%); color: #fff; font-weight: 600; border-radius: 12px; padding: 6px 14px; font-size: 14px;"><i class="fas fa-circle" style="color:#fff; margin-right:6px;"></i>Active now</span>';
+                        } elseif ($diff < 2) {
+                            return '<span class="badge" style="background: linear-gradient(90deg, #ff9800 0%, #ffc107 100%); color: #fff; font-weight: 600; border-radius: 12px; padding: 6px 14px; font-size: 14px;">
+                                <i class="fas fa-clock" style="color:#fff; margin-right:6px;"></i>
+                                Last seen ' . $diff . ' min ago
+                            </span>';
+                        } else {
+                            UserActivity::where('user_id', $data->id)->delete();
+                            return '<span class="badge" style="background: linear-gradient(90deg, #434343 0%, #262626 100%); color: #fff; font-weight: 600; border-radius: 12px; padding: 6px 14px; font-size: 14px;"><i class="fas fa-circle" style="color:#888; margin-right:6px;"></i>Offline</span>';
+                        }
+                    } else {
+                        return '<span class="badge" style="background: linear-gradient(90deg, #434343 0%, #262626 100%); color: #fff; font-weight: 600; border-radius: 12px; padding: 6px 14px; font-size: 14px;"><i class="fas fa-circle" style="color:#888; margin-right:6px;"></i>Offline</span>';
+                    }
+                })
                 ->addColumn('name', function ($data) {
                     return $data->name ? $data->name : 'N/A';
                 })
@@ -128,7 +149,7 @@ class CustomerEcommerceController extends Controller
                     $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $data->id . '" data-original-title="Delete" class="btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'active_status'])
                 ->make(true);
         }
         return view('backend.customer_ecommerce.view');

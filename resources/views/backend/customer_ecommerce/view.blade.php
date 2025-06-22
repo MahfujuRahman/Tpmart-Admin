@@ -75,8 +75,8 @@
                 <div class="card-body">
                     <h4 class="card-title mb-3">View All Customer E-commerce</h4>
                     <div class="table-responsive">
-                         <label id="customFilter">
-                            <a href="{{url('/add/new/customer-ecommerce')}}" class="btn btn-primary btn-sm"
+                        <label id="customFilter">
+                            <a href="{{ url('/add/new/customer-ecommerce') }}" class="btn btn-primary btn-sm"
                                 style="margin-left: 5px"><b><i class="fas fa-plus"></i> Add New Customer</b></a>
                         </label>
                         <table class="table table-bordered mb-0 data-table">
@@ -89,6 +89,7 @@
                                     <th class="text-center">Email</th>
                                     <th class="text-center">Address</th>
                                     <th class="text-center">Status</th>
+                                    <th class="text-center">Active Status</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                             </thead>
@@ -116,50 +117,56 @@
             serverSide: true,
             ajax: "{{ route('ViewAllCustomerEcommerce') }}",
             columns: [{
-                data: 'DT_RowIndex',
-                name: 'DT_RowIndex'
-            },
-            {
-                data: 'name',
-                name: 'name'
-            },
-            {
-                data: 'image',
-                name: 'image',
-                render: function (data, type, full, meta) {
-                    if (data) {
-                        return "<img src=\"/" + data + "\" width=\"50\"/>";
-                    } else {
-                        return '';
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'image',
+                    name: 'image',
+                    render: function(data, type, full, meta) {
+                        if (data) {
+                            return "<img src=\"/" + data + "\" width=\"50\"/>";
+                        } else {
+                            return '';
+                        }
                     }
-                }
-            },
-            {
-                data: 'phone',
-                name: 'phone'
-            },
-            {
-                data: 'email',
-                name: 'email'
-            },
-            {
-                data: 'address',
-                name: 'address'
-            },
-            {
-                data: 'status',
-                name: 'status'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            },
+                },
+                {
+                    data: 'phone',
+                    name: 'phone'
+                },
+                {
+                    data: 'email',
+                    name: 'email'
+                },
+                {
+                    data: 'address',
+                    name: 'address'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'active_status',
+                    name: 'active_status',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                },
             ],
         });
 
-         $(".dataTables_filter").append($("#customFilter"));
+        $(".dataTables_filter").append($("#customFilter"));
     </script>
 
 
@@ -171,7 +178,7 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function () {
+        $('body').on('click', '.deleteBtn', function() {
             var customerCategorySlug = $(this).data("id");
 
             if (confirm("Are You sure want to delete !")) {
@@ -181,11 +188,11 @@
                 $.ajax({
                     type: "GET",
                     url: "{{ url('delete/customer-ecommerce') }}" + '/' + customerCategorySlug,
-                    success: function (data) {
+                    success: function(data) {
                         table.draw(false);
                         toastr.error("Customer category has been Deleted", "Deleted Successfully");
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         console.log('Error 11:', xhr.responseJSON.error);
                         if (xhr.responseJSON && xhr.responseJSON.error) {
                             toastr.error(xhr.responseJSON.error, "Error");
