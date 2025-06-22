@@ -673,8 +673,7 @@ class PosController extends Controller
             $emailConfig = DB::table('email_configures')->where('status', 1)->orderBy('id', 'desc')->first();
             $userEmail = $request->shipping_email;
 
-            // if ($emailConfig && $userEmail && env('APP_ENV') != 'local') {
-            if ($emailConfig) {
+            if ($emailConfig && $userEmail && env('APP_ENV') != 'local') {
                 $decryption = "";
                 if ($emailConfig) {
 

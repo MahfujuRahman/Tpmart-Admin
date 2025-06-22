@@ -186,7 +186,7 @@
                         </div>
 
                         <div class="mt-4">
-                            <button type="submit" class="btn btn-success mr-1 text-right">
+                            <button type="submit" class="btn btn-success mr-1 text-right" id="confirmOrderBtn">
                                 Confirm Order
                             </button>
                         </div>
@@ -848,5 +848,17 @@
                 $('#exampleModal').modal('show');
             @endif
         @endif
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form[action="{{ url('place/order') }}"]');
+            const confirmBtn = document.getElementById('confirmOrderBtn');
+            if (form && confirmBtn) {
+                form.addEventListener('submit', function() {
+                    confirmBtn.disabled = true;
+                    confirmBtn.innerHTML = 'Processing...';
+                });
+            }
+        });
     </script>
 @endsection
