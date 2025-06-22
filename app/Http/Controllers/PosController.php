@@ -325,7 +325,7 @@ class PosController extends Controller
         $request->validate([
             'customer_name' => ['required', 'string', 'max:255'],
             'customer_phone' => ['required', 'string', 'max:255'],
-            'customer_email' => ['nullable', 'email', 'max:255', 'unique:users,email'],
+            'customer_email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:6'],
         ]);
 
@@ -433,6 +433,17 @@ class PosController extends Controller
 
     public function saveCustomerAddress(Request $request)
     {
+        $request->validate([
+            'customer_id' => 'required|exists:users,id',
+            'address_type' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:500',
+            'post_code' => 'nullable|string|max:20',
+            'customer_address_district_id' => 'required',
+            'customer_address_thana_id' => 'required',
+        ]);
+
         UserAddress::insert([
             'user_id' => $request->customer_id,
             'address_type' => $request->address_type,

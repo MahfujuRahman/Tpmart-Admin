@@ -860,5 +860,52 @@
                 });
             }
         });
+
+        // Handle customer address creation form submission
+        $('#exampleModal2 form').on('submit', function(e) {
+            e.preventDefault();
+            var form = $(this);
+            // Clear previous errors
+            form.find('.invalid-feedback').hide();
+            form.find('.form-control, .btn-check, select').removeClass('is-invalid');
+
+            var submitBtn = form.find('button[type="submit"]');
+            var originalText = submitBtn.text();
+            submitBtn.prop('disabled', true).text('Saving...');
+
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: form.serialize(),
+                success: function(response) {
+                    $('#exampleModal2').modal('hide');
+                    form[0].reset();
+                    toastr.success('Address added successfully!');
+                    // Optionally refresh address/customer dropdown here
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        $.each(errors, function(field, messages) {
+                            var input = form.find('[name="' + field + '"]');
+                            input.addClass('is-invalid');
+                            // For radio buttons
+                            if(input.attr('type') === 'radio') {
+                                input.closest('.form-group').find('.invalid-feedback').text(messages[0]).show();
+                            } else {
+                                input.siblings('.invalid-feedback').text(messages[0]).show();
+                            }
+                        });
+                        // Reopen modal if closed
+                        $('#exampleModal2').modal('show');
+                    } else {
+                        toastr.error('Something went wrong. Please try again.');
+                    }
+                },
+                complete: function() {
+                    submitBtn.prop('disabled', false).text(originalText);
+                }
+            });
+        });
     </script>
 @endsection

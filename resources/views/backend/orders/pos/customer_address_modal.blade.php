@@ -16,47 +16,53 @@
 
                     <div class="form-group">
                         <label>Select Customer</label>
-                        <select class="form-control w-100" name="customer_id" data-toggle="select2" required>
+                        <select class="form-control w-100" name="customer_id" data-toggle="select2">
                             <option value="">Select One</option>
                             @foreach($customers as $customer)
                             <option value="{{$customer->id}}">{{$customer->name}} (@if($customer->email){{$customer->email}}@else{{$customer->phone}}@endif)</option>
                             @endforeach
                         </select>
+                        <div class="invalid-feedback"><strong></strong></div>
                     </div>
 
                     <div class="form-group">
                         <label>Full Name</label>
-                        <input type="text" name="name" class="form-control" placeholder="Full Name" required/>
+                        <input type="text" name="name" class="form-control" placeholder="Full Name"/>
+                        <div class="invalid-feedback"><strong></strong></div>
                     </div>
 
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="tel" class="form-control" name="phone" placeholder="Phone Number" required/>
+                        <input type="tel" class="form-control" name="phone" placeholder="Phone Number"/>
+                        <div class="invalid-feedback"><strong></strong></div>
                     </div>
 
                     <div class="form-group">
                         <label>Address</label>
-                        <input type="text" name="address" class="form-control" placeholder="Address" required/>
+                        <input type="text" name="address" class="form-control" placeholder="Address"/>
+                        <div class="invalid-feedback"><strong></strong></div>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="customer_address_district_id">City</label>
-                                <select class="form-control" name="customer_address_district_id" id="customer_address_district_id" data-toggle="select2" required>
+                                <select class="form-control" name="customer_address_district_id" id="customer_address_district_id" data-toggle="select2">
                                     <option value="">Select One</option>
                                     @foreach($districts as $district)
                                     <option value="{{$district->name}}">{{$district->name}}</option>
                                     @endforeach
                                 </select>
+                                <div class="invalid-feedback"><strong></strong></div>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="customer_address_thana_id">Sub-District/State</label>
-                                <select name="customer_address_thana_id" data-toggle="select2" id="customer_address_thana_id" required>
+                                <select name="customer_address_thana_id" data-toggle="select2" id="customer_address_thana_id">
                                     <option value="">Select One</option>
                                 </select>
+                                <div class="invalid-feedback"><strong></strong></div>
                             </div>
                         </div>
                     </div>
@@ -64,6 +70,7 @@
                     <div class="form-group">
                         <label>Post Code</label>
                         <input type="text" name="post_code" class="form-control" placeholder="ex. 25663"/>
+                        <div class="invalid-feedback"><strong></strong></div>
                     </div>
 
                     <div class="form-group">
@@ -78,6 +85,7 @@
                                 <label class="btn btn-outline-primary" for="btncheck2">Office Address</label>
                             </div>
                         </div>
+                        <div class="invalid-feedback"><strong></strong></div>
                     </div>
 
                 </div>
