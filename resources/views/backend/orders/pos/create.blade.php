@@ -15,44 +15,50 @@
 @section('content')
     <div class="row">
 
-        <div class="col-lg-12 col-xl-5 col-md-5 col-12">
+        <div class="col-lg-12 col-xl-7 col-md-7 col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="mb-4">
                         @include('backend.orders.pos.product_search_form')
                     </div>
-                    <div class="pos-item-card-group" style="max-height: 820px; overflow-y: scroll; padding-right: 12px;">
-                        <ul class="live_search">
+                    <div class="pos-item-card-group" style="max-height: 1020px; overflow-y: scroll; padding-right: 12px;">
+                        <div class="live_search row gap-2" style="gap: 10px;">
+                            {{-- Live search results will be rendered here --}}
                             @include('backend.orders.pos.live_search_products')
-                        </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-12 col-xl-7 col-md-7 col-12">
-            <form action="{{url('place/order')}}" method="POST" enctype="multipart/form-data">
+        <div class="col-lg-12 col-xl-5 col-md-5 col-12">
+            <form action="{{ url('place/order') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-8 col-12">
-                                <select class="form-control w-100" name="customer_id" onchange="getSavedAddress(this.value)" data-toggle="select2">
+                                <select class="form-control w-100" name="customer_id" onchange="getSavedAddress(this.value)"
+                                    data-toggle="select2">
                                     <option value="">Walk in Customer</option>
-                                    @foreach($customers as $customer)
-                                    <option value="{{$customer->id}}">{{$customer->name}} (@if($customer->email){{$customer->email}}@else{{$customer->phone}}@endif)</option>
+                                    @foreach ($customers as $customer)
+                                        <option value="{{ $customer->id }}">{{ $customer->name }} (@if ($customer->email)
+                                                {{ $customer->email }}@else{{ $customer->phone }}
+                                            @endif)</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-lg-4 col-12">
                                 <div class="card-body-inner text-right">
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-primary mr-1 text-right" data-toggle="modal" data-target="#exampleModal">
+                                    <button type="button" class="btn btn-primary mr-1 text-right" data-toggle="modal"
+                                        data-target="#exampleModal">
                                         <i class="fa fa-user"></i>
                                     </button>
 
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-primary text-right" data-toggle="modal" data-target="#exampleModal2">
+                                    <button type="button" class="btn btn-primary text-right" data-toggle="modal"
+                                        data-target="#exampleModal2">
                                         <i class="fa fa-truck"></i>
                                     </button>
 
@@ -103,8 +109,10 @@
 
                         <div class="row mt-4">
                             <div class="col-lg-12">
-                                <input type="text" id="coupon_code" placeholder="Coupon Code" class="form-control d-inline-block w-25">
-                                <button type="button" class="btn btn-success rounded" onclick="applyCoupon()" style="margin-top: -3px; line-height: 22px;">Apply Coupon</button>
+                                <input type="text" id="coupon_code" placeholder="Coupon Code"
+                                    class="form-control d-inline-block w-25">
+                                <button type="button" class="btn btn-success rounded" onclick="applyCoupon()"
+                                    style="margin-top: -3px; line-height: 22px;">Apply Coupon</button>
                             </div>
                         </div>
                     </div>
@@ -152,13 +160,17 @@
 
                             <div class="mt-3">
                                 <div class="custom-control custom-radio mb-2">
-                                    <input type="radio" id="store_pickup" name="delivery_method" onchange="changeOfDeliveryMetod(1)" value="1" class="custom-control-input" required style="cursor: pointer"/>
+                                    <input type="radio" id="store_pickup" name="delivery_method"
+                                        onchange="changeOfDeliveryMetod(1)" value="1" class="custom-control-input"
+                                        required style="cursor: pointer" />
                                     <label class="custom-control-label" for="store_pickup" style="cursor: pointer">
                                         Store Pickup
                                     </label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" id="home_delivery" name="delivery_method" onchange="changeOfDeliveryMetod(2)" value="2" class="custom-control-input" required style="cursor: pointer"/>
+                                    <input type="radio" id="home_delivery" name="delivery_method"
+                                        onchange="changeOfDeliveryMetod(2)" value="2" class="custom-control-input"
+                                        required style="cursor: pointer" />
                                     <label class="custom-control-label" for="home_delivery" style="cursor: pointer">
                                         Home Delivery
                                     </label>
@@ -181,7 +193,7 @@
 
                     </div>
                 </div>
-            <form>
+            </form>
         </div>
     </div>
 
@@ -191,7 +203,8 @@
     <!-- Modal -->
     @include('backend.orders.pos.customer_address_modal')
 
-    <div class="modal fade" id="variantModal" tabindex="-1" role="dialog" aria-labelledby="variantModalLabel" aria-hidden="true">
+    <div class="modal fade" id="variantModal" tabindex="-1" role="dialog" aria-labelledby="variantModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="productVariantForm" name="productVariantForm" class="form-horizontal">
@@ -246,36 +259,39 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <select class="form-control" name="purchase_product_warehouse_id" id="purchase_product_warehouse_id" >
+                                    <select class="form-control" name="purchase_product_warehouse_id"
+                                        id="purchase_product_warehouse_id">
                                         <option value="">Select Warehouse</option>
-                                        @foreach($warehouses as $warehouse)
-                                        <option value="{{$warehouse->id}}">{{$warehouse->title}}</option>
+                                        @foreach ($warehouses as $warehouse)
+                                            <option value="{{ $warehouse->id }}">{{ $warehouse->title }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <select class="form-control" name="purchase_product_warehouse_room_id" id="purchase_product_warehouse_room_id"  >
+                                    <select class="form-control" name="purchase_product_warehouse_room_id"
+                                        id="purchase_product_warehouse_room_id">
                                         <option value="">Select Warehouse Room</option>
-                                        @foreach($warehouse_rooms as $room)
-                                        <option value="{{$room->id}}">{{$room->title}}</option>
+                                        @foreach ($warehouse_rooms as $room)
+                                            <option value="{{ $room->id }}">{{ $room->title }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <select class="form-control" name="purchase_product_warehouse_room_cartoon_id" id="purchase_product_warehouse_room_cartoon_id" >
+                                    <select class="form-control" name="purchase_product_warehouse_room_cartoon_id"
+                                        id="purchase_product_warehouse_room_cartoon_id">
                                         <option value="">Select Room Cartoon</option>
-                                        @foreach($room_cartoons as $cartoon)
-                                        <option value="{{$cartoon->id}}">{{$cartoon->title}}</option>
+                                        @foreach ($room_cartoons as $cartoon)
+                                            <option value="{{ $cartoon->id }}">{{ $cartoon->title }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        
+
 
 
 
@@ -285,7 +301,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" onclick="variantAddToCart()" class="btn btn-primary variant_modal_footer_btn">Add to Cart</button>
+                        <button type="button" onclick="variantAddToCart()"
+                            class="btn btn-primary variant_modal_footer_btn">Add to Cart</button>
                     </div>
                 </form>
             </div>
@@ -304,7 +321,9 @@
             }
         });
 
-        function changeOfDeliveryMetod(value){
+
+
+        function changeOfDeliveryMetod(value) {
 
             var formData = new FormData();
             formData.append("delivery_method", value);
@@ -349,9 +368,9 @@
             $("#shipping_postal_code").val(post_code);
         }
 
-        function sameShippingBilling(){
+        function sameShippingBilling() {
 
-            if($("#flexCheckChecked").prop('checked') == true){
+            if ($("#flexCheckChecked").prop('checked') == true) {
                 var shppingName = $("#shipping_name").val();
                 var shppingPhone = $("#shipping_phone").val();
                 var shppingAdress = $("#shipping_address").val();
@@ -359,35 +378,35 @@
                 var shippingThana = $("#shipping_thana_id").val();
                 var shppingPostalCode = $("#shipping_postal_code").val();
 
-                if(shppingName == '' || shppingName == null){
+                if (shppingName == '' || shppingName == null) {
                     toastr.options.positionClass = 'toast-bottom-right';
                     toastr.options.timeOut = 1000;
                     toastr.error("Please Write Shipping Customer Name");
                     $("#flexCheckChecked").prop("checked", false);
                     return false;
                 }
-                if(shppingPhone == '' || shppingPhone == null){
+                if (shppingPhone == '' || shppingPhone == null) {
                     toastr.options.positionClass = 'toast-bottom-right';
                     toastr.options.timeOut = 1000;
                     toastr.error("Please Write Shipping Customer Phone");
                     $("#flexCheckChecked").prop("checked", false);
                     return false;
                 }
-                if(shppingAdress == '' || shppingAdress == null){
+                if (shppingAdress == '' || shppingAdress == null) {
                     toastr.options.positionClass = 'toast-bottom-right';
                     toastr.options.timeOut = 1000;
                     toastr.error("Please Write Shipping Address");
                     $("#flexCheckChecked").prop("checked", false);
                     return false;
                 }
-                if(!shppingDistrict || shppingDistrict == "" || shppingDistrict == null){
+                if (!shppingDistrict || shppingDistrict == "" || shppingDistrict == null) {
                     toastr.options.positionClass = 'toast-bottom-right';
                     toastr.options.timeOut = 1000;
                     toastr.error("Please Select Shipping District");
                     $("#flexCheckChecked").prop("checked", false);
                     return false;
                 }
-                if(shippingThana == '' || shippingThana == null){
+                if (shippingThana == '' || shippingThana == null) {
                     toastr.options.positionClass = 'toast-bottom-right';
                     toastr.options.timeOut = 1000;
                     toastr.error("Please Select Shipping Thana");
@@ -403,17 +422,19 @@
                 $("#billing_thana_id").html('');
 
                 $.ajax({
-                    url: "{{url('/district/wise/thana')}}",
+                    url: "{{ url('/district/wise/thana') }}",
                     type: "POST",
                     data: {
                         district_id: district_id,
-                        _token: '{{csrf_token()}}'
+                        _token: '{{ csrf_token() }}'
                     },
                     dataType: 'json',
-                    success: function (result) {
-                        $('#billing_thana_id').html('<option data-display="Select One" value="">Select Thana</option>');
-                        $.each(result.data, function (key, value) {
-                            $("#billing_thana_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                    success: function(result) {
+                        $('#billing_thana_id').html(
+                            '<option data-display="Select One" value="">Select Thana</option>');
+                        $.each(result.data, function(key, value) {
+                            $("#billing_thana_id").append('<option value="' + value.id + '">' + value
+                                .name + '</option>');
                         });
                         $("#billing_thana_id").val(shippingThana).change();
                         $(".order-review-summary").html(result.checkoutTotalAmount);
@@ -432,7 +453,7 @@
 
         }
 
-        function getSavedAddress(user_id){
+        function getSavedAddress(user_id) {
             $.get("{{ url('get/saved/address') }}" + '/' + user_id, function(data) {
                 $('.saved_address').html(data.saved_address);
                 $('#shipping_name').val(data.user_info.name);
@@ -444,7 +465,7 @@
             })
         }
 
-        function liveSearchProduct(){
+        function liveSearchProduct() {
 
             var productName = $("#search_keyword").val();
             var productCategoryId = $("#product_category_id").val();
@@ -473,7 +494,7 @@
             });
         }
 
-        function showVariant(product_id){
+        function showVariant(product_id) {
 
             var formData = new FormData();
             formData.append("product_id", product_id);
@@ -488,19 +509,21 @@
                 success: function(data) {
                     $('#productVariantForm').trigger("reset");
                     $('#variantModal').modal('show');
-                    $("#variant_product_name").val(data.product.name+' ('+data.product.code+')');
+                    $("#variant_product_name").val(data.product.name + ' (' + data.product.code + ')');
                     $("#variant_product_id").val(data.product.id);
 
                     // colors
                     $('#variant_color_id').html('<option value="">--Select Color--</option>');
-                    $.each(data.colors, function (key, value) {
-                        $("#variant_color_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                    $.each(data.colors, function(key, value) {
+                        $("#variant_color_id").append('<option value="' + value.id + '">' + value.name +
+                            '</option>');
                     });
 
                     // size
                     $('#variant_size_id').html('<option value="">--Select Size--</option>');
-                    $.each(data.sizes, function (key, value) {
-                        $("#variant_size_id").append('<option value="' + value.id + '">' + value.name + '</option>');
+                    $.each(data.sizes, function(key, value) {
+                        $("#variant_size_id").append('<option value="' + value.id + '">' + value.name +
+                            '</option>');
                     });
                 },
                 error: function(data) {
@@ -512,7 +535,7 @@
 
         }
 
-        function checkVariant(){
+        function checkVariant() {
 
             var formData = new FormData();
             formData.append("product_id", $("#variant_product_id").val());
@@ -548,7 +571,7 @@
 
         }
 
-        function variantAddToCart(){
+        function variantAddToCart() {
 
             var variant_product_id = $("#variant_product_id").val();
             var variant_color_id = $("#variant_color_id").val();
@@ -558,28 +581,30 @@
             var purchase_product_warehouse_room_id = $("#purchase_product_warehouse_room_id").val();
             var purchase_product_warehouse_room_cartoon_id = $("#purchase_product_warehouse_room_cartoon_id").val();
 
-            if(variant_color_id == ''){
+            if (variant_color_id == '') {
                 variant_color_id = 0;
             }
-            if(variant_size_id == ''){
+            if (variant_size_id == '') {
                 variant_size_id = 0;
             }
 
-            if(purchase_product_warehouse_id == ''){
+            if (purchase_product_warehouse_id == '') {
                 purchase_product_warehouse_id = 0;
             }
-            if(purchase_product_warehouse_room_id == ''){
+            if (purchase_product_warehouse_room_id == '') {
                 purchase_product_warehouse_room_id = 0;
             }
-            if(purchase_product_warehouse_room_cartoon_id == ''){
+            if (purchase_product_warehouse_room_cartoon_id == '') {
                 purchase_product_warehouse_room_cartoon_id = 0;
             }
 
-            addToCart(variant_product_id, variant_color_id, variant_size_id, purchase_product_warehouse_id, purchase_product_warehouse_room_id, purchase_product_warehouse_room_cartoon_id);
+            addToCart(variant_product_id, variant_color_id, variant_size_id, purchase_product_warehouse_id,
+                purchase_product_warehouse_room_id, purchase_product_warehouse_room_cartoon_id);
             $('#variantModal').modal('hide');
         }
 
-        function addToCart(product_id, color_id, size_id, purchase_product_warehouse_id, purchase_product_warehouse_room_id, purchase_product_warehouse_room_cartoon_id){
+        function addToCart(product_id, color_id, size_id, purchase_product_warehouse_id, purchase_product_warehouse_room_id,
+            purchase_product_warehouse_room_cartoon_id) {
 
             var formData = new FormData();
             formData.append("product_id", product_id);
@@ -611,7 +636,7 @@
 
         }
 
-        function removeCartItem(cartIndex){
+        function removeCartItem(cartIndex) {
             $.get("{{ url('remove/cart/item') }}" + '/' + cartIndex, function(data) {
                 // toastr.error("Item Removed");
                 $('.cart_items').html(data.rendered_cart);
@@ -619,14 +644,14 @@
             })
         }
 
-        function updateCartQty(value, cartIndex){
+        function updateCartQty(value, cartIndex) {
             $.get("{{ url('update/cart/item') }}" + '/' + cartIndex + '/' + value, function(data) {
                 $('.cart_items').html(data.rendered_cart);
                 $('.cart_calculation').html(data.cart_calculation);
             })
         }
 
-        function applyCoupon(){
+        function applyCoupon() {
             var couponCode = $("#coupon_code").val();
             toastr.options.positionClass = 'toast-bottom-right';
             toastr.options.timeOut = 1000;
@@ -660,7 +685,7 @@
             });
         }
 
-        function updateOrderTotalAmount(){
+        function updateOrderTotalAmount() {
 
             var shippingCharge = parseFloat($("#shipping_charge").val());
             if (isNaN(shippingCharge)) {
@@ -678,7 +703,7 @@
                 currentPrice = 0;
             }
 
-            if(discount > currentPrice){
+            if (discount > currentPrice) {
                 toastr.error("Discount cannot be greater than Order Amount");
                 return false;
             }
@@ -686,7 +711,10 @@
             $.get("{{ url('update/order/total') }}" + '/' + shippingCharge + '/' + discount, function(data) {
                 var newPrice = (currentPrice + shippingCharge) - discount;
                 var totalPriceDiv = document.getElementById("total_cart_calculation");
-                totalPriceDiv.innerText = '৳ ' + newPrice.toLocaleString("en-BD", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                totalPriceDiv.innerText = '৳ ' + newPrice.toLocaleString("en-BD", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
                 $("input[name='delivery_method']").prop("checked", false);
             });
 
@@ -758,7 +786,8 @@
                             '<option data-display="Select One" value="">Select One</option>'
                         );
                         $.each(result.data, function(key, value) {
-                            $("#customer_address_thana_id").append('<option value="' + value.name +
+                            $("#customer_address_thana_id").append('<option value="' +
+                                value.name +
                                 '">' + value.name + '</option>');
                         });
                     }
@@ -766,5 +795,58 @@
             });
 
         });
+
+        // Handle customer creation form submission
+        $('#customerCreateForm').on('submit', function(e) {
+            e.preventDefault();
+
+            // Clear previous errors
+            $('.invalid-feedback').hide();
+            $('.form-control').removeClass('is-invalid');
+
+            var submitBtn = $(this).find('button[type="submit"]');
+            var originalText = submitBtn.text();
+            submitBtn.prop('disabled', true).text('Creating...');
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    // Success - close modal and refresh customer dropdown
+                    $('#exampleModal').modal('hide');
+                    $('#customerCreateForm')[0].reset();
+                    toastr.success('New Customer Created Successfully!');
+
+                    // Optionally refresh the page or reload customer dropdown
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        // Validation errors
+                        var errors = xhr.responseJSON.errors;
+                        $.each(errors, function(field, messages) {
+                            var input = $('[name="' + field + '"]');
+                            input.addClass('is-invalid');
+                            input.siblings('.invalid-feedback').text(messages[0]).show();
+                        });
+                    } else {
+                        toastr.error('Something went wrong. Please try again.');
+                    }
+                },
+                complete: function() {
+                    submitBtn.prop('disabled', false).text(originalText);
+                }
+            });
+        });
+
+        // Check if there are validation errors for customer creation and reopen modal
+        @if ($errors->any())
+            @if (old('customer_name') || old('customer_phone') || old('customer_email') || old('password'))
+                $('#exampleModal').modal('show');
+            @endif
+        @endif
     </script>
 @endsection
