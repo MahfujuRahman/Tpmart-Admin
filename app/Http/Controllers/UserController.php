@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\UserCard;
 use App\Models\WishList;
 use App\Models\UserAddress;
+use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use App\Models\CustomerExcel;
 use App\Models\SupportTicket;
@@ -70,23 +71,44 @@ class UserController extends Controller
             $data = $query->get();
 
             return Datatables::of($data)
-                ->addColumn('active_status', function ($data) {
-                    $lastSeen = Cache::get('user-is-online-' . $data->id);
+                // ->addColumn('active_status', function ($data) {
+                //     $lastSeen = Cache::get('user-is-online-' . $data->id);
 
-                    if ($lastSeen) {
-                        $diff = Carbon::now()->diffInMinutes($lastSeen);
+                //     if ($lastSeen) {
+                //         $diff = Carbon::now()->diffInMinutes($lastSeen);
+                //         if ($diff < 1) {
+                //             return '<span class="badge" style="background: linear-gradient(90deg, #00c853 0%, #43e97b 100%); color: #fff; font-weight: 600; border-radius: 12px; padding: 6px 14px; font-size: 14px;"><i class="fas fa-circle" style="color:#fff; margin-right:6px;"></i>Active now</span>';
+                //         } else {
+                //             return '<span class="badge" style="background: linear-gradient(90deg, #ff9800 0%, #ffc107 100%); color: #fff; font-weight: 600; border-radius: 12px; padding: 6px 14px; font-size: 14px;">
+                //                 <i class="fas fa-clock" style="color:#fff; margin-right:6px;"></i>
+                //                 Last seen ' . $diff . ' min ago
+                //             </span>';
+                //         }
+                //     } else {
+                //         return '<span class="badge" style="background: linear-gradient(90deg, #434343 0%, #262626 100%); color: #fff; font-weight: 600; border-radius: 12px; padding: 6px 14px; font-size: 14px;"><i class="fas fa-circle" style="color:#888; margin-right:6px;"></i>Offline</span>';
+                //     }
+                // })
+                ->addColumn('active_status', function ($data) {
+                    $activity = UserActivity::where('user_id', $data->id)->first();
+
+                    if ($activity && $activity->last_seen) {
+                        $diff = Carbon::now()->diffInMinutes($activity->last_seen);
                         if ($diff < 1) {
                             return '<span class="badge" style="background: linear-gradient(90deg, #00c853 0%, #43e97b 100%); color: #fff; font-weight: 600; border-radius: 12px; padding: 6px 14px; font-size: 14px;"><i class="fas fa-circle" style="color:#fff; margin-right:6px;"></i>Active now</span>';
-                        } else {
+                        } elseif ($diff < 2) {
                             return '<span class="badge" style="background: linear-gradient(90deg, #ff9800 0%, #ffc107 100%); color: #fff; font-weight: 600; border-radius: 12px; padding: 6px 14px; font-size: 14px;">
                                 <i class="fas fa-clock" style="color:#fff; margin-right:6px;"></i>
                                 Last seen ' . $diff . ' min ago
                             </span>';
+                        } else {
+                            UserActivity::where('user_id', $data->id)->delete();
+                            return '<span class="badge" style="background: linear-gradient(90deg, #434343 0%, #262626 100%); color: #fff; font-weight: 600; border-radius: 12px; padding: 6px 14px; font-size: 14px;"><i class="fas fa-circle" style="color:#888; margin-right:6px;"></i>Offline</span>';
                         }
                     } else {
                         return '<span class="badge" style="background: linear-gradient(90deg, #434343 0%, #262626 100%); color: #fff; font-weight: 600; border-radius: 12px; padding: 6px 14px; font-size: 14px;"><i class="fas fa-circle" style="color:#888; margin-right:6px;"></i>Offline</span>';
                     }
                 })
+
                 ->editColumn('created_at', function ($data) {
                     return date("Y-m-d h:i:s a", strtotime($data->created_at));
                 })

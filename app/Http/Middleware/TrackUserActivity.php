@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
+use App\Models\UserActivity;
 
 class TrackUserActivity
 {
@@ -18,9 +19,22 @@ class TrackUserActivity
      */
     public function handle(Request $request, Closure $next)
     {
+        // Track user activity by updating the last seen time in cache
+        // if (Auth::check()) {
+        //     $expiresAt = now()->addMinutes(5); // cache expires in 5 minutes
+        //     Cache::put('user-is-online-' . Auth::id(), now(), $expiresAt);
+        // }
+
+
         if (Auth::check()) {
-            $expiresAt = now()->addMinutes(5); // cache expires in 5 minutes
-            Cache::put('user-is-online-' . Auth::id(), now(), $expiresAt);
+            $userActivity = UserActivity::where('user_id', Auth::id())->first();
+
+            if (!$userActivity || now()->diffInMinutes($userActivity->last_seen) >= 1) {
+                UserActivity::updateOrCreate(
+                    ['user_id' => Auth::id()],
+                    ['last_seen' => now()]
+                );
+            }
         }
 
         return $next($request);
