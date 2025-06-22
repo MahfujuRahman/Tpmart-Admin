@@ -256,7 +256,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <select class="form-control" name="purchase_product_warehouse_id"
@@ -290,7 +290,7 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
 
 

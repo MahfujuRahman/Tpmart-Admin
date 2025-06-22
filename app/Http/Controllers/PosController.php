@@ -503,12 +503,6 @@ class PosController extends Controller
 
         DB::table('order_progress')->insert([
             'order_id' => $orderId,
-            'order_status' => 0,
-            'created_at' => Carbon::now()
-        ]);
-
-        DB::table('order_progress')->insert([
-            'order_id' => $orderId,
             'order_status' => 1,
             'created_at' => Carbon::now()
         ]);
@@ -679,7 +673,8 @@ class PosController extends Controller
             $emailConfig = DB::table('email_configures')->where('status', 1)->orderBy('id', 'desc')->first();
             $userEmail = $request->shipping_email;
 
-            if ($emailConfig && $userEmail && env('APP_ENV') != 'local') {
+            // if ($emailConfig && $userEmail && env('APP_ENV') != 'local') {
+            if ($emailConfig) {
                 $decryption = "";
                 if ($emailConfig) {
 
