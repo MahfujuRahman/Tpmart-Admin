@@ -205,6 +205,55 @@ class InvoiceController extends Controller
     }
 
     /**
+     * Get printable content for POS invoice (AJAX)
+     */
+    public function getPrintableContent($orderId)
+    {
+        $order = Order::with(['shippingInfo', 'billingAddress'])->findOrFail($orderId);
+        
+        // Auto-generate invoice if it doesn't exist
+        if (!Invoice::hasInvoice($orderId)) {
+            $invoice = Invoice::find($orderId);
+            $invoice->markAsInvoiced();
+        }
+
+        // Get order details with product information
+        $orderDetails = DB::table('order_details')
+            ->leftJoin('products', 'order_details.product_id', '=', 'products.id')
+            ->leftJoin('units', 'order_details.unit_id', '=', 'units.id')
+            ->leftJoin('colors', 'order_details.color_id', '=', 'colors.id')
+            ->leftJoin('product_sizes', 'order_details.size_id', '=', 'product_sizes.id')
+            ->select(
+                'order_details.*',
+                'products.name as product_name',
+                'products.code as product_code',
+                'units.name as unit_name',
+                'colors.name as color_name',
+                'product_sizes.name as size_name'
+            )
+            ->where('order_details.order_id', $orderId)
+            ->get();
+
+        // Get customer information
+        $customer = null;
+        if ($order->user_id) {
+            $customer = User::find($order->user_id);
+        }
+
+        // Get company/general information
+        $generalInfo = DB::table('general_infos')
+            ->select('logo', 'logo_dark', 'company_name', 'address', 'email', 'contact')
+            ->first();
+
+        return view('backend.orders.pos.invoice_content_only', compact(
+            'order', 
+            'orderDetails', 
+            'customer', 
+            'generalInfo'
+        ));
+    }
+
+    /**
      * List all invoices
      */
     public function index(Request $request)
@@ -233,7 +282,8 @@ class InvoiceController extends Controller
                 ->addColumn('action', function ($data) {
                     $btn = '';
                     $btn .= '<a href="' . route('ShowInvoice', $data->id) . '" class="btn btn-sm btn-primary mr-1"><i class="fas fa-eye"></i> View</a>';
-                    $btn .= '<a href="' . route('PrintInvoice', $data->id) . '" target="_blank" class="btn btn-sm btn-success"><i class="fas fa-print"></i> Print</a>';
+                    $btn .= '<a href="javascript:void(0)" onclick="printInvoiceInline(' . $data->id . ')" class="btn btn-sm btn-success mr-1"><i class="fas fa-print"></i> Print</a>';
+                    // $btn .= '<a href="' . route('POSInvoicePrint', $data->id) . '" target="_blank" class="btn btn-sm btn-info mr-1"><i class="fas fa-external-link-alt"></i> Open & Print</a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])

@@ -100,9 +100,9 @@
             <div class="card">
                 <div class="card-body">
                     <div class="text-right mb-3">
-                        <a href="{{ route('PrintInvoice', $order->id) }}" target="_blank" class="btn btn-success btn-print">
+                        {{-- <a href="{{ route('PrintInvoice', $order->id) }}" target="_blank" class="btn btn-success btn-print">
                             <i class="fas fa-print"></i> Print Invoice
-                        </a>
+                        </a> --}}
                         <a href="{{ route('ViewAllInvoices') }}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i> Back to List
                         </a>
@@ -116,7 +116,7 @@
                                         <tr>
                                             <td class="title">
                                                 @if($generalInfo && $generalInfo->logo)
-                                                    <img src="{{ url('company_logo/' . $generalInfo->logo) }}" style="width:100%; max-width:200px;">
+                                                    <img src="{{ url( $generalInfo->logo) }}" style="width:100%; max-width:200px;">
                                                 @else
                                                     <h2>{{ $generalInfo->company_name ?? 'Company Name' }}</h2>
                                                 @endif

@@ -13,8 +13,8 @@
                 padding: 0;
             }
 
-            .no-print {
-                display: none !important;
+            @page {
+                margin: 0;
             }
         }
 
@@ -118,30 +118,6 @@
             padding-top: 10px;
         }
 
-        .print-button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .back-button {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-            text-decoration: none;
-            display: inline-block;
-        }
-
         .center {
             text-align: center;
         }
@@ -153,14 +129,6 @@
 </head>
 
 <body>
-    <!-- Print/Back Buttons (hidden when printing) -->
-    <div class="no-print center" style="margin-bottom: 20px;">
-        <button onclick="manualPrint()" class="print-button">🖨️ Print Invoice</button>
-        <a href="{{ route('CreateNewOrder') }}" class="back-button">← Back to POS</a>
-        <a href="{{ route('ViewAllInvoices') }}" class="back-button">← Back to Invoices</a>
-    </div>
-
-    <!-- Invoice Content -->
     <div class="invoice-header">
         <div class="company-name">{{ $generalInfo->company_name ?? 'Your Company Name' }}</div>
         @if ($generalInfo && $generalInfo->address)
@@ -283,52 +251,12 @@
         <div style="margin-top: 5px;">
             {{ $order->invoice_date ? date('d/m/Y H:i:s', strtotime($order->invoice_date)) : date('d/m/Y H:i:s') }}
         </div>
-        @if ($order->delivery_method == 2)
+        {{-- @if ($order->delivery_method == 2)
             <div style="margin-top: 5px; font-size: 9px;">
                 Expected Delivery: {{ date('d/m/Y', strtotime($order->estimated_dd)) }}
             </div>
-        @endif
+        @endif --}}
     </div>
-
-    <!-- Auto-print script -->
-    <script>
-        console.log('POS Invoice Print page loaded');
-
-        // Auto-print when page loads (for thermal printers)
-        window.addEventListener('load', function() {
-            console.log('Window loaded, starting print process...');
-
-            // Wait a moment for content to load, then print
-            setTimeout(function() {
-                try {
-                    console.log('Attempting to print...');
-                    window.print();
-                    console.log('Print command executed');
-                } catch (e) {
-                    console.error('Print failed:', e);
-                }
-            }, 1000); // Increased timeout for better reliability
-        });
-
-        // After printing, optionally redirect back to POS
-        window.addEventListener('afterprint', function() {
-            console.log('After print event fired');
-            // Uncomment the line below if you want to auto-redirect after printing
-            // window.location.href = "{{ route('CreateNewOrder') }}";
-        });
-
-        // Fallback: Manual print button click
-        function manualPrint() {
-            console.log('Manual print triggered');
-            window.print();
-        }
-
-        // Additional debugging
-        window.addEventListener('beforeprint', function() {
-            console.log('Before print event fired');
-        });
-    </script>
-    </script>
 </body>
 
 </html>
