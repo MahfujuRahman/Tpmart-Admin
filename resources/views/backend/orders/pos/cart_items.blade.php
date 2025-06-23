@@ -34,10 +34,12 @@
                     name="quantity[]" placeholder="1" required />
             </td>
             <td class="text-center">
-                <input type="text" class="text-center" style="width: 50px;" min="0"
+                <input type="text" class=" text-center" style="width: 50px;" min="0"
+                     onwheel="this.blur()"
                     value="{{ $details['discounted_price'] }}" name="discounted_price[]" required
-                    onchange="updateCartDiscount(this, '{{ $cartIndex }}')" />
+                    onkeyup="updateCartDiscount(this, '{{ $cartIndex }}')" />
             </td>
+           
             <td class="text-center subtotal-cell">
                 ৳{{ $details['price'] * $details['quantity'] - (isset($details['discounted_price']) ? $details['discounted_price'] : 0) }}
             </td>
@@ -60,7 +62,6 @@
     // User-friendly discount update
     function updateCartDiscount(input, cartIndex) {
         let discount = parseFloat(input.value) || 0;
-        // Get the price and quantity fields for this row
         var row = input.closest('tr');
         var price = parseFloat(row.querySelector('input[name="price[]"]').value) || 0;
         var qty = parseFloat(row.querySelector('input[name="quantity[]"]').value) || 1;
@@ -75,23 +76,16 @@
             toastr.error('Discount cannot be greater than subtotal!');
         }
 
-        // Show loading spinner or disable input
-        input.disabled = true;
-        input.style.background = '#f3f3f3';
-
-        // Calculate subtotal after discount
+        // Update subtotal cell immediately for smooth UX
         var subtotalCell = row.querySelector('.subtotal-cell');
         var newSubtotal = subtotal - discount;
         if (newSubtotal < 0) newSubtotal = 0;
         subtotalCell.innerHTML = '৳' + newSubtotal.toFixed(2);
 
-        // Update the cart item discount in backend
+        // Update the cart item discount in backend, but do NOT reload the whole cart_items
         $.get("{{ url('update/cart/discount') }}/" + cartIndex + "/" + discount, function(data) {
-            $('.cart_items').html(data.rendered_cart);
+            // Only update the totals section, not the cart rows
             $('.cart_calculation').html(data.cart_calculation);
-        }).always(function() {
-            input.disabled = false;
-            input.style.background = '';
         });
     }
 </script>
