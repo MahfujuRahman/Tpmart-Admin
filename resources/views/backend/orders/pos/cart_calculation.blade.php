@@ -1,4 +1,4 @@
-{{session('shipping_charge') }}
+
 <tr>
     <td class="text-center">
         @php
@@ -6,6 +6,9 @@
             if (session('cart') && count(session('cart')) > 0) {
                 foreach (session('cart') as $cartIndex => $details) {
                     $total = $total + $details['price'] * $details['quantity'];
+                    if (isset($details['discounted_price'])) {
+                        $total = $total - $details['discounted_price'];
+                    }
                 }
             }
         @endphp

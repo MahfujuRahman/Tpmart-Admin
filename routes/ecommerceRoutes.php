@@ -144,6 +144,7 @@ Route::group(['middleware' => ['auth', 'CheckUserType', 'DemoMode']], function (
     Route::post('/add/to/cart', [PosController::class, 'addToCart'])->name('AddToCart');
     Route::get('/remove/cart/item/{index}', [PosController::class, 'removeCartItem'])->name('RemoveCartItem');
     Route::get('/update/cart/item/{index}/{qty}', [PosController::class, 'updateCartItem'])->name('UpdateCartItem');
+    Route::get('/update/cart/discount/{index}/{discount}', [PosController::class, 'updateCartItemDiscount'])->name('UpdateCartItemDiscount');
     Route::post('/save/new/customer', [PosController::class, 'saveNewCustomer'])->name('SaveNewCustomer');
     Route::get('/update/order/total/{shipping_charge}/{discount}', [PosController::class, 'updateOrderTotal'])->name('UpdateOrderTotal');
     Route::post('/apply/coupon', [PosController::class, 'applyCoupon'])->name('ApplyCoupon');

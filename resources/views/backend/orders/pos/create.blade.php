@@ -85,6 +85,7 @@
                                         <th class="text-center">Product</th>
                                         <th class="text-center">Price</th>
                                         <th class="text-center">QTY</th>
+                                        <th class="text-center">Discount</th>
                                         <th class="text-center">Subtotal</th>
                                         <th class="text-center">Remove</th>
                                     </tr>
@@ -696,12 +697,12 @@
             if (isNaN(shippingCharge)) {
                 shippingCharge = 0;
             }
-            console.log('shippingCharge:', shippingCharge);
+
             var discount = parseFloat($("#discount").val());
             if (isNaN(discount)) {
                 discount = 0;
             }
-            console.log('discount:', discount);
+
             var priceInputField = document.getElementById("subtotal");
             var currentPrice = parseFloat(priceInputField.value);
             if (isNaN(currentPrice)) {
@@ -724,6 +725,7 @@
             });
 
         }
+
 
         $(document).ready(function() {
 

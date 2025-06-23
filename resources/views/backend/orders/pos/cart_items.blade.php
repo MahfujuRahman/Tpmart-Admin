@@ -1,39 +1,97 @@
-@if(session('cart') && count(session('cart')) > 0)
+@if (session('cart') && count(session('cart')) > 0)
     @php $serial = 1; @endphp
-    @foreach(session('cart') as $cartIndex => $details)
-    <tr>
-        <th class="text-center">
-            {{$serial++}}
-            <input type="hidden" name="product_id[]" value="{{$details['product_id']}}">
-            <input type="hidden" name="color_id[]" value="{{$details['color_id']}}">
-            <input type="hidden" name="size_id[]" value="{{$details['size_id']}}">
-            <input type="hidden" name="purchase_product_warehouse_id[]" value="{{$details['purchase_product_warehouse_id']}}">
-            <input type="hidden" name="purchase_product_warehouse_room_id[]" value="{{$details['purchase_product_warehouse_room_id']}}">
-            <input type="hidden" name="purchase_product_warehouse_room_cartoon_id[]" value="{{$details['purchase_product_warehouse_room_cartoon_id']}}">
-            <input type="hidden" name="price[]" value="{{$details['price']}}">
-        </th>
-        <td class="text-center">
-            <img src="{{url($details['image'])}}" style="width: 30px; height: 30px">
-        </td>
-        <td class="text-left">
-            {{$details['name']}} ({{$details['code']}})
-            @if($details['color_id']) <b>Color:</b> {{$details['color_name']}} @endif
-            @if($details['size_id']) <b>Size:</b> {{$details['size_name']}} @endif
-        </td>
-        <td class="text-center">৳{{$details['price']}}</td>
-        <td class="text-center">
-            <input type="text" class="text-center" style="width: 50px;" min="1" onkeyup="updateCartQty(this.value, '{{$cartIndex}}')" value="{{$details['quantity']}}" name="quantity[]" placeholder="1" required/>
-        </td>
-        <td class="text-center">৳{{$details['price']*$details['quantity']}}</td>
-        <td class="text-center">
-            <button type="button" onclick="removeCartItem('{{$cartIndex}}')" class="btn btn-danger btn-sm m-0">
-                <i class="fa fa-times"></i>
-            </button>
-        </td>
-    </tr>
+    @foreach (session('cart') as $cartIndex => $details)
+        <tr>
+            <th class="text-center">
+                {{ $serial++ }}
+                <input type="hidden" name="product_id[]" value="{{ $details['product_id'] }}">
+                <input type="hidden" name="color_id[]" value="{{ $details['color_id'] }}">
+                <input type="hidden" name="size_id[]" value="{{ $details['size_id'] }}">
+                <input type="hidden" name="purchase_product_warehouse_id[]"
+                    value="{{ $details['purchase_product_warehouse_id'] }}">
+                <input type="hidden" name="purchase_product_warehouse_room_id[]"
+                    value="{{ $details['purchase_product_warehouse_room_id'] }}">
+                <input type="hidden" name="purchase_product_warehouse_room_cartoon_id[]"
+                    value="{{ $details['purchase_product_warehouse_room_cartoon_id'] }}">
+                <input type="hidden" name="price[]" value="{{ $details['price'] }}">
+            </th>
+            <td class="text-center">
+                <img src="{{ url($details['image']) }}" style="width: 30px; height: 30px">
+            </td>
+            <td class="text-left">
+                {{ $details['name'] }} ({{ $details['code'] }})
+                @if ($details['color_id'])
+                    <b>Color:</b> {{ $details['color_name'] }}
+                @endif
+                @if ($details['size_id'])
+                    <b>Size:</b> {{ $details['size_name'] }}
+                @endif
+            </td>
+            <td class="text-center">৳{{ $details['price'] }}</td>
+            <td class="text-center">
+                <input type="text" class="text-center" style="width: 50px;" min="1"
+                    onkeyup="updateCartQty(this.value, '{{ $cartIndex }}')" value="{{ $details['quantity'] }}"
+                    name="quantity[]" placeholder="1" required />
+            </td>
+            <td class="text-center">
+                <input type="text" class="text-center" style="width: 50px;" min="0"
+                    value="{{ $details['discounted_price'] }}" name="discounted_price[]" required
+                    onchange="updateCartDiscount(this, '{{ $cartIndex }}')" />
+            </td>
+            <td class="text-center subtotal-cell">
+                ৳{{ $details['price'] * $details['quantity'] - (isset($details['discounted_price']) ? $details['discounted_price'] : 0) }}
+            </td>
+            <td class="text-center">
+                <button type="button" onclick="removeCartItem('{{ $cartIndex }}')"
+                    class="btn btn-danger btn-sm m-0">
+                    <i class="fa fa-times"></i>
+                </button>
+            </td>
+        </tr>
     @endforeach
 @else
     <tr>
         <td colspan="7" class="text-center">No item is Added</td>
     </tr>
 @endif
+
+
+<script>
+    // User-friendly discount update
+    function updateCartDiscount(input, cartIndex) {
+        let discount = parseFloat(input.value) || 0;
+        // Get the price and quantity fields for this row
+        var row = input.closest('tr');
+        var price = parseFloat(row.querySelector('input[name="price[]"]').value) || 0;
+        var qty = parseFloat(row.querySelector('input[name="quantity[]"]').value) || 1;
+        var subtotal = price * qty;
+
+        // Prevent discount greater than subtotal
+        if (discount > subtotal) {
+            discount = 0;
+            input.value = 0;
+            toastr.options.positionClass = 'toast-top-right';
+            toastr.options.timeOut = 1500;
+            toastr.error('Discount cannot be greater than subtotal!');
+        }
+
+        // Show loading spinner or disable input
+        input.disabled = true;
+        input.style.background = '#f3f3f3';
+
+        // Calculate subtotal after discount
+        var subtotalCell = row.querySelector('.subtotal-cell');
+        var newSubtotal = subtotal - discount;
+        if (newSubtotal < 0) newSubtotal = 0;
+        subtotalCell.innerHTML = '৳' + newSubtotal.toFixed(2);
+
+        // Update the cart item discount in backend
+        $.get("{{ url('update/cart/discount') }}/" + cartIndex + "/" + discount, function(data) {
+            $('.cart_items').html(data.rendered_cart);
+            $('.cart_calculation').html(data.cart_calculation);
+        }).always(function() {
+            input.disabled = false;
+            input.style.background = '';
+        });
+    }
+</script>

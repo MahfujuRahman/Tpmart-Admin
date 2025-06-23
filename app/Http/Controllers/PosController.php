@@ -158,6 +158,7 @@ class PosController extends Controller
                     "code" => $productInfo->product_code,
                     "name" => $productInfo->product_name,
                     "quantity" => 1,
+                    'discounted_price' => 0,
                     "price" => $productInfo->discounted_price > 0 ? $productInfo->discounted_price : $productInfo->price,
                     "image" => $productInfo->product_image,
                     "color_id" => $request->color_id,
@@ -182,6 +183,7 @@ class PosController extends Controller
                     "code" => $productInfo->code,
                     "name" => $productInfo->name,
                     "quantity" => 1,
+                    'discounted_price' => 0,
                     "price" => $productInfo->discount_price > 0 ? $productInfo->discount_price : $productInfo->price,
                     "image" => $productInfo->image,
                     "color_id" => null,
@@ -243,6 +245,25 @@ class PosController extends Controller
         $cart = session()->get('cart');
         if (isset($cart[$cartIndex])) {
             $cart[$cartIndex]['quantity'] = $qty;
+            session()->put('cart', $cart);
+        }
+
+        // removing discount because some coupon code have minimum order value
+        session(['pos_discount' => 0]);
+
+        $returnHTML = view('backend.orders.pos.cart_items')->render();
+        $cartCalculationHTML = view('backend.orders.pos.cart_calculation')->render();
+        return response()->json([
+            'rendered_cart' => $returnHTML,
+            'cart_calculation' => $cartCalculationHTML,
+        ]);
+    }
+
+    public function updateCartItemDiscount($cartIndex, $discount )
+    {
+        $cart = session()->get('cart');
+        if (isset($cart[$cartIndex])) {
+            $cart[$cartIndex]['discounted_price'] = is_numeric($discount) ? (float)$discount : 0;
             session()->put('cart', $cart);
         }
 
@@ -510,11 +531,13 @@ class PosController extends Controller
 
         // Calculate grand total value
         $grandTotal = $total + $deliveryCost - $discount;
-        
+
         // Store the decimal part (e.g., for 11.99, store 0.99)
         $roundOff = $grandTotal - floor($grandTotal);
 
         $grandTotalwithoutRoundOff = $grandTotal - $roundOff;
+
+        dd(request()->all(), $grandTotal, $roundOff, $grandTotalwithoutRoundOff, $discount, $deliveryCost, $couponCode);
 
         $orderId = DB::table('orders')->insertGetId([
             'order_no' => date("ymd") . DB::table('orders')->where('order_date', 'LIKE', date("Y-m-d") . '%')->count() + 1,
