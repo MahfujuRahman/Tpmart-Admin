@@ -51,6 +51,11 @@
                             <div class="col-lg-4 col-12">
                                 <div class="card-body-inner text-right">
                                     <!-- Button trigger modal -->
+                                    <a href="{{ route('ViewAllInvoices') }}" class="btn btn-primary mr-1 text-right">
+                                        <i class="fa fa-print"></i>
+                                    </a>
+
+                                    <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-primary mr-1 text-right" data-toggle="modal"
                                         data-target="#exampleModal">
                                         <i class="fa fa-user"></i>
