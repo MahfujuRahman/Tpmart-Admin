@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 use App\Models\BillingAddress;
+use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\OrderPayment;
@@ -345,7 +346,7 @@ class PosController extends Controller
         // Check if request is AJAX
         if ($request->ajax()) {
             Toastr::success('New Customer Created', 'Success');
-             return back();
+            return back();
         }
 
         Toastr::success('New Customer Created', 'Success');
@@ -740,8 +741,23 @@ class PosController extends Controller
         session()->forget('shipping_charge');
         session()->forget('cart');
 
-        Toastr::success('Order Placed Successfully', 'Success');
-        return back();
+        // Auto-generate invoice for completed POS order
+        try {
+            $invoice = Invoice::find($orderId);
+            if ($invoice) {
+                $invoice->markAsInvoiced();
+                // Redirect to POS invoice print page instead of going back
+                Toastr::error('Order & Invoice Generated Successfully', 'Success');
+                return redirect()->route('POSInvoicePrint', $orderId)
+                    ->with('success', 'Order & Invoice Generated Successfully');
+            } else {
+                session()->flash('success', 'Order Placed Successfully');
+                return back();
+            }
+        } catch (\Exception $e) {
+            session()->flash('success', 'Order Placed Successfully');
+            return back();
+        }
     }
 
 

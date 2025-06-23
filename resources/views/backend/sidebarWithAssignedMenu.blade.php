@@ -510,6 +510,19 @@ $backupModule = App\Models\UserRolePermission::where('user_id', Auth::user()->id
         </li>
 
         <li>
+            @if(checkAuth("ViewAllInvoices"))
+                <a href="{{ route('ViewAllInvoices') }}"
+                    data-active-paths="{{ route('ViewAllInvoices') }}">
+                    <i class="feather-file-text"></i>
+                    <span>Invoices</span>
+                    <span style="color:lightgreen" title="Total Invoices">
+                        (@php echo DB::table('orders')->where('order_from', 3)->where('invoice_generated', 1)->count(); @endphp)
+                    </span>
+                </a>
+            @endif
+        </li>
+
+        <li>
             @if(checkAuth("view/all/promo/codes"))
                 <a href="{{ url('/view/all/promo/codes') }}"
                     data-active-paths="{{ url('/view/all/promo/codes') }},{{ url('/add/new/code') }},{{ url('/edit/promo/code/*') }}">

@@ -16,6 +16,7 @@ use App\Http\Controllers\ProductColorController;
 use App\Http\Controllers\ChildCategoryController;
 use App\Http\Controllers\DeliveryChargeController;
 use App\Http\Controllers\ProductSizeValueController;
+use App\Http\Controllers\InvoiceController;
 
 
 
@@ -154,6 +155,15 @@ Route::group(['middleware' => ['auth', 'CheckUserType', 'DemoMode']], function (
     Route::post('place/order', [PosController::class, 'placeOrder'])->name('PlaceOrder');
     // Route::get('/edit/place/order/{slug}', [PosController::class, 'editPlaceOrder'])->name('EditPlaceOrder');
     // Route::post('/update/place/order', [PosController::class, 'updatePlaceOrder'])->name('UpdatePlaceOrder');
+    
+    // POS Invoice Print Route
+    Route::get('/pos/invoice/print/{id}', [InvoiceController::class, 'posInvoicePrint'])->name('POSInvoicePrint');
+
+    // invoice routes
+    Route::get('/view/all/invoices', [InvoiceController::class, 'index'])->name('ViewAllInvoices');
+    Route::get('/invoice/show/{id}', [InvoiceController::class, 'showInvoice'])->name('ShowInvoice');
+    Route::get('/invoice/print/{id}', [InvoiceController::class, 'printInvoice'])->name('PrintInvoice');
+    Route::post('/invoice/generate/{id}', [InvoiceController::class, 'generateInvoice'])->name('GenerateInvoice');
 
     // promo codes
     Route::get('/add/new/code', [PromoCodeController::class, 'addPromoCode'])->name('AddPromoCode');

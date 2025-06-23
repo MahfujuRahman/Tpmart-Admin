@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Models\ShippingInfo;
+use App\Models\BillingAddress;
+use App\Models\OrderDetails;
 use App\Models\OrderDeliveyMan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,6 +43,18 @@ class Order extends Model
 
     public function shippingInfo() {
         return $this->hasOne(ShippingInfo::class, 'order_id');
+    }
+
+    public function billingAddress() {
+        return $this->hasOne(BillingAddress::class, 'order_id');
+    }
+
+    public function orderDetails() {
+        return $this->hasMany(OrderDetails::class, 'order_id');
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     // public function customerSourceType() {
