@@ -696,12 +696,12 @@
             if (isNaN(shippingCharge)) {
                 shippingCharge = 0;
             }
-
+            console.log('shippingCharge:', shippingCharge);
             var discount = parseFloat($("#discount").val());
             if (isNaN(discount)) {
                 discount = 0;
             }
-
+            console.log('discount:', discount);
             var priceInputField = document.getElementById("subtotal");
             var currentPrice = parseFloat(priceInputField.value);
             if (isNaN(currentPrice)) {

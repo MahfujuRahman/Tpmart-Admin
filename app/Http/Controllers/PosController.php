@@ -413,7 +413,7 @@ class PosController extends Controller
     public function changeDeliveryMethod(Request $request)
     {
         if ($request->delivery_method == 1) {
-            session(['shipping_charge' => 0]);
+            session(['shipping_charge' => session()->has('shipping_charge') ? session('shipping_charge') : 0]);
             $cartCalculationHTML = view('backend.orders.pos.cart_calculation')->render();
             return response()->json([
                 'cart_calculation' => $cartCalculationHTML
@@ -508,6 +508,14 @@ class PosController extends Controller
         $deliveryCost = $request->shipping_charge ? $request->shipping_charge : 0;
         $couponCode = session('coupon') ? session('coupon') : null;
 
+        // Calculate grand total value
+        $grandTotal = $total + $deliveryCost - $discount;
+        
+        // Store the decimal part (e.g., for 11.99, store 0.99)
+        $roundOff = $grandTotal - floor($grandTotal);
+
+        $grandTotalwithoutRoundOff = $grandTotal - $roundOff;
+
         $orderId = DB::table('orders')->insertGetId([
             'order_no' => date("ymd") . DB::table('orders')->where('order_date', 'LIKE', date("Y-m-d") . '%')->count() + 1,
             'order_from' => 3, //pos order
@@ -522,11 +530,13 @@ class PosController extends Controller
             'sub_total' => $total,
             'coupon_code' => $couponCode,
             'discount' => $discount,
-            'delivery_fee' => $request->delivery_method == 2 ? $deliveryCost : 0,
+            'delivery_fee' => $deliveryCost ?? 0,
             'vat' => 0,
             'tax' => 0,
-            'total' => $total + $deliveryCost - $discount,
+            // 'total' => $total + $deliveryCost - $discount,
+            'total' => $grandTotalwithoutRoundOff ?? 0,
             'order_note' => $request->special_note,
+            'round_off' => $roundOff ?? 0,
             // 'warehouse_id' => request()->purchase_product_warehouse_id,
             // 'room_id' => request()->purchase_product_warehouse_room_id,
             // 'cartoon_id' => request()->purchase_product_warehouse_room_cartoon_id,
