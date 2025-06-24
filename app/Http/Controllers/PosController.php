@@ -584,6 +584,7 @@ class PosController extends Controller
             'total' => $grandTotalwithoutRoundOff ?? 0,
             'order_note' => $request->special_note,
             'round_off' => $roundOff ?? 0,
+            'coupon_price' => $couponDiscount ?? 0,
             // 'warehouse_id' => request()->purchase_product_warehouse_id,
             // 'room_id' => request()->purchase_product_warehouse_room_id,
             // 'cartoon_id' => request()->purchase_product_warehouse_room_cartoon_id,
@@ -794,6 +795,7 @@ class PosController extends Controller
         session()->forget('pos_discount');
         session()->forget('shipping_charge');
         session()->forget('cart');
+        session()->forget('discount');
 
         // Auto-generate invoice for completed POS order
         try {

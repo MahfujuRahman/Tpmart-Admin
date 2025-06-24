@@ -226,6 +226,15 @@
             </div>
         @endif
 
+        @if ($order->coupon_price > 0)
+            <div class="total-row">
+                <span>Coupon:</span>
+                <span>
+                    {{ $order->coupon_price > 0 ? '- ৳' . number_format(abs($order->coupon_price), 2) : '' }}
+                </span>
+            </div>
+        @endif
+
         @if ($order->delivery_fee > 0)
             <div class="total-row">
                 <span>Delivery Fee:</span>
