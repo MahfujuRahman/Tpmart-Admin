@@ -342,6 +342,44 @@
             formData.append("delivery_method", value);
             formData.append("shipping_district_id", $("#shipping_district_id").val());
 
+            // Handle UI changes based on delivery method
+            if (value == 1) { // Store Pickup
+                // Hide saved address section
+                $('.saved_address').hide();
+                
+                // Hide billing address tab completely
+                $('.shipping-address-table .nav-item:last-child').hide();
+                $('.shipping-address-table #profile1').hide();
+                
+                // Update shipping tab label
+                $('.shipping-address-table .nav-link.active span').text('Customer Information');
+                
+                // Hide specific shipping fields - keep only name, phone, email, customer type, and outlet
+                $('#shipping_address').closest('tr').hide();
+                $('#shipping_district_id').closest('tr').hide();
+                $('#shipping_thana_id').closest('tr').hide();
+                $('#shipping_postal_code').closest('tr').hide();
+                $('#reference_code').closest('tr').hide();
+                
+            } else { // Home Delivery
+                // Show saved address section
+                $('.saved_address').show();
+                
+                // Show billing address tab
+                $('.shipping-address-table .nav-item:last-child').show();
+                $('.shipping-address-table #profile1').show();
+                
+                // Restore shipping tab label
+                $('.shipping-address-table .nav-link.active span').text('Shipping Address');
+                
+                // Show all shipping fields
+                $('#shipping_address').closest('tr').show();
+                $('#shipping_district_id').closest('tr').show();
+                $('#shipping_thana_id').closest('tr').show();
+                $('#shipping_postal_code').closest('tr').show();
+                $('#reference_code').closest('tr').show();
+            }
+
             $.ajax({
                 data: formData,
                 url: "{{ url('change/delivery/method') }}",
@@ -772,6 +810,13 @@
 
 
         $(document).ready(function() {
+
+            // Initialize delivery method UI state
+            var selectedDeliveryMethod = $('input[name="delivery_method"]:checked').val();
+            if (selectedDeliveryMethod == 1) {
+                // If store pickup is already selected, apply the UI changes
+                changeOfDeliveryMetod(1);
+            }
 
             $('#shipping_district_id').on('change', function() {
                 var district_id = this.value;

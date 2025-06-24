@@ -508,29 +508,50 @@ class PosController extends Controller
 
     public function placeOrder(Request $request)
     {
-        $request->validate([
+        // Conditional validation based on delivery method
+        $validationRules = [
             'customer_id' => 'nullable|exists:users,id',
             'shipping_name' => 'required|string|max:255',
             'shipping_phone' => 'required|string|max:20',
             'shipping_email' => 'required|email|max:255',
-            'shipping_address' => 'required|string|max:500',
-            'shipping_postal_code' => 'nullable|string|max:20',
-            'shipping_district_id' => 'required|exists:districts,id',
-            'shipping_thana_id' => 'required|exists:upazilas,id',
             'delivery_method' => 'required|in:1,2', // 1 for pickup, 2 for delivery
             'reference_code' => 'nullable|string|max:255',
             'customer_source_type_id' => 'nullable|exists:customer_source_types,id',
             'outlet_id' => 'nullable|exists:outlets,id',
-            'billing_address' => 'required|string|max:500',
-            'billing_district_id' => 'required|exists:districts,id',
-            'billing_thana_id' => 'required|exists:upazilas,id',
-            'billing_postal_code' => 'nullable|string|max:20',
             'special_note' => 'nullable|string|max:1000',
             'shipping_charge' => 'nullable|numeric',
             'discount' => 'nullable|numeric',
-        ]);
+        ];
 
+        // Only require address fields for home delivery (delivery_method = 2)
+        if ($request->delivery_method == 2) {
+            $validationRules = array_merge($validationRules, [
+                'shipping_address' => 'required|string|max:500',
+                'shipping_postal_code' => 'nullable|string|max:20',
+                'shipping_district_id' => 'required|exists:districts,id',
+                'shipping_thana_id' => 'required|exists:upazilas,id',
+                'billing_address' => 'required|string|max:500',
+                'billing_district_id' => 'required|exists:districts,id',
+                'billing_thana_id' => 'required|exists:upazilas,id',
+                'billing_postal_code' => 'nullable|string|max:20',
+            ]);
+        } else {
+            // For store pickup, make address fields optional
+            $validationRules = array_merge($validationRules, [
+                'shipping_address' => 'nullable|string|max:500',
+                'shipping_postal_code' => 'nullable|string|max:20',
+                'shipping_district_id' => 'nullable|exists:districts,id',
+                'shipping_thana_id' => 'nullable|exists:upazilas,id',
+                'billing_address' => 'nullable|string|max:500',
+                'billing_district_id' => 'nullable|exists:districts,id',
+                'billing_thana_id' => 'nullable|exists:upazilas,id',
+                'billing_postal_code' => 'nullable|string|max:20',
+            ]);
+        }
 
+        $request->validate($validationRules);
+
+        
         if (!session('cart') || (session('cart') && count(session('cart')) <= 0)) {
             Toastr::error('No Products Found in Cart');
             return back();
