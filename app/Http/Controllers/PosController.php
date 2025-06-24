@@ -299,9 +299,9 @@ class PosController extends Controller
 
             $subTotal = 0;
             foreach ((array) session('cart') as $id => $details) {
-                $subTotal += ($details['price'] - $details['discounted_price']) * $details['quantity'];
+                $subTotal += ($details['price'] * $details['quantity']);
+                // $subTotal += ($details['price'] - $details['discounted_price']) * $details['quantity'];
             }
-            $subTotal -= session('discount', 0);
 
             if ($couponInfo->minimum_order_amount && $couponInfo->minimum_order_amount > $subTotal) {
                 return response()->json([
@@ -544,26 +544,24 @@ class PosController extends Controller
         $couponDiscount = session('pos_discount') ? session('pos_discount') : 0;
 
         // Calculate grand total value
-        $grandTotal = ($total + $deliveryCost) - ($discount);
+        $grandTotal = ($total + $deliveryCost) - ($discount + $couponDiscount);
 
         // Store the decimal part (e.g., for 11.99, store 0.99)
         $roundOff = $grandTotal - floor($grandTotal);
 
         $grandTotalwithoutRoundOff = $grandTotal - $roundOff;
 
-        dd(
-            request()->all(),
-            'total : ' . $total,
-            'coupon code : ' . $couponCode,
-            'coupon price : ' . $couponDiscount,
-            'discount : ' . $discount,
-            'delivery cost : ' . $deliveryCost,
-            'grand total : ' . $grandTotal,
-            'round off : ' . $roundOff,
-            'grand total without round off : ' . $grandTotalwithoutRoundOff,
-
-
-        );
+        // dd(
+        //     request()->all(),
+        //     'total : ' . $total,
+        //     'coupon code : ' . $couponCode,
+        //     'coupon price : ' . $couponDiscount,
+        //     'discount : ' . $discount,
+        //     'delivery cost : ' . $deliveryCost,
+        //     'grand total : ' . $grandTotal,
+        //     'round off : ' . $roundOff,
+        //     'grand total without round off : ' . $grandTotalwithoutRoundOff,
+        // );
 
         $orderId = DB::table('orders')->insertGetId([
             'order_no' => date("ymd") . DB::table('orders')->where('order_date', 'LIKE', date("Y-m-d") . '%')->count() + 1,
@@ -576,9 +574,9 @@ class PosController extends Controller
             'payment_status' => 0,
             'trx_id' => time() . str::random(5),
             'order_status' => 1,
-            'sub_total' => $total,
+            'sub_total' => $total, 
             'coupon_code' => $couponCode,
-            'discount' => $discount,
+            'discount' => $discount, //overall discount
             'delivery_fee' => $deliveryCost ?? 0,
             'vat' => 0,
             'tax' => 0,
@@ -647,7 +645,7 @@ class PosController extends Controller
                 'warehouse_room_id' => $details['purchase_product_warehouse_room_id'],
                 'warehouse_room_cartoon_id' => $details['purchase_product_warehouse_room_cartoon_id'],
 
-                'special_discount' => $details['discounted_price'],
+                'special_discount' => $details['discounted_price'], // this is the discount amount for this product
                 'reward_points' => $product->reward_points,
                 'qty' => $details['quantity'],
                 'unit_id' => $product->unit_id,

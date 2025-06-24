@@ -95,7 +95,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        {{-- @dump(session('cart')) --}}
+                        @dump(session('discount'), session('pos_discount'))
                         <div class="table-responsive pt-4">
                             <table class="table mb-0">
                                 <thead>
@@ -731,8 +731,12 @@
                 return false;
             }
 
+            var couponPrice = {{ session('pos_discount', 0) }};
+
             $.get("{{ url('update/order/total') }}" + '/' + shippingCharge + '/' + discount, function(data) {
-                var newPrice = (currentPrice + shippingCharge) - discount;
+
+                var newPrice = (currentPrice + shippingCharge) - (discount + couponPrice);
+
                 var totalPriceDiv = document.getElementById("total_cart_calculation");
                 totalPriceDiv.innerText = '৳ ' + newPrice.toLocaleString("en-BD", {
                     minimumFractionDigits: 2,

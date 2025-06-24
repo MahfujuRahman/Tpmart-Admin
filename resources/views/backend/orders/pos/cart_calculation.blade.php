@@ -1,4 +1,3 @@
-
 <tr>
     <td class="text-center">
         @php
@@ -29,13 +28,15 @@
     <td class="text-center">
         @php
             if (session('pos_discount')) {
-                $total = $total - (session('discount') + session('pos_discount'));
+                $total -= session('pos_discount');
             }
-            
+            // if (session('discount')) {
+            //     $total -= session('discount');
+            // }
         @endphp
         ৳ <input type="text" class="text-center" style="width: 50px;" onkeyup="updateOrderTotalAmount()"
-            @if (session('discount')) value="{{ session('discount') }}" @else value="0" @endif
-            min="0" id="discount" name="discount" placeholder="1" required />
+            @if (session('discount')) value="{{ session('discount') }}" @else value="0" @endif min="0"
+            id="discount" name="discount" placeholder="1" required />
     </td>
     <th class="text-center" id="total_cart_calculation">৳ {{ number_format($total, 2) }}</th>
 </tr>
