@@ -122,6 +122,10 @@
         $.get("{{ url('update/cart/item') }}" + '/' + cartIndex + '/' + value, function(data) {
             $('.cart_items').html(data.rendered_cart);
             $('.cart_calculation').html(data.cart_calculation);
+            // Reset coupon price as cart updates invalidate coupon
+            if (typeof couponPrice !== 'undefined') {
+                couponPrice = 0;
+            }
             // Restore focus and cursor position
             setTimeout(function() {
                 var focusData = window._posCartQtyFocus;
@@ -149,6 +153,10 @@
             // toastr.error("Item Removed");
             $('.cart_items').html(data.rendered_cart);
             $('.cart_calculation').html(data.cart_calculation);
+            // Reset coupon price as cart updates invalidate coupon
+            if (typeof couponPrice !== 'undefined') {
+                couponPrice = 0;
+            }
         })
     }
 </script>

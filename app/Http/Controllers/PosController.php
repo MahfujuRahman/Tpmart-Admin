@@ -341,7 +341,8 @@ class PosController extends Controller
             return response()->json([
                 'status' => 1,
                 'message' => "Coupon Applied",
-                'cart_calculation' => $cartCalculationHTML
+                'cart_calculation' => $cartCalculationHTML,
+                'coupon_discount' => $discount
             ]);
         } else {
             return response()->json([

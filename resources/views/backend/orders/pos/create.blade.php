@@ -328,6 +328,9 @@
             }
         });
 
+        // Global variable for dynamic coupon price tracking
+        var couponPrice = {{ session('pos_discount', 0) }};
+
 
 
         function changeOfDeliveryMetod(value) {
@@ -345,6 +348,14 @@
                 processData: false,
                 success: function(data) {
                     $('.cart_calculation').html(data.cart_calculation);
+                    // Sync coupon price with current session value if still applied
+                    if ($("#coupon_code").val().trim() !== '') {
+                        // Coupon is still applied, keep the current couponPrice value
+                        // Don't reset it here
+                    } else {
+                        // No coupon applied, reset to 0
+                        couponPrice = 0;
+                    }
                 },
                 error: function(data) {
                     toastr.options.positionClass = 'toast-bottom-right';
@@ -641,6 +652,8 @@
                     // toastr.success("Item added in Cart");
                     $('.cart_items').html(data.rendered_cart);
                     $('.cart_calculation').html(data.cart_calculation);
+                    // Preserve coupon price when items are added to cart
+                    // The global couponPrice variable should remain unchanged unless coupon is specifically removed
                 },
                 error: function(data) {
                     toastr.options.positionClass = 'toast-bottom-right';
@@ -668,6 +681,8 @@
                         if (data.status == 1) {
                             toastr.success("Coupon removed from cart.");
                             $('.cart_calculation').html(data.cart_calculation);
+                            // Update global coupon price variable
+                            couponPrice = 0;
                         }
                     },
                     error: function() {
@@ -693,6 +708,10 @@
                         toastr.success(data.message);
                         $('.cart_calculation').html(data.cart_calculation);
                         $("input[name='delivery_method']").prop("checked", false);
+                        // Update global coupon price variable from the response
+                        if (data.coupon_discount) {
+                            couponPrice = parseFloat(data.coupon_discount);
+                        }
                     }
                 },
                 error: function(data) {
@@ -724,11 +743,19 @@
                 return false;
             }
 
-            var couponPrice = {{ session('pos_discount', 0) }};
+            // Use the global dynamic couponPrice variable instead of hardcoded session value
+            // var couponPrice = {{ session('pos_discount', 0) }}; // OLD: hardcoded from session
+          
+            console.log(
+                    'currentPrice:', currentPrice,
+                    'shippingCharge:', shippingCharge,
+                    'discount:', discount,
+                    'couponPrice:', couponPrice);
 
             $.get("{{ url('update/order/total') }}" + '/' + shippingCharge + '/' + discount, function(data) {
 
                 var newPrice = (currentPrice + shippingCharge) - (discount + couponPrice);
+               
 
                 var totalPriceDiv = document.getElementById("total_cart_calculation");
                 totalPriceDiv.innerText = '৳ ' + newPrice.toLocaleString("en-BD", {
@@ -764,6 +791,14 @@
                         });
                         $('.cart_calculation').html(result.cart_calculation);
                         $("input[name='delivery_method']").prop("checked", false);
+                        // Sync coupon price with current session value if still applied
+                        if ($("#coupon_code").val().trim() !== '') {
+                            // Coupon is still applied, keep the current couponPrice value
+                            // Don't reset it here
+                        } else {
+                            // No coupon applied, reset to 0
+                            couponPrice = 0;
+                        }
                     }
                 });
             });
@@ -968,6 +1003,8 @@
                         if (data.status == 1) {
                             toastr.success("Coupon removed from cart.");
                             $('.cart_calculation').html(data.cart_calculation);
+                            // Update global coupon price variable
+                            couponPrice = 0;
                         }
                     },
                     error: function() {
@@ -1018,6 +1055,8 @@
                     confirmBtn.disabled = false;
                     confirmBtn.innerHTML = 'Confirm Order';
                 }
+                // Reset global coupon price after successful order
+                couponPrice = 0;
             });
         </script>
     @endif
