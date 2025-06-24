@@ -129,7 +129,31 @@
                 <div class="card">
                     <div class="card-body">
 
-                        <div class="row">
+                        <div class="row border-bottom pb-3">
+                            <div class="px-3 mb-2">
+                                <h4 class="mb-3">Delivery Method</h4>
+                                <div class="mt-3">
+                                    <div class="custom-control custom-radio mb-2">
+                                        <input type="radio" id="store_pickup" name="delivery_method"
+                                            onchange="changeOfDeliveryMetod(1)" value="1" class="custom-control-input"
+                                            style="cursor: pointer" />
+                                        <label class="custom-control-label" for="store_pickup" style="cursor: pointer">
+                                            Store Pickup
+                                        </label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="home_delivery" name="delivery_method"
+                                            onchange="changeOfDeliveryMetod(2)" value="2" class="custom-control-input"
+                                            style="cursor: pointer" />
+                                        <label class="custom-control-label" for="home_delivery" style="cursor: pointer">
+                                            Home Delivery
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
                             <div class="col-lg-12 saved_address">
                                 {{-- render saved address here based on customer selction --}}
                             </div>
@@ -139,7 +163,8 @@
                             <div class="card-body">
                                 <ul class="nav nav-tabs nav-justified mb-3">
                                     <li class="nav-item">
-                                        <a href="#home1" data-toggle="tab" aria-expanded="true" class="nav-link active">
+                                        <a href="#home1" data-toggle="tab" aria-expanded="true"
+                                            class="nav-link active">
                                             <i class="fa fa-truck d-lg-none d-block"></i>
                                             <span class="d-none d-lg-block">Shipping Address</span>
                                         </a>
@@ -159,28 +184,6 @@
                                     <div class="tab-pane" id="profile1">
                                         @include('backend.orders.pos.billing_form')
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4">
-                            <h4 class="mb-3">Delivery Method</h4>
-
-                            <div class="mt-3">
-                                <div class="custom-control custom-radio mb-2">
-                                    <input type="radio" id="store_pickup" name="delivery_method"
-                                        onchange="changeOfDeliveryMetod(1)" value="1" class="custom-control-input"
-                                        style="cursor: pointer" />
-                                    <label class="custom-control-label" for="store_pickup" style="cursor: pointer">
-                                        Store Pickup
-                                    </label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="home_delivery" name="delivery_method"
-                                        onchange="changeOfDeliveryMetod(2)" value="2" class="custom-control-input"
-                                        style="cursor: pointer" />
-                                    <label class="custom-control-label" for="home_delivery" style="cursor: pointer">
-                                        Home Delivery
-                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -745,17 +748,17 @@
 
             // Use the global dynamic couponPrice variable instead of hardcoded session value
             // var couponPrice = {{ session('pos_discount', 0) }}; // OLD: hardcoded from session
-          
+
             console.log(
-                    'currentPrice:', currentPrice,
-                    'shippingCharge:', shippingCharge,
-                    'discount:', discount,
-                    'couponPrice:', couponPrice);
+                'currentPrice:', currentPrice,
+                'shippingCharge:', shippingCharge,
+                'discount:', discount,
+                'couponPrice:', couponPrice);
 
             $.get("{{ url('update/order/total') }}" + '/' + shippingCharge + '/' + discount, function(data) {
 
                 var newPrice = (currentPrice + shippingCharge) - (discount + couponPrice);
-               
+
 
                 var totalPriceDiv = document.getElementById("total_cart_calculation");
                 totalPriceDiv.innerText = '৳ ' + newPrice.toLocaleString("en-BD", {
