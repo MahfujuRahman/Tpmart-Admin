@@ -119,6 +119,10 @@ class PosController extends Controller
             $query->where('size_id', $request->size_id);
         }
 
+        if ($request->color_id == '' && $request->size_id == '') {
+            return response()->json(['price' => 0, 'stock' => 0]);
+        }
+
         $data = $query->where('stock', '>', 0)->orderBy('discounted_price', 'asc')->orderBy('price', 'asc')->first();
 
 

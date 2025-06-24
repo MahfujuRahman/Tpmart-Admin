@@ -30,9 +30,9 @@
             if (session('pos_discount')) {
                 $total -= session('pos_discount');
             }
-            // if (session('discount')) {
-            //     $total -= session('discount');
-            // }
+            if (session('discount')) {
+                $total -= session('discount');
+            }
         @endphp
         ৳ <input type="number" class="text-center" style="width: 50px;" onkeyup="if(this.value < 1) this.value = 0; updateOrderTotalAmount()"
             @if (session('discount')) value="{{ session('discount') }}" @else value="0" @endif min="0"
