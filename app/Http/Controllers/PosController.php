@@ -594,6 +594,14 @@ class PosController extends Controller
         //     'grand total without round off : ' . $grandTotalwithoutRoundOff,
         // );
 
+        $orderStatus = 1; // 1 for approved order and 4 for delivered order
+        $paymentStatus = 0; // 0 for pending payment
+        if ($request->delivery_method == 2) {
+            // if delivery method is Store pickup, then order status will be 4 (delivered)
+            $orderStatus = 4;
+            $paymentStatus = 1; // 1 for paid
+        }
+
         $orderId = DB::table('orders')->insertGetId([
             'order_no' => date("ymd") . DB::table('orders')->where('order_date', 'LIKE', date("Y-m-d") . '%')->count() + 1,
             'order_from' => 3, //pos order
@@ -602,9 +610,9 @@ class PosController extends Controller
             'estimated_dd' => date('Y-m-d', strtotime("+7 day", strtotime(date("Y-m-d")))),
             'delivery_method' => $request->delivery_method,
             'payment_method' => 1,
-            'payment_status' => 0,
+            'payment_status' => $paymentStatus,
             'trx_id' => time() . str::random(5),
-            'order_status' => 1,
+            'order_status' => $orderStatus,
             'sub_total' => $total,
             'coupon_code' => $couponCode,
             'discount' => $discount, //overall discount
