@@ -556,17 +556,17 @@ class PosController extends Controller
 
         $grandTotalwithoutRoundOff = $grandTotal - $roundOff;
 
-        dd(
-            request()->all(),
-            'total : ' . $total,
-            'coupon code : ' . $couponCode,
-            'coupon price : ' . $couponDiscount,
-            'discount : ' . $discount,
-            'delivery cost : ' . $deliveryCost,
-            'grand total : ' . $grandTotal,
-            'round off : ' . $roundOff,
-            'grand total without round off : ' . $grandTotalwithoutRoundOff,
-        );
+        // dd(
+        //     request()->all(),
+        //     'total : ' . $total,
+        //     'coupon code : ' . $couponCode,
+        //     'coupon price : ' . $couponDiscount,
+        //     'discount : ' . $discount,
+        //     'delivery cost : ' . $deliveryCost,
+        //     'grand total : ' . $grandTotal,
+        //     'round off : ' . $roundOff,
+        //     'grand total without round off : ' . $grandTotalwithoutRoundOff,
+        // );
 
         $orderId = DB::table('orders')->insertGetId([
             'order_no' => date("ymd") . DB::table('orders')->where('order_date', 'LIKE', date("Y-m-d") . '%')->count() + 1,

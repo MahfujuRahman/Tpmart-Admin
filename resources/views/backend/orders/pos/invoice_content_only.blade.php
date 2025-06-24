@@ -241,7 +241,14 @@
                 <span>৳{{ number_format($order->delivery_fee, 2) }}</span>
             </div>
         @endif
-
+        @if ($order->round_off)
+            <div class="total-row">
+                <span>Round Off:</span>
+                <span>
+                    {{ $order->round_off > 0 ? '৳' . number_format(abs($order->round_off), 2) : '' }}
+                </span>
+            </div>
+        @endif
         <div class="total-row grand-total">
             <span>TOTAL:</span>
             <span>৳{{ number_format($order->total, 2) }}</span>
