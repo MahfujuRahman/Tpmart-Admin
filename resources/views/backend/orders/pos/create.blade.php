@@ -95,7 +95,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        @dump(session('discount'), session('pos_discount'))
+       
                         <div class="table-responsive pt-4">
                             <table class="table mb-0">
                                 <thead>
@@ -514,6 +514,7 @@
                 contentType: false,
                 processData: false,
                 success: function(data) {
+                    console.log(data);
                     $('#productVariantForm').trigger("reset");
                     $('#variantModal').modal('show');
                     $("#variant_product_name").val(data.product.name + ' (' + data.product.code + ')');
@@ -561,6 +562,7 @@
                     if (Number(data.price) > 0 && Number(data.stock) > 0) {
                         $("#variant_price").val(Number(data.price));
                         $("#variant_stock").val(Number(data.stock));
+                        console.log(data);
                         $(".variant_modal_footer_btn").css('display', 'inline-block')
                     } else {
                         $("#variant_price").val(Number(0));

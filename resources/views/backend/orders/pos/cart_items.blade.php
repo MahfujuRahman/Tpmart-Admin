@@ -53,7 +53,7 @@
     @endforeach
 @else
     <tr>
-        <td colspan="7" class="text-center">No item is Added</td>
+        <td colspan="8" class="text-center">No item is Added</td>
     </tr>
 @endif
 

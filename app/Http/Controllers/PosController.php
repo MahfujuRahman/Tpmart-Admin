@@ -93,8 +93,14 @@ class PosController extends Controller
             ->select('product_sizes.*')
             ->where('product_variants.product_id', $product->id)
             ->where('product_variants.stock', '>', 0)
+            ->whereNotNull('product_variants.size_id')
+            ->where('product_sizes.id', '!=', null)
             ->groupBy('product_variants.size_id')
-            ->get();
+            ->get()
+            ->filter(function ($size) {
+                return $size->id !== null;
+            })
+            ->values();
 
         return response()->json([
             'product' => $product,
@@ -105,7 +111,6 @@ class PosController extends Controller
 
     public function checkProductVariant(Request $request)
     {
-
         $query = DB::table('product_variants')->where('product_id', $request->product_id);
         if ($request->color_id != '') {
             $query->where('color_id', $request->color_id);
@@ -113,8 +118,10 @@ class PosController extends Controller
         if ($request->size_id != '') {
             $query->where('size_id', $request->size_id);
         }
-
+        
         $data = $query->where('stock', '>', 0)->orderBy('discounted_price', 'asc')->orderBy('price', 'asc')->first();
+       
+        
         if ($data) {
             return response()->json([
                 'price' => $data->discounted_price > 0 ? $data->discounted_price : $data->price,
@@ -574,7 +581,7 @@ class PosController extends Controller
             'payment_status' => 0,
             'trx_id' => time() . str::random(5),
             'order_status' => 1,
-            'sub_total' => $total, 
+            'sub_total' => $total,
             'coupon_code' => $couponCode,
             'discount' => $discount, //overall discount
             'delivery_fee' => $deliveryCost ?? 0,
