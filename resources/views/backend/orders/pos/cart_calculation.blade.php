@@ -1,4 +1,3 @@
-
 <tr>
     <td class="text-center">
         @php
@@ -15,16 +14,16 @@
         ৳ {{ number_format($total, 2) }}
         <input type="hidden" name="subtotal" id="subtotal" value="{{ $total }}">
     </td>
-    <td class="text-center">৳ 0</td>
+    {{-- <td class="text-center">৳ 0</td> --}}
     <td class="text-center">
         @php
             if (session('shipping_charge')) {
                 $total = $total + session('shipping_charge');
             }
         @endphp
-        ৳ <input type="text" class="text-center" style="width: 50px;" onkeyup="updateOrderTotalAmount()"
+        ৳ <input type="number" class="text-center" style="width: 50px;" onkeyup="if(this.value < 1) this.value = 0; updateOrderTotalAmount()"
             @if (session('shipping_charge')) value="{{ session('shipping_charge') }}" @else value="0" @endif
-            min="0" id="shipping_charge" name="shipping_charge" placeholder="1" required />
+            min="0" id="shipping_charge" name="shipping_charge" />
     </td>
     <td class="text-center">
         @php
@@ -35,9 +34,9 @@
             //     $total -= session('discount');
             // }
         @endphp
-        ৳ <input type="text" class="text-center" style="width: 50px;" onkeyup="updateOrderTotalAmount()"
+        ৳ <input type="number" class="text-center" style="width: 50px;" onkeyup="if(this.value < 1) this.value = 0; updateOrderTotalAmount()"
             @if (session('discount')) value="{{ session('discount') }}" @else value="0" @endif min="0"
-            id="discount" name="discount" placeholder="1" required />
+            id="discount" name="discount" />
     </td>
     <th class="text-center" id="total_cart_calculation">৳ {{ number_format($total, 2) }}</th>
 </tr>

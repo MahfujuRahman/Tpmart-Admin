@@ -101,7 +101,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">Sub Total</th>
-                                        <th class="text-center">Total Tax</th>
+                                        {{-- <th class="text-center">Total Tax</th> --}}
                                         <th class="text-center">Shipping Charge</th>
                                         <th class="text-center">Discount</th>
                                         <th class="text-center">Total</th>
@@ -649,21 +649,6 @@
                 }
             });
 
-        }
-
-        function removeCartItem(cartIndex) {
-            $.get("{{ url('remove/cart/item') }}" + '/' + cartIndex, function(data) {
-                // toastr.error("Item Removed");
-                $('.cart_items').html(data.rendered_cart);
-                $('.cart_calculation').html(data.cart_calculation);
-            })
-        }
-
-        function updateCartQty(value, cartIndex) {
-            $.get("{{ url('update/cart/item') }}" + '/' + cartIndex + '/' + value, function(data) {
-                $('.cart_items').html(data.rendered_cart);
-                $('.cart_calculation').html(data.cart_calculation);
-            })
         }
 
         function applyCoupon() {

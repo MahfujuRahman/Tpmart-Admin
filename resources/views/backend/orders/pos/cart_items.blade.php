@@ -19,27 +19,44 @@
                 <img src="{{ url($details['image']) }}" style="width: 30px; height: 30px">
             </td>
             <td class="text-left">
-                {{ $details['name'] }} ({{ $details['code'] }})
+                {{ $details['name'] }} ({{ $details['code'] }}),
                 @if ($details['color_id'])
-                    <b>Color:</b> {{ $details['color_name'] }}
+                    <b>Color:</b> {{ $details['color_name'] }},
                 @endif
                 @if ($details['size_id'])
                     <b>Size:</b> {{ $details['size_name'] }}
                 @endif
             </td>
             <td class="text-center">৳{{ $details['price'] }}</td>
+
             <td class="text-center">
-                <input type="text" class="text-center" style="width: 50px;" min="1"
-                    onkeyup="updateCartQty(this.value, '{{ $cartIndex }}')" value="{{ $details['quantity'] }}"
-                    name="quantity[]" placeholder="1" required />
+                <input type="number" class="text-center" style="width: 50px; -moz-appearance: textfield; appearance: textfield;" min="1"
+                    data-cart-index="{{ $cartIndex }}"
+                    onkeyup="if(this.value < 1) this.value = 1; 
+                    updateCartQty(this, '{{ $cartIndex }}')"
+                    value="{{ $details['quantity'] }}" name="quantity[]" 
+                    onwheel="this.blur()" />
+                <style>
+                    /* Hide number input arrows for Chrome, Safari, Edge, Opera */
+                    input[type=number]::-webkit-inner-spin-button, 
+                    input[type=number]::-webkit-outer-spin-button { 
+                        -webkit-appearance: none; 
+                        margin: 0; 
+                    }
+                    /* Hide number input arrows for Firefox */
+                    input[type=number] {
+                        -moz-appearance: textfield;
+                    }
+                </style>
             </td>
+
             <td class="text-center">
-                <input type="text" class=" text-center" style="width: 50px;" min="0"
-                     onwheel="this.blur()"
+                <input type="number" class=" text-center" style="width: 50px; -moz-appearance: textfield; appearance: textfield;" min="0" onwheel="this.blur()"
                     value="{{ $details['discounted_price'] }}" name="discounted_price[]" required
-                    onkeyup="updateCartDiscount(this, '{{ $cartIndex }}')" />
+                    onkeyup="if(this.value < 1) this.value = 0; updateCartDiscount(this, '{{ $cartIndex }}')" 
+                    />
             </td>
-           
+
             <td class="text-center subtotal-cell">
                 ৳{{ $details['price'] * $details['quantity'] - (isset($details['discounted_price']) ? $details['discounted_price'] : 0) }}
             </td>
@@ -87,5 +104,51 @@
             // Only update the totals section, not the cart rows
             $('.cart_calculation').html(data.cart_calculation);
         });
+    }
+
+    // Improved quantity update: keep focus and cursor after AJAX
+    function updateCartQty(inputElem, cartIndex) {
+        // Save cursor position and value
+        var selectionStart = inputElem.selectionStart;
+        var selectionEnd = inputElem.selectionEnd;
+        var value = inputElem.value;
+        // Save cartIndex to restore focus
+        window._posCartQtyFocus = {
+            cartIndex: cartIndex,
+            selectionStart: selectionStart,
+            selectionEnd: selectionEnd,
+            value: value
+        };
+        $.get("{{ url('update/cart/item') }}" + '/' + cartIndex + '/' + value, function(data) {
+            $('.cart_items').html(data.rendered_cart);
+            $('.cart_calculation').html(data.cart_calculation);
+            // Restore focus and cursor position
+            setTimeout(function() {
+                var focusData = window._posCartQtyFocus;
+                if (!focusData) return;
+                var qtyInput = document.querySelector('input[data-cart-index="' + focusData.cartIndex +
+                    '"]');
+                if (qtyInput) {
+                    qtyInput.focus();
+                    // Restore cursor position if possible
+                    try {
+                        qtyInput.setSelectionRange(focusData.selectionStart, focusData.selectionEnd);
+                    } catch (e) {
+                        // fallback: move cursor to end
+                        var val = qtyInput.value;
+                        qtyInput.value = '';
+                        qtyInput.value = val;
+                    }
+                }
+            }, 10);
+        });
+    }
+
+    function removeCartItem(cartIndex) {
+        $.get("{{ url('remove/cart/item') }}" + '/' + cartIndex, function(data) {
+            // toastr.error("Item Removed");
+            $('.cart_items').html(data.rendered_cart);
+            $('.cart_calculation').html(data.cart_calculation);
+        })
     }
 </script>

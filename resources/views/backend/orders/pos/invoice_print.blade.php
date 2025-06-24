@@ -254,7 +254,7 @@
         @if ($order->discount > 0)
             <div class="total-row">
                 <span>Discount:</span>
-                <span>- ৳{{ number_format($order->discount, 2) }}</span>
+                <span> ৳{{ number_format($order->discount, 2) }}</span>
             </div>
         @endif
 
@@ -262,7 +262,7 @@
             <div class="total-row">
                 <span>Coupon:</span>
                 <span>
-                    {{ $order->coupon_price > 0 ? '- ৳' . number_format(abs($order->coupon_price), 2) : '' }}
+                    {{ $order->coupon_price > 0 ? ' ৳' . number_format(abs($order->coupon_price), 2) : '' }}
                 </span>
             </div>
         @endif
