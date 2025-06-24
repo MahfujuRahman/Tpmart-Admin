@@ -118,10 +118,10 @@ class PosController extends Controller
         if ($request->size_id != '') {
             $query->where('size_id', $request->size_id);
         }
-        
+
         $data = $query->where('stock', '>', 0)->orderBy('discounted_price', 'asc')->orderBy('price', 'asc')->first();
-       
-        
+
+
         if ($data) {
             return response()->json([
                 'price' => $data->discounted_price > 0 ? $data->discounted_price : $data->price,
@@ -134,8 +134,6 @@ class PosController extends Controller
 
     public function addToCart(Request $request)
     {
-
-        // dd(request()->all());
 
         if ($request->color_id > 0 || $request->size_id > 0) {
 
@@ -558,17 +556,17 @@ class PosController extends Controller
 
         $grandTotalwithoutRoundOff = $grandTotal - $roundOff;
 
-        // dd(
-        //     request()->all(),
-        //     'total : ' . $total,
-        //     'coupon code : ' . $couponCode,
-        //     'coupon price : ' . $couponDiscount,
-        //     'discount : ' . $discount,
-        //     'delivery cost : ' . $deliveryCost,
-        //     'grand total : ' . $grandTotal,
-        //     'round off : ' . $roundOff,
-        //     'grand total without round off : ' . $grandTotalwithoutRoundOff,
-        // );
+        dd(
+            request()->all(),
+            'total : ' . $total,
+            'coupon code : ' . $couponCode,
+            'coupon price : ' . $couponDiscount,
+            'discount : ' . $discount,
+            'delivery cost : ' . $deliveryCost,
+            'grand total : ' . $grandTotal,
+            'round off : ' . $roundOff,
+            'grand total without round off : ' . $grandTotalwithoutRoundOff,
+        );
 
         $orderId = DB::table('orders')->insertGetId([
             'order_no' => date("ymd") . DB::table('orders')->where('order_date', 'LIKE', date("Y-m-d") . '%')->count() + 1,
@@ -629,6 +627,9 @@ class PosController extends Controller
                     ->where('color_id', $details['color_id'])->update([
                         'stock' => $productInfo->stock - $details['quantity'],
                     ]);
+                DB::table('products')->where('id', $details['product_id'])->update([
+                    'stock' => $product->stock - $details['quantity'],
+                ]);
             } else {
                 DB::table('products')->where('id', $details['product_id'])->update([
                     'stock' => $product->stock - $details['quantity'],

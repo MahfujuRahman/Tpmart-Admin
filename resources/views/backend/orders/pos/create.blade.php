@@ -581,21 +581,27 @@
         }
 
         function variantAddToCart() {
-
             var variant_product_id = $("#variant_product_id").val();
             var variant_color_id = $("#variant_color_id").val();
             var variant_size_id = $("#variant_size_id").val();
 
+            // Ensure color and size are selected
+            if (variant_color_id === '' || variant_color_id === null) {
+                toastr.options.positionClass = 'toast-top-right';
+                toastr.options.timeOut = 1500;
+                toastr.error('Please select a color.');
+                return;
+            }
+            if (variant_size_id === '' || variant_size_id === null) {
+                toastr.options.positionClass = 'toast-top-right';
+                toastr.options.timeOut = 1500;
+                toastr.error('Please select a size.');
+                return;
+            }
+
             var purchase_product_warehouse_id = $("#purchase_product_warehouse_id").val();
             var purchase_product_warehouse_room_id = $("#purchase_product_warehouse_room_id").val();
             var purchase_product_warehouse_room_cartoon_id = $("#purchase_product_warehouse_room_cartoon_id").val();
-
-            if (variant_color_id == '') {
-                variant_color_id = 0;
-            }
-            if (variant_size_id == '') {
-                variant_size_id = 0;
-            }
 
             if (purchase_product_warehouse_id == '') {
                 purchase_product_warehouse_id = 0;
