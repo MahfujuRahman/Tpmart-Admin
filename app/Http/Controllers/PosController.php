@@ -342,6 +342,18 @@ class PosController extends Controller
         }
     }
 
+    public function removeCoupon(Request $request)
+    {
+        session()->forget('coupon');
+        session()->forget('pos_discount');
+        $cartCalculationHTML = view('backend.orders.pos.cart_calculation')->render();
+        return response()->json([
+            'status' => 1,
+            'message' => 'Coupon removed',
+            'cart_calculation' => $cartCalculationHTML
+        ]);
+    }
+
     public function saveNewCustomer(Request $request)
     {
         $request->validate([

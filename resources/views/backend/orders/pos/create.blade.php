@@ -116,8 +116,9 @@
                         <div class="row mt-4">
                             <div class="col-lg-12">
                                 <input type="text" id="coupon_code" placeholder="Coupon Code" value="{{ session('coupon') }}"
-                                    class="form-control d-inline-block w-25">
-                                <button type="button" class="btn btn-success rounded" onkeyup="applyCoupon()"
+                                    class="form-control d-inline-block w-25"
+                                    onkeyup="autoRemoveCouponIfEmpty(this)" />
+                                <button type="button" class="btn btn-success rounded" onclick="applyCoupon()"
                                     style="margin-top: -3px; line-height: 22px;">Apply Coupon</button>
                             </div>
                         </div>
@@ -658,13 +659,29 @@
         }
 
         function applyCoupon() {
-            var couponCode = $("#coupon_code").val();
+            var couponCode = $("#coupon_code").val().trim();
             toastr.options.positionClass = 'toast-bottom-right';
             toastr.options.timeOut = 1000;
 
-            if (couponCode == '') {
-                toastr.error("Please Enter a Coupon Code");
-                return false;
+            if (couponCode === '') {
+                // Remove coupon from cart if input is empty
+                $.ajax({
+                    url: "{{ url('remove/coupon') }}",
+                    type: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(data) {
+                        if (data.status == 1) {
+                            toastr.success("Coupon removed from cart.");
+                            $('.cart_calculation').html(data.cart_calculation);
+                        }
+                    },
+                    error: function() {
+                        toastr.error("Failed to remove coupon.");
+                    }
+                });
+                return;
             }
 
             var formData = new FormData();
@@ -929,5 +946,27 @@
                 });
             });
         @endif
+
+        function autoRemoveCouponIfEmpty(input) {
+            var couponCode = input.value.trim();
+            if (couponCode === '') {
+                $.ajax({
+                    url: "{{ url('remove/coupon') }}",
+                    type: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(data) {
+                        if (data.status == 1) {
+                            toastr.success("Coupon removed from cart.");
+                            $('.cart_calculation').html(data.cart_calculation);
+                        }
+                    },
+                    error: function() {
+                        toastr.error("Failed to remove coupon.");
+                    }
+                });
+            }
+        }
     </script>
 @endsection
