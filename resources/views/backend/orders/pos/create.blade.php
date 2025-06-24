@@ -95,7 +95,7 @@
                                 </tbody>
                             </table>
                         </div>
-
+                        {{-- @dump(session('cart')) --}}
                         <div class="table-responsive pt-4">
                             <table class="table mb-0">
                                 <thead>
@@ -115,9 +115,9 @@
 
                         <div class="row mt-4">
                             <div class="col-lg-12">
-                                <input type="text" id="coupon_code" placeholder="Coupon Code"
+                                <input type="text" id="coupon_code" placeholder="Coupon Code" value="{{ session('coupon') }}"
                                     class="form-control d-inline-block w-25">
-                                <button type="button" class="btn btn-success rounded" onclick="applyCoupon()"
+                                <button type="button" class="btn btn-success rounded" onkeyup="applyCoupon()"
                                     style="margin-top: -3px; line-height: 22px;">Apply Coupon</button>
                             </div>
                         </div>

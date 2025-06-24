@@ -259,16 +259,15 @@ class PosController extends Controller
         ]);
     }
 
-    public function updateCartItemDiscount($cartIndex, $discount )
+    public function updateCartItemDiscount($cartIndex, $discount)
     {
         $cart = session()->get('cart');
+        $couponDiscount = session('pos_discount', 0);
+
         if (isset($cart[$cartIndex])) {
             $cart[$cartIndex]['discounted_price'] = is_numeric($discount) ? (float)$discount : 0;
             session()->put('cart', $cart);
         }
-
-        // removing discount because some coupon code have minimum order value
-        session(['pos_discount' => 0]);
 
         $returnHTML = view('backend.orders.pos.cart_items')->render();
         $cartCalculationHTML = view('backend.orders.pos.cart_calculation')->render();
@@ -300,8 +299,9 @@ class PosController extends Controller
 
             $subTotal = 0;
             foreach ((array) session('cart') as $id => $details) {
-                $subTotal += $details['price'] * $details['quantity'];
+                $subTotal += ($details['price'] - $details['discounted_price']) * $details['quantity'];
             }
+            $subTotal -= session('discount', 0);
 
             if ($couponInfo->minimum_order_amount && $couponInfo->minimum_order_amount > $subTotal) {
                 return response()->json([
@@ -380,7 +380,7 @@ class PosController extends Controller
         $discount = is_numeric($discount) ? $discount : 0;
 
         session(['shipping_charge' => $shipping_charge]);
-        session(['pos_discount' => $discount]);
+        session(['discount' => $discount]);
         $cartCalculationHTML = view('backend.orders.pos.cart_calculation')->render();
         return response()->json([
             'cart_calculation' => $cartCalculationHTML
@@ -520,24 +520,38 @@ class PosController extends Controller
         }
 
         date_default_timezone_set("Asia/Dhaka");
+
         $total = 0;
         foreach ((array) session('cart') as $details) {
-            $total += $details['price'] * $details['quantity'];
+            $total += ($details['price'] - $details['discounted_price']) * $details['quantity'];
         }
 
         $discount = $request->discount ? $request->discount : 0;
         $deliveryCost = $request->shipping_charge ? $request->shipping_charge : 0;
         $couponCode = session('coupon') ? session('coupon') : null;
+        $couponDiscount = session('pos_discount') ? session('pos_discount') : 0;
 
         // Calculate grand total value
-        $grandTotal = $total + $deliveryCost - $discount;
+        $grandTotal = ($total + $deliveryCost) - ($discount);
 
         // Store the decimal part (e.g., for 11.99, store 0.99)
         $roundOff = $grandTotal - floor($grandTotal);
 
         $grandTotalwithoutRoundOff = $grandTotal - $roundOff;
 
-        dd(request()->all(), $grandTotal, $roundOff, $grandTotalwithoutRoundOff, $discount, $deliveryCost, $couponCode);
+        dd(
+            request()->all(),
+            'total : ' . $total,
+            'coupon code : ' . $couponCode,
+            'coupon price : ' . $couponDiscount,
+            'discount : ' . $discount,
+            'delivery cost : ' . $deliveryCost,
+            'grand total : ' . $grandTotal,
+            'round off : ' . $roundOff,
+            'grand total without round off : ' . $grandTotalwithoutRoundOff,
+
+
+        );
 
         $orderId = DB::table('orders')->insertGetId([
             'order_no' => date("ymd") . DB::table('orders')->where('order_date', 'LIKE', date("Y-m-d") . '%')->count() + 1,
@@ -621,15 +635,12 @@ class PosController extends Controller
                 'warehouse_room_id' => $details['purchase_product_warehouse_room_id'],
                 'warehouse_room_cartoon_id' => $details['purchase_product_warehouse_room_cartoon_id'],
 
-                // 'warehouse_id' => request()->purchase_product_warehouse_id,
-                // 'room_id' => request()->purchase_product_warehouse_room_id,
-                // 'cartoon_id' => request()->purchase_product_warehouse_room_cartoon_id,
-
+                'special_discount' => $details['discounted_price'],
                 'reward_points' => $product->reward_points,
                 'qty' => $details['quantity'],
                 'unit_id' => $product->unit_id,
                 'unit_price' => $details['price'],
-                'total_price' => $details['price'] * $details['quantity'],
+                'total_price' => ($details['price'] - $details['discounted_price']) * $details['quantity'],
                 'created_at' => Carbon::now()
             ]);
         }

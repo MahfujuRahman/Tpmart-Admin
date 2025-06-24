@@ -29,11 +29,12 @@
     <td class="text-center">
         @php
             if (session('pos_discount')) {
-                $total = $total - session('pos_discount');
+                $total = $total - (session('discount') + session('pos_discount'));
             }
+            
         @endphp
         ৳ <input type="text" class="text-center" style="width: 50px;" onkeyup="updateOrderTotalAmount()"
-            @if (session('pos_discount')) value="{{ session('pos_discount') }}" @else value="0" @endif
+            @if (session('discount')) value="{{ session('discount') }}" @else value="0" @endif
             min="0" id="discount" name="discount" placeholder="1" required />
     </td>
     <th class="text-center" id="total_cart_calculation">৳ {{ number_format($total, 2) }}</th>
