@@ -814,10 +814,10 @@ class PosController extends Controller
             $invoice = Invoice::find($orderId);
             if ($invoice) {
                 $invoice->markAsInvoiced();
-                // Redirect to POS invoice print page instead of going back
-                Toastr::error('Order & Invoice Generated Successfully', 'Success');
-                return redirect()->route('POSInvoicePrint', $orderId)
-                    ->with('success', 'Order & Invoice Generated Successfully');
+                // Set invoice URL in session instead of redirecting
+                session()->flash('invoice_url', route('POSInvoicePrint', $orderId));
+                // Toastr::success('Order & Invoice Generated Successfully', 'Success');
+                return back();
             } else {
                 session()->flash('success', 'Order Placed Successfully');
                 return back();

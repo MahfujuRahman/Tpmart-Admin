@@ -95,7 +95,7 @@
                                 </tbody>
                             </table>
                         </div>
-       
+
                         <div class="table-responsive pt-4">
                             <table class="table mb-0">
                                 <thead>
@@ -115,8 +115,8 @@
 
                         <div class="row mt-4">
                             <div class="col-lg-12">
-                                <input type="text" id="coupon_code" placeholder="Coupon Code" value="{{ session('coupon') }}"
-                                    class="form-control d-inline-block w-25"
+                                <input type="text" id="coupon_code" placeholder="Coupon Code"
+                                    value="{{ session('coupon') }}" class="form-control d-inline-block w-25"
                                     onkeyup="autoRemoveCouponIfEmpty(this)" />
                                 <button type="button" class="btn btn-success rounded" onclick="applyCoupon()"
                                     style="margin-top: -3px; line-height: 22px;">Apply Coupon</button>
@@ -875,12 +875,23 @@
             const form = document.querySelector('form[action="{{ url('place/order') }}"]');
             const confirmBtn = document.getElementById('confirmOrderBtn');
             if (form && confirmBtn) {
-                form.addEventListener('submit', function() {
-                    confirmBtn.disabled = true;
-                    confirmBtn.innerHTML = 'Processing...';
+                form.addEventListener('submit', function(e) {
+                    if (!form.dataset.confirmed) {
+                        e.preventDefault();
+                        if (confirm('Are you sure you want to place this order?')) {
+                            confirmBtn.disabled = true;
+                            confirmBtn.innerHTML = 'Processing...';
+                            form.dataset.confirmed = 'true';
+                            form.submit();
+                        }
+                    } else {
+                        confirmBtn.disabled = true;
+                        confirmBtn.innerHTML = 'Processing...';
+                    }
                 });
             }
         });
+
 
         // Handle customer address creation form submission
         $('#exampleModal2 form').on('submit', function(e) {
@@ -966,4 +977,48 @@
             }
         }
     </script>
+
+    <!-- On successful order, open invoice in new tab and clear form -->
+    @if (session('invoice_url'))
+        <script>
+            // Open invoice immediately when page loads
+            const invoiceUrl = "{{ session('invoice_url') }}";
+            console.log('Opening invoice URL:', invoiceUrl);
+
+            // Open invoice in new tab immediately
+            // Try to open invoice in new tab immediately
+            let win = window.open(invoiceUrl, '_blank');
+            if (!win || win.closed || typeof win.closed == 'undefined') {
+                // If blocked, try to open on user interaction
+                function openOnUserAction() {
+                    let win2 = window.open(invoiceUrl, '_blank');
+                    if (win2) {
+                        win2.focus();
+                        document.removeEventListener('click', openOnUserAction);
+                        document.removeEventListener('keydown', openOnUserAction);
+                    }
+                }
+                document.addEventListener('click', openOnUserAction);
+                document.addEventListener('keydown', openOnUserAction);
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Show success message
+                toastr.success('Order placed successfully! Invoice opened in new tab.', 'Success');
+
+                // Clear form
+                const form = document.querySelector('form[action="{{ url('place/order') }}"]');
+                if (form) {
+                    form.reset();
+                    // Also reset Select2 dropdowns
+                    $('[data-toggle="select2"]').val(null).trigger('change');
+                }
+                const confirmBtn = document.getElementById('confirmOrderBtn');
+                if (confirmBtn) {
+                    confirmBtn.disabled = false;
+                    confirmBtn.innerHTML = 'Confirm Order';
+                }
+            });
+        </script>
+    @endif
 @endsection
