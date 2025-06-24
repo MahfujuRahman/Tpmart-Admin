@@ -134,19 +134,19 @@
                                 <h4 class="mb-3">Delivery Method</h4>
                                 <div class="mt-3">
                                     <div class="custom-control custom-radio mb-2">
-                                        <input type="radio" id="store_pickup" name="delivery_method"
-                                            onchange="changeOfDeliveryMetod(1)" value="1" class="custom-control-input"
-                                            style="cursor: pointer" />
-                                        <label class="custom-control-label" for="store_pickup" style="cursor: pointer">
-                                            Store Pickup
-                                        </label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
                                         <input type="radio" id="home_delivery" name="delivery_method"
-                                            onchange="changeOfDeliveryMetod(2)" value="2" class="custom-control-input"
+                                            onchange="changeOfDeliveryMetod(1)" value="1" class="custom-control-input"
                                             style="cursor: pointer" />
                                         <label class="custom-control-label" for="home_delivery" style="cursor: pointer">
                                             Home Delivery
+                                        </label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="store_pickup" name="delivery_method"
+                                            onchange="changeOfDeliveryMetod(2)" value="2" class="custom-control-input"
+                                            style="cursor: pointer" />
+                                        <label class="custom-control-label" for="store_pickup" style="cursor: pointer">
+                                            Store Pickup
                                         </label>
                                     </div>
                                 </div>
@@ -343,7 +343,7 @@
             formData.append("shipping_district_id", $("#shipping_district_id").val());
 
             // Handle UI changes based on delivery method
-            if (value == 1) { // Store Pickup
+            if (value == 2) { // Store Pickup
                 // Hide saved address section
                 $('.saved_address').hide();
                 
@@ -361,7 +361,7 @@
                 $('#shipping_postal_code').closest('tr').hide();
                 $('#reference_code').closest('tr').hide();
                 
-            } else { // Home Delivery
+            } else { // Home Delivery (value == 1)
                 // Show saved address section
                 $('.saved_address').show();
                 
@@ -408,6 +408,9 @@
         }
 
         function applySavedAddress(slug) {
+            // Store currently selected delivery method before making changes
+            var selectedDeliveryMethod = $('input[name="delivery_method"]:checked').val();
+            
             // fetching the values
             var name = $("#saved_address_name_" + slug).val();
             var phone = $("#saved_address_phone_" + slug).val();
@@ -423,8 +426,23 @@
             $("#shipping_district_id option:contains('" + district + "')").prop("selected", true).change();
             setTimeout(function() {
                 $("#shipping_thana_id option:contains('" + upazila + "')").prop("selected", true).change();
+                
+                // Restore the delivery method selection after thana is updated
+                if (selectedDeliveryMethod) {
+                    $('input[name="delivery_method"][value="' + selectedDeliveryMethod + '"]').prop('checked', true);
+                    // Reapply the delivery method UI changes
+                    changeOfDeliveryMetod(selectedDeliveryMethod);
+                }
             }, 1000);
             $("#shipping_postal_code").val(post_code);
+            
+            // Also restore delivery method immediately in case the timeout doesn't work
+            if (selectedDeliveryMethod) {
+                setTimeout(function() {
+                    $('input[name="delivery_method"][value="' + selectedDeliveryMethod + '"]').prop('checked', true);
+                    changeOfDeliveryMetod(selectedDeliveryMethod);
+                }, 1200);
+            }
         }
 
         function sameShippingBilling() {
@@ -813,9 +831,9 @@
 
             // Initialize delivery method UI state
             var selectedDeliveryMethod = $('input[name="delivery_method"]:checked').val();
-            if (selectedDeliveryMethod == 1) {
+            if (selectedDeliveryMethod == 2) {
                 // If store pickup is already selected, apply the UI changes
-                changeOfDeliveryMetod(1);
+                changeOfDeliveryMetod(2);
             }
 
             $('#shipping_district_id').on('change', function() {

@@ -524,7 +524,7 @@ class PosController extends Controller
         ];
 
         // Only require address fields for home delivery (delivery_method = 2)
-        if ($request->delivery_method == 2) {
+        if ($request->delivery_method == 1) {
             $validationRules = array_merge($validationRules, [
                 'shipping_address' => 'required|string|max:500',
                 'shipping_postal_code' => 'nullable|string|max:20',
