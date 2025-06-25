@@ -726,6 +726,7 @@ class OrderController extends Controller
             ->select(
                 'order_details.*',
                 'products.name as product_name',
+                'products.is_package',
                 'units.name as unit_name',
                 'categories.name as category_name',
                 'product_warehouses.title as warehouse_title',

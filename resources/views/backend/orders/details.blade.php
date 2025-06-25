@@ -219,6 +219,11 @@
                                         <tr>
                                             <td class="text-center">{{$sl++}}</td>
                                             <td>
+                                                @if($details->is_package == 1)
+                                                    <span class="badge badge-soft-info">Package</span>
+                                                @else
+                                                    <span class="badge badge-soft-success">Product</span>
+                                                @endif
                                                 <b>{{$details->product_name}}</b>
                                                 <br />
                                                 Category : {{$details->category_name}},

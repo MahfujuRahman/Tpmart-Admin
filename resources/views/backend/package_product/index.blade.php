@@ -63,6 +63,7 @@
                                     <th class="text-center">Category</th>
                                     <th class="text-center">Name</th>
                                     <th class="text-center">Price</th>
+                                    <th class="text-center">Stock</th>
                                     <th class="text-center">Package Items</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Action</th>
@@ -111,6 +112,10 @@
                 {
                     data: 'price',
                     name: 'price'
+                },
+                {
+                    data: 'stock',
+                    name: 'stock'
                 },
                 {
                     data: 'package_items_count',
