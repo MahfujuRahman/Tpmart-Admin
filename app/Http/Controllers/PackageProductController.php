@@ -50,7 +50,7 @@ class PackageProductController extends Controller
 
             return DataTables::of($data)
                 ->addColumn('image', function ($data) {
-                    $imagePath = $data->image ? url('productImages/' . $data->image) : url('demo_products/demo_product.png');
+                    $imagePath = $data->image ? url( $data->image) : url('demo_products/demo_product.png');
                     return '<img src="' . $imagePath . '" class="gridProductImage" style="width: 50px; height: 50px; object-fit: cover;">';
                 })
                 ->addColumn('price', function ($data) {
@@ -137,6 +137,8 @@ class PackageProductController extends Controller
             } else {
                 Image::make($image)->save($location . $imageName, 60);
             }
+
+            $imageFileName = $location . $imageName;
         }
 
         // Generate slug
@@ -153,7 +155,7 @@ class PackageProductController extends Controller
             $product->subcategory_id = $request->subcategory_id;
             $product->childcategory_id = $request->childcategory_id;
             $product->brand_id = $request->brand_id;
-            $product->image = $imageName;
+            $product->image = $imageFileName;
             $product->price = $request->price;
             $product->discount_price = $request->discount_price ?? 0;
             $product->stock = 0; // Package products don't have direct stock
@@ -246,7 +248,7 @@ class PackageProductController extends Controller
             } else {
                 Image::make($image)->save($location . $imageName, 60);
             }
-            $product->image = $imageName;
+            $product->image = $location . $imageName;
         }
 
         $product->name = $request->name;

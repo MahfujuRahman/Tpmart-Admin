@@ -70,7 +70,7 @@
                                         </div>
                                         @if($product->image)
                                             <div class="text-center mt-2">
-                                                <img src="{{ url('productImages/' . $product->image) }}" class="img-fluid" style="max-height: 200px;">
+                                                <img src="{{ url( $product->image) }}" class="img-fluid" style="max-height: 200px;">
                                                 <p class="text-muted mt-1">Current Image</p>
                                             </div>
                                         @endif
