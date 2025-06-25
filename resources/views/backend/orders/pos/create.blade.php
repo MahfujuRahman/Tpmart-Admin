@@ -779,53 +779,7 @@
             });
         }
 
-        function updateOrderTotalAmount() {
-
-            var shippingCharge = parseFloat($("#shipping_charge").val());
-            if (isNaN(shippingCharge)) {
-                shippingCharge = 0;
-            }
-
-            var discount = parseFloat($("#discount").val());
-            if (isNaN(discount)) {
-                discount = 0;
-            }
-
-            var priceInputField = document.getElementById("subtotal");
-            var currentPrice = parseFloat(priceInputField.value);
-            if (isNaN(currentPrice)) {
-                currentPrice = 0;
-            }
-
-            if (discount > currentPrice) {
-                toastr.error("Discount cannot be greater than Order Amount");
-                return false;
-            }
-
-            // Use the global dynamic couponPrice variable instead of hardcoded session value
-            // var couponPrice = {{ session('pos_discount', 0) }}; // OLD: hardcoded from session
-
-            console.log(
-                'currentPrice:', currentPrice,
-                'shippingCharge:', shippingCharge,
-                'discount:', discount,
-                'couponPrice:', couponPrice);
-
-            $.get("{{ url('update/order/total') }}" + '/' + shippingCharge + '/' + discount, function(data) {
-
-                var newPrice = (currentPrice + shippingCharge) - (discount + couponPrice);
-
-
-                var totalPriceDiv = document.getElementById("total_cart_calculation");
-                totalPriceDiv.innerText = '৳ ' + newPrice.toLocaleString("en-BD", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
-                $("input[name='delivery_method']").prop("checked", false);
-            });
-
-        }
-
+        
 
         $(document).ready(function() {
 
