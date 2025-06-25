@@ -238,6 +238,16 @@
         </ul>
     </li>
 
+      <li>
+        <a href="{{ url('/package-products') }}"
+            data-active-paths="{{ url('/package-products') }}, {{ url('/package-products/create') }}, {{ url('/package-products/*/edit') }}, {{ url('/package-products/*/manage-items') }}">
+            <i class="feather-package"></i> Package Products
+            <span style="color:lightgreen" title="Total Package Products">
+                ({{ DB::table('products')->where('is_package', true)->count() }})
+            </span>
+        </a>
+    </li>
+
 
     <li>
         <a href="javascript: void(0);" class="has-arrow">

@@ -17,6 +17,7 @@ use App\Http\Controllers\ChildCategoryController;
 use App\Http\Controllers\DeliveryChargeController;
 use App\Http\Controllers\ProductSizeValueController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\PackageProductController;
 
 
 
@@ -113,6 +114,7 @@ Route::group(['middleware' => ['auth', 'CheckUserType', 'DemoMode']], function (
     Route::post('/submit/question/answer', [ProductController::class, 'submitAnswerOfQuestion'])->name('SubmitAnswerOfQuestion');
 
 
+
     // order routes
     Route::get('/view/orders', [OrderController::class, 'viewAllOrders'])->name('ViewAllOrders');
     Route::get('/view/trash/orders', [OrderController::class, 'viewAllTrashedOrders'])->name('viewAllTrashedOrders');
@@ -157,7 +159,7 @@ Route::group(['middleware' => ['auth', 'CheckUserType', 'DemoMode']], function (
     Route::post('place/order', [PosController::class, 'placeOrder'])->name('PlaceOrder');
     // Route::get('/edit/place/order/{slug}', [PosController::class, 'editPlaceOrder'])->name('EditPlaceOrder');
     // Route::post('/update/place/order', [PosController::class, 'updatePlaceOrder'])->name('UpdatePlaceOrder');
-    
+
     // POS Invoice Print Route
     Route::get('/pos/invoice/print/{id}', [InvoiceController::class, 'posInvoicePrint'])->name('POSInvoicePrint');
     Route::get('/pos/invoice/content/{id}', [InvoiceController::class, 'getPrintableContent'])->name('POSInvoiceContent');
@@ -197,6 +199,20 @@ Route::group(['middleware' => ['auth', 'CheckUserType', 'DemoMode']], function (
     Route::post('save/new/upazila', [DeliveryChargeController::class, 'saveNewUpazila'])->name('SaveNewUpazila');
     Route::get('delete/upazila/{id}', [DeliveryChargeController::class, 'deleteUpazila'])->name('DeleteUpazila');
 
+
+    // Package Product routes
+    Route::get('package-products', [PackageProductController::class, 'index'])->name('PackageProducts.Index');
+    Route::get('package-products/data', [PackageProductController::class, 'getData'])->name('PackageProducts.Data');
+    Route::get('package-products/create', [PackageProductController::class, 'create'])->name('PackageProducts.Create');
+    Route::post('package-products', [PackageProductController::class, 'store'])->name('PackageProducts.Store');
+    Route::get('package-products/{id}/edit', [PackageProductController::class, 'edit'])->name('PackageProducts.Edit');
+    Route::put('package-products/{id}', [PackageProductController::class, 'update'])->name('PackageProducts.Update');
+    Route::delete('package-products/{id}', [PackageProductController::class, 'destroy'])->name('PackageProducts.Destroy');
+    Route::get('package-products/{id}/manage-items', [PackageProductController::class, 'manageItems'])->name('PackageProducts.ManageItems');
+    Route::post('package-products/{id}/add-item', [PackageProductController::class, 'addItem'])->name('PackageProducts.AddItem');
+    Route::put('package-products/{packageId}/items/{itemId}', [PackageProductController::class, 'updateItem'])->name('PackageProducts.UpdateItem');
+    Route::delete('package-products/{packageId}/items/{itemId}', [PackageProductController::class, 'removeItem'])->name('PackageProducts.RemoveItem');
+    Route::get('get-product-variants/{productId}', [PackageProductController::class, 'getProductVariants'])->name('GetProductVariants');
 
     // generate report
     Route::get('sales/report', [ReportController::class, 'salesReport'])->name('SalesReport');
