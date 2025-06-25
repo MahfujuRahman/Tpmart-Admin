@@ -320,11 +320,12 @@ class PackageProductController extends Controller
      */
     public function addItem(Request $request, $packageId)
     {
+       
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
-            'color_id' => 'nullable|exists:colors,id',
-            'size_id' => 'nullable|exists:product_sizes,id',
+            'color_id' => 'required|exists:colors,id',
+            'size_id' => 'required|exists:product_sizes,id',
         ]);
 
         // Check if item already exists

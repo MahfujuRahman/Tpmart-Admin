@@ -93,7 +93,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label for="product_id">Select Product <span class="text-danger">*</span></label>
-                                        <select name="product_id" id="product_id" class="form-control select2" required>
+                                        <select name="product_id" id="product_id" class="form-control select2">
                                             <option value="">Choose Product...</option>
                                             @foreach($products as $product)
                                                 <option value="{{ $product->id }}">{{ $product->name }} (৳{{ $product->price }})</option>
@@ -106,30 +106,36 @@
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="form-group">
-                                        <label for="color_id">Color</label>
+                                        <label for="color_id">Color <span class="text-danger">*</span></label>
                                         <select name="color_id" id="color_id" class="form-control select2">
                                             <option value="">Any Color</option>
                                             @foreach($colors as $color)
                                                 <option value="{{ $color->id }}">{{ $color->name }}</option>
                                             @endforeach
                                         </select>
+                                         @error('color_id')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="form-group">
-                                        <label for="size_id">Size</label>
+                                        <label for="size_id">Size <span class="text-danger">*</span></label>
                                         <select name="size_id" id="size_id" class="form-control select2">
                                             <option value="">Any Size</option>
                                             @foreach($sizes as $size)
                                                 <option value="{{ $size->id }}">{{ $size->name }}</option>
                                             @endforeach
                                         </select>
+                                         @error('size_id')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="quantity">Quantity <span class="text-danger">*</span></label>
-                                        <input type="number" name="quantity" id="quantity" class="form-control" min="1" value="1" required>
+                                        <input type="number" name="quantity" id="quantity" class="form-control" min="1" value="1">
                                         @error('quantity')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
