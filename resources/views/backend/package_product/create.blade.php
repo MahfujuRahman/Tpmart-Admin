@@ -74,7 +74,7 @@
                                         <h5 class="card-title">Basic Information</h5>
                                         
                                         <div class="row">
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-12">
                                                 <div class="form-group">
                                                     <label for="name">Package Name <span class="text-danger">*</span></label>
                                                     <input type="text" id="name" name="name" maxlength="255" class="form-control" placeholder="Enter Package Product Name Here" value="{{ old('name') }}" >
@@ -85,12 +85,27 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <label for="stock">Stock <span class="text-danger">*</span></label>
                                                     <input type="number" id="stock" name="stock" min="1" class="form-control" value="{{ old('stock') ?? 1}}">
                                                     <div class="invalid-feedback" style="display: block;">
                                                         @error('stock')
+                                                            {{ $message }}
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="low_stock">Low Stock <span class="text-danger">*</span></label>
+                                                    <input type="number" id="low_stock" name="low_stock" min="1" class="form-control" value="{{ old('low_stock') ?? 1}}">
+                                                    <div class="invalid-feedback" style="display: block;">
+                                                        @error('low_stock')
                                                             {{ $message }}
                                                         @enderror
                                                     </div>

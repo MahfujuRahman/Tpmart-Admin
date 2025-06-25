@@ -90,8 +90,7 @@
             processing: true,
             serverSide: true,
             ajax: "{{ url('package-products/data') }}",
-            columns: [
-                {
+            columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
                 },
@@ -115,7 +114,16 @@
                 },
                 {
                     data: 'stock',
-                    name: 'stock'
+                    name: 'stock',
+                    render: function(data, type, full, meta) {
+                        console.log(full.low_stock);
+                        if (data <= full.low_stock ? full.low_stock : 0) {
+                            return '<span style="color: red; font-weight: bold;" title="Low Stock: Consider Restocking">' +
+                                '<i class="fas fa-exclamation-triangle"></i> ' + data +
+                                '</span>';
+                        }
+                        return data;
+                    }
                 },
                 {
                     data: 'package_items_count',
@@ -147,17 +155,17 @@
             }
         });
 
-        $('body').on('click', '.deleteBtn', function () {
+        $('body').on('click', '.deleteBtn', function() {
             var id = $(this).data("id");
             if (confirm("Are you sure you want to delete this package product?")) {
                 $.ajax({
                     type: "DELETE",
                     url: "{{ url('package-products') }}" + '/' + id,
-                    success: function (data) {
+                    success: function(data) {
                         table.draw(false);
                         toastr.success("Package Product has been deleted", "Deleted Successfully");
                     },
-                    error: function (data) {
+                    error: function(data) {
                         console.log('Error:', data);
                         toastr.error("Failed to delete package product", "Error");
                     }

@@ -117,9 +117,11 @@ class PackageProductController extends Controller
             'name' => 'required|max:255',
             'category_id' => 'required',
             'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'low_stock' => 'nullable|integer|min:0',
             'discount_price' => 'nullable|numeric|min:0',
             'status' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'package_items' => 'required|array|min:1',
             'package_items.*.product_id' => 'required|exists:products,id',
             'package_items.*.quantity' => 'required|integer|min:1',
@@ -138,7 +140,7 @@ class PackageProductController extends Controller
                 Image::make($image)->save($location . $imageName, 60);
             }
 
-            $imageFileName = $location . $imageName;
+            $imageFileName = 'productImages/' . $imageName;
         }
 
         // Generate slug
@@ -158,6 +160,7 @@ class PackageProductController extends Controller
             $product->image = $imageFileName;
             $product->price = $request->price;
             $product->stock = $request->stock;
+            $product->low_stock = $request->low_stock;
 
             $product->discount_price = $request->discount_price ?? 0;
             $product->stock = 0; // Package products don't have direct stock
@@ -227,9 +230,11 @@ class PackageProductController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'category_id' => 'required',
+            'stock' => 'required|integer|min:1',
+            'low_stock' => 'nullable|integer|min:1',
             'price' => 'required|numeric|min:0',
             'status' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         $product = Product::where('id', $id)->where('is_package', 1)->firstOrFail();
@@ -250,7 +255,7 @@ class PackageProductController extends Controller
             } else {
                 Image::make($image)->save($location . $imageName, 60);
             }
-            $product->image = $location . $imageName;
+            $product->image = 'productImages/'. $imageName;
         }
 
         $product->name = $request->name;
@@ -264,6 +269,7 @@ class PackageProductController extends Controller
         $product->discount_price = $request->discount_price ?? 0;
         $product->unit_id = $request->unit_id;
         $product->stock = $request->stock;
+        $product->low_stock = $request->low_stock;  
         $product->tags = $request->tags;
         $product->meta_title = $request->meta_title;
         $product->meta_keywords = $request->meta_keywords;
