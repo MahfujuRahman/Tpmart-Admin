@@ -228,6 +228,7 @@ class ProductController extends Controller
                 ->leftJoin('flags', 'products.flag_id', '=', 'flags.id')
                 ->leftJoin('units', 'products.unit_id', '=', 'units.id')
                 ->select('products.*', 'units.name as unit_name', 'categories.name as category_name', 'flags.name as flag_name')
+                ->where('products.is_package', 0)
                 ->orderBy('products.id', 'desc')
                 ->get();
             // $data;

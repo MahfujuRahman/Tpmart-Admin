@@ -207,7 +207,7 @@
                     data-active-paths="{{ url('/view/all/product') }},{{ url('/add/new/product') }},{{ url('/edit/product/*') }},{{ url('/rearrange/product') }}">
                     View All Products
                     <span style="color:lightgreen" title="Total Products">
-                        ({{ DB::table('products')->count() }})
+                        ({{ DB::table('products')->where('is_package', false)->count() }})
                     </span>
                 </a>
             </li>
