@@ -49,15 +49,18 @@
                     input[type=number] {
                         -moz-appearance: textfield;
                     }
-                   
                 </style>
             </td>
 
             <td class="text-center">
-                <input type="number" class=" text-center" style="width: 50px; -moz-appearance: textfield; appearance: textfield;" min="0" onwheel="this.blur()"
+                <input type="number" class="text-center discount-input" style="width: 60px; -moz-appearance: textfield; appearance: textfield;" min="0" 
+                    data-cart-index="{{ $cartIndex }}"
+                    data-original-value="{{ $details['discounted_price'] }}"
+                    onblur="updateCartDiscountOnBlur(this, '{{ $cartIndex }}')"
+                    onkeydown="handleDiscountKeydown(event, this, '{{ $cartIndex }}')"
+                    oninput="handleDiscountInput(this)"
                     value="{{ $details['discounted_price'] }}" name="discounted_price[]" required
-                    onkeyup="if(this.value < 1) this.value = 0; updateCartDiscount(this, '{{ $cartIndex }}')" 
-                    />
+                    onwheel="this.blur()" />
             </td>
 
             <td class="text-center subtotal-cell">
@@ -79,34 +82,141 @@
 
 
 <script>
-    // User-friendly discount update
-    function updateCartDiscount(input, cartIndex) {
-        let discount = parseFloat(input.value) || 0;
-        var row = input.closest('tr');
+    // Improved user-friendly discount update
+    function handleDiscountInput(inputElem) {
+        // Visual feedback - show pending state
+        inputElem.classList.add('pending-update');
+        inputElem.classList.remove('updating');
+        
+        // Real-time validation
+        let discount = parseFloat(inputElem.value) || 0;
+        var row = inputElem.closest('tr');
         var price = parseFloat(row.querySelector('input[name="price[]"]').value) || 0;
         var qty = parseFloat(row.querySelector('input[name="quantity[]"]').value) || 1;
         var subtotal = price * qty;
-
+        
+        // Validate input as user types
+        if (inputElem.value !== '' && (isNaN(discount) || discount < 0 || discount > subtotal)) {
+            inputElem.style.borderColor = '#dc3545';
+            inputElem.style.backgroundColor = '#f8d7da';
+        } else {
+            inputElem.style.borderColor = '';
+            inputElem.style.backgroundColor = '';
+        }
+    }
+    
+    function handleDiscountKeydown(event, inputElem, cartIndex) {
+        // Enter key to immediately update
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            inputElem.blur(); // This will trigger onblur
+            return;
+        }
+        
+        // Escape key to restore original value
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            let originalValue = inputElem.getAttribute('data-original-value');
+            inputElem.value = originalValue;
+            inputElem.classList.remove('pending-update');
+            inputElem.style.borderColor = '';
+            inputElem.style.backgroundColor = '';
+            inputElem.blur();
+            return;
+        }
+    }
+    
+    function updateCartDiscountOnBlur(inputElem, cartIndex) {
+        let discount = parseFloat(inputElem.value) || 0;
+        let originalValue = parseFloat(inputElem.getAttribute('data-original-value')) || 0;
+        var row = inputElem.closest('tr');
+        var price = parseFloat(row.querySelector('input[name="price[]"]').value) || 0;
+        var qty = parseFloat(row.querySelector('input[name="quantity[]"]').value) || 1;
+        var subtotal = price * qty;
+        
+        // If empty, set to 0
+        if (inputElem.value === '') {
+            discount = 0;
+            inputElem.value = 0;
+        }
+        
+        // Validate discount
+        if (isNaN(discount) || discount < 0) {
+            inputElem.value = originalValue;
+            inputElem.classList.remove('pending-update');
+            inputElem.style.borderColor = '';
+            inputElem.style.backgroundColor = '';
+            
+            toastr.options.positionClass = 'toast-top-right';
+            toastr.options.timeOut = 2000;
+            toastr.warning('Discount must be 0 or greater. Restored to previous value.');
+            return;
+        }
+        
         // Prevent discount greater than subtotal
         if (discount > subtotal) {
-            discount = 0;
-            input.value = 0;
+            inputElem.value = originalValue;
+            inputElem.classList.remove('pending-update');
+            inputElem.style.borderColor = '';
+            inputElem.style.backgroundColor = '';
+            
             toastr.options.positionClass = 'toast-top-right';
-            toastr.options.timeOut = 1500;
-            toastr.error('Discount cannot be greater than subtotal!');
+            toastr.options.timeOut = 2000;
+            toastr.error('Discount cannot be greater than subtotal (৳' + subtotal.toFixed(2) + ')!');
+            return;
         }
-
+        
+        // If value hasn't changed, just remove pending state
+        if (discount === originalValue) {
+            inputElem.classList.remove('pending-update');
+            return;
+        }
+        
+        // Show updating state
+        inputElem.classList.remove('pending-update');
+        inputElem.classList.add('updating');
+        inputElem.disabled = true;
+        
         // Update subtotal cell immediately for smooth UX
         var subtotalCell = row.querySelector('.subtotal-cell');
         var newSubtotal = subtotal - discount;
         if (newSubtotal < 0) newSubtotal = 0;
         subtotalCell.innerHTML = '৳' + newSubtotal.toFixed(2);
-
-        // Update the cart item discount in backend, but do NOT reload the whole cart_items
+        
+        // Update the cart item discount in backend
         $.get("{{ url('update/cart/discount') }}/" + cartIndex + "/" + discount, function(data) {
             // Only update the totals section, not the cart rows
             $('.cart_calculation').html(data.cart_calculation);
+            
+            // Update the original value for next comparison
+            inputElem.setAttribute('data-original-value', discount);
+            inputElem.classList.remove('updating');
+            inputElem.disabled = false;
+            
+            // Show success feedback
+            toastr.options.positionClass = 'toast-top-right';
+            toastr.options.timeOut = 1000;
+            toastr.success('Discount updated successfully!');
+            
+        }).fail(function() {
+            // On error, restore original value
+            inputElem.value = originalValue;
+            inputElem.classList.remove('updating');
+            inputElem.disabled = false;
+            
+            // Restore subtotal
+            var originalSubtotal = subtotal - originalValue;
+            subtotalCell.innerHTML = '৳' + originalSubtotal.toFixed(2);
+            
+            toastr.options.positionClass = 'toast-top-right';
+            toastr.options.timeOut = 2000;
+            toastr.error('Failed to update discount. Please try again.');
         });
+    }
+    
+    // Legacy function for compatibility (keep the old one for backward compatibility)
+    function updateCartDiscount(input, cartIndex) {
+        updateCartDiscountOnBlur(input, cartIndex);
     }
 
     // Improved quantity update: more user-friendly with debouncing
