@@ -50,7 +50,7 @@ class PackageProductController extends Controller
 
             return DataTables::of($data)
                 ->addColumn('image', function ($data) {
-                    $imagePath = $data->image ? url( $data->image) : url('demo_products/demo_product.png');
+                    $imagePath = $data->image ? url($data->image) : url('demo_products/demo_product.png');
                     return '<img src="' . $imagePath . '" class="gridProductImage" style="width: 50px; height: 50px; object-fit: cover;">';
                 })
                 ->addColumn('price', function ($data) {
@@ -157,6 +157,8 @@ class PackageProductController extends Controller
             $product->brand_id = $request->brand_id;
             $product->image = $imageFileName;
             $product->price = $request->price;
+            $product->stock = $request->stock;
+
             $product->discount_price = $request->discount_price ?? 0;
             $product->stock = 0; // Package products don't have direct stock
             $product->unit_id = $request->unit_id;
@@ -261,6 +263,7 @@ class PackageProductController extends Controller
         $product->price = $request->price;
         $product->discount_price = $request->discount_price ?? 0;
         $product->unit_id = $request->unit_id;
+        $product->stock = $request->stock;
         $product->tags = $request->tags;
         $product->meta_title = $request->meta_title;
         $product->meta_keywords = $request->meta_keywords;
@@ -322,7 +325,7 @@ class PackageProductController extends Controller
      */
     public function addItem(Request $request, $packageId)
     {
-       
+
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
@@ -348,7 +351,7 @@ class PackageProductController extends Controller
             'size_id' => $request->size_id,
             'quantity' => $request->quantity,
         ]);
-        
+
         return back()->with('success', 'Item added to package successfully');
     }
 
@@ -369,7 +372,7 @@ class PackageProductController extends Controller
             'color_id' => $request->color_id,
             'size_id' => $request->size_id,
         ]);
-        
+
         return back()->with('success', 'Package item updated successfully');
     }
 
