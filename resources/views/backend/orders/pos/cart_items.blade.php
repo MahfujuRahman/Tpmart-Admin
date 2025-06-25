@@ -30,10 +30,12 @@
             <td class="text-center">৳{{ $details['price'] }}</td>
 
             <td class="text-center">
-                <input type="number" class="text-center" style="width: 50px; -moz-appearance: textfield; appearance: textfield;" min="1"
+                <input type="number" class="text-center qty-input" style="width: 60px; -moz-appearance: textfield; appearance: textfield;" min="1"
                     data-cart-index="{{ $cartIndex }}"
-                    onkeyup="if(this.value < 1) this.value = 1; 
-                    updateCartQty(this, '{{ $cartIndex }}')"
+                    data-original-value="{{ $details['quantity'] }}"
+                    onblur="updateCartQtyOnBlur(this, '{{ $cartIndex }}')"
+                    onkeydown="handleQtyKeydown(event, this, '{{ $cartIndex }}')"
+                    oninput="handleQtyInput(this)"
                     value="{{ $details['quantity'] }}" name="quantity[]" 
                     onwheel="this.blur()" />
                 <style>
@@ -47,6 +49,7 @@
                     input[type=number] {
                         -moz-appearance: textfield;
                     }
+                   
                 </style>
             </td>
 
@@ -106,46 +109,115 @@
         });
     }
 
-    // Improved quantity update: keep focus and cursor after AJAX
-    function updateCartQty(inputElem, cartIndex) {
-        // Save cursor position and value
-        var selectionStart = inputElem.selectionStart;
-        var selectionEnd = inputElem.selectionEnd;
-        var value = inputElem.value;
-        // Save cartIndex to restore focus
-        window._posCartQtyFocus = {
-            cartIndex: cartIndex,
-            selectionStart: selectionStart,
-            selectionEnd: selectionEnd,
-            value: value
-        };
+    // Improved quantity update: more user-friendly with debouncing
+    let qtyUpdateTimeout = null;
+    
+    function handleQtyInput(inputElem) {
+        // Visual feedback - show pending state
+        inputElem.classList.add('pending-update');
+        inputElem.classList.remove('updating');
+        
+        // Clear any existing timeout
+        if (qtyUpdateTimeout) {
+            clearTimeout(qtyUpdateTimeout);
+        }
+        
+        // Validate input as user types
+        let value = parseFloat(inputElem.value);
+        if (inputElem.value !== '' && (isNaN(value) || value < 1)) {
+            inputElem.style.borderColor = '#dc3545';
+            inputElem.style.backgroundColor = '#f8d7da';
+        } else {
+            inputElem.style.borderColor = '';
+            inputElem.style.backgroundColor = '';
+        }
+    }
+    
+    function handleQtyKeydown(event, inputElem, cartIndex) {
+        // Enter key to immediately update
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            inputElem.blur(); // This will trigger onblur which calls updateCartQtyOnBlur
+            return;
+        }
+        
+        // Escape key to restore original value
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            let originalValue = inputElem.getAttribute('data-original-value');
+            inputElem.value = originalValue;
+            inputElem.classList.remove('pending-update');
+            inputElem.style.borderColor = '';
+            inputElem.style.backgroundColor = '';
+            inputElem.blur();
+            return;
+        }
+    }
+    
+    function updateCartQtyOnBlur(inputElem, cartIndex) {
+        let value = parseFloat(inputElem.value);
+        let originalValue = parseFloat(inputElem.getAttribute('data-original-value'));
+        
+        // If empty or invalid, restore original value
+        if (inputElem.value === '' || isNaN(value) || value < 1) {
+            inputElem.value = originalValue;
+            inputElem.classList.remove('pending-update');
+            inputElem.style.borderColor = '';
+            inputElem.style.backgroundColor = '';
+            
+            if (inputElem.value === '') {
+                toastr.options.positionClass = 'toast-top-right';
+                toastr.options.timeOut = 2000;
+                toastr.warning('Quantity cannot be empty. Restored to previous value.');
+            } else if (value < 1) {
+                toastr.options.positionClass = 'toast-top-right';
+                toastr.options.timeOut = 2000;
+                toastr.warning('Quantity must be at least 1. Restored to previous value.');
+            }
+            return;
+        }
+        
+        // If value hasn't changed, just remove pending state
+        if (value === originalValue) {
+            inputElem.classList.remove('pending-update');
+            return;
+        }
+        
+        // Show updating state
+        inputElem.classList.remove('pending-update');
+        inputElem.classList.add('updating');
+        inputElem.disabled = true;
+        
+        // Update cart
         $.get("{{ url('update/cart/item') }}" + '/' + cartIndex + '/' + value, function(data) {
             $('.cart_items').html(data.rendered_cart);
             $('.cart_calculation').html(data.cart_calculation);
+            
             // Reset coupon price as cart updates invalidate coupon
             if (typeof couponPrice !== 'undefined') {
                 couponPrice = 0;
             }
-            // Restore focus and cursor position
-            setTimeout(function() {
-                var focusData = window._posCartQtyFocus;
-                if (!focusData) return;
-                var qtyInput = document.querySelector('input[data-cart-index="' + focusData.cartIndex +
-                    '"]');
-                if (qtyInput) {
-                    qtyInput.focus();
-                    // Restore cursor position if possible
-                    try {
-                        qtyInput.setSelectionRange(focusData.selectionStart, focusData.selectionEnd);
-                    } catch (e) {
-                        // fallback: move cursor to end
-                        var val = qtyInput.value;
-                        qtyInput.value = '';
-                        qtyInput.value = val;
-                    }
-                }
-            }, 10);
+            
+            // Show success feedback
+            toastr.options.positionClass = 'toast-top-right';
+            toastr.options.timeOut = 1000;
+            toastr.success('Quantity updated successfully!');
+            
+        }).fail(function() {
+            // On error, restore original value
+            inputElem.value = originalValue;
+            inputElem.classList.remove('updating');
+            inputElem.disabled = false;
+            
+            toastr.options.positionClass = 'toast-top-right';
+            toastr.options.timeOut = 2000;
+            toastr.error('Failed to update quantity. Please try again.');
         });
+    }
+    
+    // Legacy function for compatibility (in case it's called elsewhere)
+    function updateCartQty(inputElem, cartIndex) {
+        updateCartQtyOnBlur(inputElem, cartIndex);
     }
 
     function removeCartItem(cartIndex) {
