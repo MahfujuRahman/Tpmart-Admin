@@ -237,7 +237,7 @@
                                                 <label for="quantity">Quantity <span class="text-danger">*</span></label>
                                                 <input type="number" name="quantity" id="quantity" class="form-control" min="1" value="1">
                                                 <small class="form-text text-muted">
-                                                    Stock: <span id="available_stock" class="badge badge-secondary"></span>
+                                                    Stock: <span id="available_stock" class="badge badge-secondary">-</span>
                                                 </small>
                                                 @error('quantity')
                                                     <div class="text-danger">{{ $message }}</div>
@@ -699,6 +699,16 @@
             }
             // Always validate form when color/size changes (for duplicate checking)
             validateAddItemForm();
+            
+            // Real-time duplicate feedback
+            const productId = $('#product_id').val();
+            const colorId = $('#color_id').val();
+            const sizeId = $('#size_id').val();
+            
+            if (productId && checkForDuplicateVariantInExisting(productId, colorId, sizeId)) {
+                $('.add-item-form').addClass('duplicate-error');
+                setTimeout(() => $('.add-item-form').removeClass('duplicate-error'), 2000);
+            }
         });
 
         // Check stock for specific variant combination
@@ -775,7 +785,7 @@
 
             $('#color_id').empty().append('<option value="">Any Color</option>');
             $('#size_id').empty().append('<option value="">Any Size</option>');
-            $('#available_stock').text('').removeClass('badge-success badge-warning badge-danger badge-info').addClass('badge-secondary');
+            $('#available_stock').text('-').removeClass('badge-success badge-warning badge-danger badge-info').addClass('badge-secondary');
             $('#quantity').val(1).attr('max', 0);
             $('.add-item-form').removeClass('stock-error stock-warning stock-ok duplicate-error');
             $('#product_id, #color_id, #size_id, #quantity').removeClass('is-invalid');
@@ -791,13 +801,13 @@
             // Remove previous validation classes
             $(this).removeClass('is-invalid');
 
-            if (quantity > maxStock) {
+            // Force quantity within valid range
+            if (quantity > maxStock && maxStock > 0) {
                 $(this).val(maxStock);
-                if (maxStock === 0) {
-                    toastr.warning('This variant is out of stock', 'Stock Issue');
-                } else {
-                    toastr.warning(`Maximum available stock is ${maxStock}. Quantity adjusted.`, 'Stock Limited');
-                }
+                toastr.warning(`Maximum available stock is ${maxStock}. Quantity adjusted.`, 'Stock Limited');
+            } else if (quantity > maxStock && maxStock === 0) {
+                $(this).val(1);
+                toastr.warning('This variant is out of stock', 'Stock Issue');
             }
 
             if (quantity <= 0) {
@@ -806,6 +816,22 @@
             }
 
             validateAddItemForm();
+        });
+
+        // Add edit modal quantity validation
+        $('[id^="edit_quantity_"]').on('input', function() {
+            const maxStock = parseInt($(this).closest('.modal-body').find('strong').text()) || 0;
+            const quantity = parseInt($(this).val()) || 0;
+
+            if (quantity > maxStock && maxStock > 0) {
+                $(this).val(maxStock);
+                toastr.warning(`Maximum available stock is ${maxStock}. Quantity adjusted.`, 'Stock Limited');
+            }
+
+            if (quantity <= 0) {
+                $(this).val(1);
+                toastr.warning('Quantity must be at least 1', 'Invalid Quantity');
+            }
         });
 
         // Comprehensive form validation
