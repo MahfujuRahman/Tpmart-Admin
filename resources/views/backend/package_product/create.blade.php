@@ -109,21 +109,7 @@
                     <form class="needs-validation" method="POST" action="{{ url('package-products') }}"
                         enctype="multipart/form-data">
                         @csrf
-
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong>Please fix the following errors:</strong>
-                                <ul class="mb-0 mt-2">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        @endif
-
+                        
                         <div class="row border-bottom mb-4 pb-2">
                             <div class="col-lg-6 product-card-title">
                                 <h4 class="card-title mb-3" style="font-size: 18px; padding-top: 12px;">Add New Package
@@ -264,11 +250,15 @@
                                                                 <img src="{{ asset($product->image ?? 'assets/images/default-product.png') }}"
                                                                     class="card-img-top"
                                                                     style="height: 150px; object-fit: cover;"
-                                                                    alt="{{ $product->name }}">
-                                                                <div class="badge badge-primary position-absolute"
-                                                                    style="top: 5px; right: 5px;">
-                                                                    ৳{{ number_format($product->discount_price > 0 ? $product->discount_price : $product->price, 2) }}
-                                                                </div>
+                                                                    alt="{{ $product->name }}">                                                <div class="badge badge-primary position-absolute"
+                                                    style="top: 5px; right: 5px;">
+                                                    ৳{{ number_format($product->discount_price > 0 ? $product->discount_price : $product->price, 2) }}
+                                                </div>
+                                                <div class="badge badge-info position-absolute variant-counter"
+                                                    style="top: 5px; left: 5px; display: none;"
+                                                    data-product-id="{{ $product->id }}">
+                                                    0/0
+                                                </div>
                                                                 @php
                                                                     $hasVariants = DB::table('product_variants')
                                                                         ->where('product_id', $product->id)
@@ -527,6 +517,26 @@
                 // Update total after a short delay to ensure all items are loaded
                 setTimeout(function() {
                     updatePackageTotal();
+                    
+                    // Update variant counters for all products
+                    const productIds = [...new Set(Object.values(oldItems).map(item => item.product_id))];
+                    productIds.forEach(productId => {
+                        $.ajax({
+                            url: "{{ url('get-product-variants') }}/" + productId,
+                            type: "GET",
+                            success: function(response) {
+                                if (response.has_variants) {
+                                    const maxVariants = getMaxVariantCombinations(response.colors, response.sizes);
+                                    updateVariantCounter(productId, maxVariants);
+                                } else {
+                                    updateVariantCounter(productId, 1);
+                                }
+                            },
+                            error: function() {
+                                updateVariantCounter(productId, 1);
+                            }
+                        });
+                    });
                 }, 1000);
             @endif
         });
@@ -631,12 +641,6 @@
             const productDiscountPrice = parseFloat($(this).data('discount_price'));
             const productImage = $(this).find('img').attr('src');
 
-            // Check if product already exists
-            if (packageItems.find(item => item.product_id == productId)) {
-                toastr.warning('This product is already added to the package.', 'Duplicate Product');
-                return;
-            }
-
             // Check stock from badge
             const stockBadge = $(this).find('.badge:contains("Stock:")').text();
             const stockMatch = stockBadge.match(/Stock: (\d+)/);
@@ -658,20 +662,26 @@
                 size_id: ''
             };
 
-            // Mark card as selected
+            // Mark card as selected (visual feedback)
             $(this).addClass('selected').css({
                 'border-color': '#28a745',
                 'background-color': '#f8fff9'
             });
 
-            // Get product variants
-            getProductVariants(productId, productData);
+            // Remove the selection styling after a short delay to allow multiple additions
+            setTimeout(() => {
+                $(this).removeClass('selected').css({
+                    'border-color': '#dee2e6',
+                    'background-color': '#fff'
+                });
+            }, 1000);
 
-            toastr.success(`${productName} added to package`, 'Product Added');
+            // Get product variants and check if we can add more
+            getProductVariantsAndValidate(productId, productData);
         });
 
-        // Get product variants (colors and sizes)
-        function getProductVariants(productId, productData) {
+        // Get product variants and validate if product can be added (colors and sizes)
+        function getProductVariantsAndValidate(productId, productData) {
             console.log('Getting variants for product ID:', productId);
             $.ajax({
                 url: "{{ url('get-product-variants') }}/" + productId,
@@ -680,17 +690,107 @@
                     console.log('Variants response:', response);
                     productData.total_stock = response.total_stock;
                     productData.has_variants = response.has_variants;
-                    addItemToTable(productData, response.colors, response.sizes);
+                    
+                    // Check if we can add this product
+                    if (canAddProduct(productId, response)) {
+                        addItemToTable(productData, response.colors, response.sizes);
+                        
+                        if (response.has_variants) {
+                            const currentCount = packageItems.filter(item => item.product_id == productId).length;
+                            const maxVariants = getMaxVariantCombinations(response.colors, response.sizes);
+                            const remaining = maxVariants - currentCount;
+                            
+                            // Update variant counter badge
+                            updateVariantCounter(productId, maxVariants);
+                            
+                            if (remaining > 0) {
+                                toastr.success(`${productData.name} added to package (${remaining} more variants possible)`, 'Product Added');
+                            } else {
+                                toastr.success(`${productData.name} added to package (all variants now added)`, 'Product Added');
+                            }
+                        } else {
+                            // Update variant counter for non-variant product
+                            updateVariantCounter(productId, 1);
+                            toastr.success(`${productData.name} added to package`, 'Product Added');
+                        }
+                    }
                 },
                 error: function(xhr, status, error) {
                     console.log('Error getting variants:', error);
                     console.log('Response:', xhr.responseText);
-                    // If no variants, add with empty options
+                    // If no variants, add with empty options if allowed
                     productData.total_stock = 0;
                     productData.has_variants = false;
-                    addItemToTable(productData, [], []);
+                    
+                    if (canAddProduct(productId, {has_variants: false, colors: [], sizes: []})) {
+                        addItemToTable(productData, [], []);
+                        updateVariantCounter(productId, 1);
+                        toastr.success(`${productData.name} added to package`, 'Product Added');
+                    }
                 }
             });
+        }
+
+        // Function to check if a product can be added based on variant limits
+        function canAddProduct(productId, variantData) {
+            const existingItems = packageItems.filter(item => item.product_id == productId);
+            
+            if (!variantData.has_variants) {
+                // Product has no variants - can only add once
+                if (existingItems.length > 0) {
+                    toastr.warning('This product has no variants and is already added to the package.', 'Already Added');
+                    return false;
+                }
+                return true;
+            } else {
+                // Product has variants - check maximum possible combinations
+                const maxVariants = getMaxVariantCombinations(variantData.colors, variantData.sizes);
+                
+                if (existingItems.length >= maxVariants) {
+                    toastr.warning(`All possible variants of this product are already added to the package.`, 'All Variants Added');
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        // Function to calculate maximum variant combinations
+        function getMaxVariantCombinations(colors, sizes) {
+            const colorCount = colors.length || 1; // At least 1 for "No Color"
+            const sizeCount = sizes.length || 1;   // At least 1 for "No Size"
+            return colorCount * sizeCount;
+        }
+
+        // Function to update variant counter badges on product cards
+        function updateVariantCounter(productId, maxVariants = null) {
+            const currentCount = packageItems.filter(item => item.product_id == productId).length;
+            const counterBadge = $(`.variant-counter[data-product-id="${productId}"]`);
+            
+            if (maxVariants !== null && maxVariants > 1) {
+                counterBadge.text(`${currentCount}/${maxVariants}`).show();
+                
+                // Change badge color based on progress
+                counterBadge.removeClass('badge-info badge-warning badge-success badge-secondary');
+                if (currentCount === 0) {
+                    counterBadge.addClass('badge-info');
+                } else if (currentCount < maxVariants) {
+                    counterBadge.addClass('badge-warning');
+                } else {
+                    counterBadge.addClass('badge-success');
+                }
+            } else {
+                // Single variant product or no variants
+                if (currentCount > 0) {
+                    counterBadge.text('Added').addClass('badge-success').show();
+                } else {
+                    counterBadge.hide();
+                }
+            }
+        }
+
+        // Get product variants (colors and sizes) - kept for backward compatibility
+        function getProductVariants(productId, productData) {
+            return getProductVariantsAndValidate(productId, productData);
         }
 
         // Add restored item to table (used when validation fails)
@@ -879,7 +979,10 @@
                 discount_price: productData.discount_price,
                 quantity: 1,
                 stock: productData.total_stock || 0,
-                has_variants: productData.has_variants || false
+                has_variants: productData.has_variants || false,
+                color_id: '',
+                size_id: '',
+                current_stock: productData.total_stock || 0
             });
 
             updatePackageTotal();
@@ -891,17 +994,25 @@
             const productId = $(this).data('product-id');
             const productName = $('#' + itemId).find('td:nth-child(2)').text().trim();
 
+            // Get item data before removing
+            const removedItem = packageItems.find(item => item.id === itemId);
+
             // Remove from array
             packageItems = packageItems.filter(item => item.id !== itemId);
 
             // Remove row
             $('#' + itemId).remove();
 
-            // Deselect product card
-            $(`.product-card[data-product-id="${productId}"]`).removeClass('selected').css({
-                'border-color': '#dee2e6',
-                'background-color': '#fff'
-            });
+            // Check remaining instances of this product
+            const remainingInstances = packageItems.filter(item => item.product_id == productId);
+            
+            // If no more instances of this product, deselect the card
+            if (remainingInstances.length === 0) {
+                $(`.product-card[data-product-id="${productId}"]`).removeClass('selected').css({
+                    'border-color': '#dee2e6',
+                    'background-color': '#fff'
+                });
+            }
 
             // Show "no items" row if table is empty
             if (packageItems.length === 0) {
@@ -913,7 +1024,36 @@
             }
 
             updatePackageTotal();
-            toastr.info(`${productName} removed from package`, 'Product Removed');
+            
+            // Provide feedback about remaining slots for variants
+            if (removedItem && removedItem.has_variants) {
+                // Get product variants to calculate remaining slots
+                $.ajax({
+                    url: "{{ url('get-product-variants') }}/" + productId,
+                    type: "GET",
+                    success: function(response) {
+                        const maxVariants = getMaxVariantCombinations(response.colors, response.sizes);
+                        const currentCount = packageItems.filter(item => item.product_id == productId).length;
+                        const remaining = maxVariants - currentCount;
+                        
+                        // Update variant counter badge
+                        updateVariantCounter(productId, maxVariants);
+                        
+                        if (remaining > 0) {
+                            toastr.info(`${productName} removed from package (${remaining} more variants can be added)`, 'Product Removed');
+                        } else {
+                            toastr.info(`${productName} removed from package`, 'Product Removed');
+                        }
+                    },
+                    error: function() {
+                        updateVariantCounter(productId, 1);
+                        toastr.info(`${productName} removed from package`, 'Product Removed');
+                    }
+                });
+            } else {
+                updateVariantCounter(productId, 1);
+                toastr.info(`${productName} removed from package`, 'Product Removed');
+            }
         });
 
         // Handle color/size selection to update stock
@@ -924,6 +1064,11 @@
 
             const colorId = row.find('.color-select').val();
             const sizeId = row.find('.size-select').val();
+
+            // Check for duplicate variant combinations
+            if (checkForDuplicateVariant(itemId, productId, colorId, sizeId)) {
+                return; // Stop processing if duplicate found
+            }
 
             // Get the item from packageItems array
             const item = packageItems.find(item => item.id === itemId);
@@ -946,6 +1091,8 @@
 
                         // Update item in array
                         item.current_stock = stock;
+                        item.color_id = colorId;
+                        item.size_id = sizeId;
 
                         // Update row styling based on stock
                         updateRowStockStatus(row, stock);
@@ -978,6 +1125,8 @@
                 row.find('.current-stock').val(item.stock);
                 row.find('.quantity-input').attr('max', item.stock);
                 item.current_stock = item.stock;
+                item.color_id = '';
+                item.size_id = '';
 
                 // Update row styling based on stock
                 updateRowStockStatus(row, item.stock);
@@ -1002,6 +1151,31 @@
             } else {
                 row.addClass('stock-ok');
             }
+        }
+
+        // Function to check for duplicate variant combinations
+        function checkForDuplicateVariant(currentItemId, productId, colorId, sizeId) {
+            // Find if this exact variant combination already exists
+            const duplicateFound = packageItems.find(item => 
+                item.id !== currentItemId && 
+                item.product_id == productId && 
+                (item.color_id || '') == (colorId || '') && 
+                (item.size_id || '') == (sizeId || '')
+            );
+
+            if (duplicateFound) {
+                const colorName = colorId ? $(`#${currentItemId} .color-select option[value="${colorId}"]`).text() : 'No Color';
+                const sizeName = sizeId ? $(`#${currentItemId} .size-select option[value="${sizeId}"]`).text() : 'No Size';
+                
+                toastr.warning(`This product variant (${colorName}, ${sizeName}) is already added to the package.`, 'Duplicate Variant');
+                
+                // Reset the selects to empty values
+                $(`#${currentItemId} .color-select`).val('');
+                $(`#${currentItemId} .size-select`).val('');
+                
+                return true;
+            }
+            return false;
         }
 
         // Update quantity and totals
