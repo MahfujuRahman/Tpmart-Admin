@@ -130,8 +130,8 @@
         }
 
         .add-item-form.duplicate-error {
-            border-color: #6f42c1;
-            background-color: #f8f4ff;
+            border-color: #dc3545;
+            background-color: #fff5f5;
             animation: shake 0.5s ease-in-out;
         }
 
@@ -693,21 +693,32 @@
         });
 
         // Handle color/size selection for stock checking
-        $('#color_id, #size_id').on('change', function() {
+        $('#color_id, #size_id, #product_id').on('change', function() {
             if ($('#product_id').val() && selectedProductHasVariants) {
                 checkVariantStock();
             }
-            // Always validate form when color/size changes (for duplicate checking)
-            validateAddItemForm();
-            
-            // Real-time duplicate feedback
+            // Always validate form when color/size/product changes (for duplicate checking)
             const productId = $('#product_id').val();
             const colorId = $('#color_id').val();
             const sizeId = $('#size_id').val();
-            
             if (productId && checkForDuplicateVariantInExisting(productId, colorId, sizeId)) {
                 $('.add-item-form').addClass('duplicate-error');
-                setTimeout(() => $('.add-item-form').removeClass('duplicate-error'), 2000);
+                $('#add_item_btn').prop('disabled', true);
+                $('#product_id, #color_id, #size_id, #quantity').addClass('is-invalid');
+                if (!$('.add-item-form').data('duplicate-toast')) {
+                    toastr.error('This product variant is already in the package!', 'Duplicate Item');
+                    $('.add-item-form').data('duplicate-toast', true);
+                }
+            } else {
+                $('.add-item-form').removeClass('duplicate-error');
+                $('#product_id, #color_id, #size_id, #quantity').removeClass('is-invalid');
+                $('.add-item-form').removeData('duplicate-toast');
+                // Only enable if form is valid and not duplicate
+                if (validateAddItemForm()) {
+                    $('#add_item_btn').prop('disabled', false);
+                } else {
+                    $('#add_item_btn').prop('disabled', true);
+                }
             }
         });
 
@@ -902,16 +913,14 @@
                 // Add visual feedback for different error types
                 if (errorMessage.includes('variant already exists')) {
                     $('.add-item-form').addClass('duplicate-error');
-                    // Show error on the relevant fields
                     if (productId) $('#product_id').addClass('is-invalid');
                     if (colorId) $('#color_id').addClass('is-invalid');
                     if (sizeId) $('#size_id').addClass('is-invalid');
-
-                    // Show toast notification for duplicate (with debounce)
+                    $('#quantity').addClass('is-invalid');
                     clearTimeout(duplicateCheckTimeout);
                     duplicateCheckTimeout = setTimeout(function() {
-                        toastr.warning(errorMessage, 'Duplicate Item');
-                    }, 500);
+                        toastr.error(errorMessage, 'Duplicate Item');
+                    }, 200);
                 }
             }
 
@@ -921,26 +930,23 @@
         // Check for duplicate variant combinations in existing items
         function checkForDuplicateVariantInExisting(productId, colorId, sizeId) {
             let duplicateFound = false;
-            
-            // Normalize empty values to empty strings for comparison
-            const normalizedColorId = colorId || '';
-            const normalizedSizeId = sizeId || '';
-
-            // Check each existing package item
+            // Normalize all values to string for strict comparison
+            const normalizedProductId = String(productId || '');
+            const normalizedColorId = String(colorId || '');
+            const normalizedSizeId = String(sizeId || '');
             $('.package-item-card').each(function() {
-                const existingProductId = $(this).data('product-id');
-                const existingColorId = $(this).data('color-id') || '';
-                const existingSizeId = $(this).data('size-id') || '';
-
-                // Check if this is the same product with same variant combination
-                if (existingProductId == productId && 
-                    existingColorId === normalizedColorId && 
-                    existingSizeId === normalizedSizeId) {
+                const existingProductId = String($(this).data('product-id') || '');
+                const existingColorId = String($(this).data('color-id') || '');
+                const existingSizeId = String($(this).data('size-id') || '');
+                if (
+                    existingProductId === normalizedProductId &&
+                    existingColorId === normalizedColorId &&
+                    existingSizeId === normalizedSizeId
+                ) {
                     duplicateFound = true;
-                    return false; // Break the loop
+                    return false; // break
                 }
             });
-
             return duplicateFound;
         }
 
@@ -992,23 +998,20 @@
         // Add item form validation and submission
         $('#add-item-form').on('submit', function(e) {
             e.preventDefault();
-
             if (!validateAddItemForm()) {
                 return false;
             }
-
-            // Check for duplicates
+            // Check for duplicates (defensive, in case of race)
             const productId = $('#product_id').val();
             const colorId = $('#color_id').val();
             const sizeId = $('#size_id').val();
-            
             if (checkForDuplicateVariantInExisting(productId, colorId, sizeId)) {
                 $('.add-item-form').addClass('duplicate-error');
-                setTimeout(() => $('.add-item-form').removeClass('duplicate-error'), 2000);
+                $('#add_item_btn').prop('disabled', true);
+                $('#product_id, #color_id, #size_id, #quantity').addClass('is-invalid');
                 toastr.error('This product variant is already in the package!', 'Duplicate Item');
                 return false;
             }
-
             // Submit via AJAX
             var formData = $(this).serialize();
             var submitButton = $('#add_item_btn');
