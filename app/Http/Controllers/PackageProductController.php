@@ -269,8 +269,20 @@ class PackageProductController extends Controller
         $colors = Color::get();
         $sizes = ProductSize::orderBy('serial', 'asc')->get();
         
-        // Get all non-package products for the add item form
-        $products = Product::where('is_package', 0)->where('status', 1)->get();
+        // Get all non-package products for the add item form with stock information
+        $products = Product::where('is_package', 0)->where('status', 1)
+            ->with(['variants'])
+            ->get()
+            ->map(function ($product) {
+                // Calculate total stock and has_variants flag
+                $product->has_variants = $product->variants()->exists();
+                if ($product->has_variants) {
+                    $product->total_stock = $product->variants()->sum('stock');
+                } else {
+                    $product->total_stock = $product->stock ?? 0;
+                }
+                return $product;
+            });
         
         // Get package items for this product
         $packageItems = PackageProductItem::with(['product', 'color', 'size'])
