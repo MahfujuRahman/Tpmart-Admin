@@ -60,10 +60,8 @@
                                 <tr>
                                     <th class="text-center">SL</th>
                                     <th class="text-center">Image</th>
-                                    <th class="text-center">Category</th>
                                     <th class="text-center">Name</th>
                                     <th class="text-center">Price</th>
-                                    <th class="text-center">Stock</th>
                                     <th class="text-center">Package Items</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Action</th>
@@ -101,29 +99,12 @@
                     searchable: false
                 },
                 {
-                    data: 'category_name',
-                    name: 'category_name'
-                },
-                {
                     data: 'name',
                     name: 'name'
                 },
                 {
                     data: 'price',
                     name: 'price'
-                },
-                {
-                    data: 'stock',
-                    name: 'stock',
-                    render: function(data, type, full, meta) {
-                        console.log(full.low_stock);
-                        if (data <= full.low_stock ? full.low_stock : 0) {
-                            return '<span style="color: red; font-weight: bold;" title="Low Stock: Consider Restocking">' +
-                                '<i class="fas fa-exclamation-triangle"></i> ' + data +
-                                '</span>';
-                        }
-                        return data;
-                    }
                 },
                 {
                     data: 'package_items_count',

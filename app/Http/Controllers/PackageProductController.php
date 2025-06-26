@@ -54,9 +54,13 @@ class PackageProductController extends Controller
                     return '<img src="' . $imagePath . '" class="gridProductImage" style="width: 50px; height: 50px; object-fit: cover;">';
                 })
                 ->addColumn('price', function ($data) {
-                    $price = '৳' . number_format($data->price, 2);
-                    if ($data->discount_price > 0) {
-                        $price .= '<br><small class="text-muted"><del>৳' . number_format($data->discount_price, 2) . '</del></small>';
+                    if ($data->discount_price && $data->discount_price > 0) {
+                        $price = '৳' . number_format($data->discount_price, 2);
+                        if ($data->price > 0) {
+                            $price .= '<br><small class="text-muted"><del>৳' . number_format($data->price, 2) . '</del></small>';
+                        }
+                    } else {
+                        $price = '৳' . number_format($data->price, 2);
                     }
                     return $price;
                 })
