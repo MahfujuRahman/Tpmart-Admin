@@ -77,7 +77,6 @@ class PackageProductController extends Controller
                 })
                 ->addColumn('action', function ($data) {
                     $btn = '<a href="' . url('package-products/' . $data->id . '/edit') . '" class="btn btn-sm btn-warning mb-1"><i class="fas fa-edit"></i> Edit</a>';
-                    $btn .= ' <a href="' . url('package-products/' . $data->id . '/manage-items') . '" class="btn btn-sm btn-info mb-1"><i class="fas fa-list"></i> Manage Items</a>';
                     $btn .= ' <a href="javascript:void(0)" data-id="' . $data->id . '" class="btn btn-sm btn-danger mb-1 deleteBtn"><i class="fas fa-trash"></i> Delete</a>';
                     return $btn;
                 })
@@ -151,7 +150,6 @@ class PackageProductController extends Controller
             }
             
             if ($duplicateIndex !== null) {
-                Toastr('Duplicate variant combination found. Each product variant can only be added once.', 'error');
                 return back()->withInput()->withErrors([
                     "package_items.{$index}.product_id" => "Duplicate variant combination found. Each product variant can only be added once."
                 ]);
@@ -268,6 +266,17 @@ class PackageProductController extends Controller
         $brands = Brand::where('status', 1)->get();
         $units = Unit::where('status', 1)->get();
         $flags = Flag::where('status', 1)->get();
+        $colors = Color::get();
+        $sizes = ProductSize::orderBy('serial', 'asc')->get();
+        
+        // Get all non-package products for the add item form
+        $products = Product::where('is_package', 0)->where('status', 1)->get();
+        
+        // Get package items for this product
+        $packageItems = PackageProductItem::with(['product', 'color', 'size'])
+            ->where('package_product_id', $id)
+            ->get();
+        
         $subcategories = Subcategory::where('category_id', $product->category_id)->get();
         $childcategories = ChildCategory::where('category_id', $product->category_id)
             ->where('subcategory_id', $product->subcategory_id)
@@ -279,6 +288,10 @@ class PackageProductController extends Controller
             'brands',
             'units',
             'flags',
+            'colors',
+            'sizes',
+            'products',
+            'packageItems',
             'subcategories',
             'childcategories'
         ));
@@ -304,17 +317,15 @@ class PackageProductController extends Controller
             ],
             'status' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'package_items' => 'required|array|min:1',
-            'package_items.*.product_id' => 'required|exists:products,id',
-            'package_items.*.quantity' => 'required|integer|min:1',
         ]);
+        
         $product = Product::where('id', $id)->where('is_package', 1)->firstOrFail();
 
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($product->image && file_exists(public_path('productImages/' . $product->image))) {
-                unlink(public_path('productImages/' . $product->image));
+            if ($product->image && file_exists(public_path($product->image))) {
+                unlink(public_path($product->image));
             }
 
             $image = $request->file('image');
@@ -332,15 +343,8 @@ class PackageProductController extends Controller
         $product->name = $request->name;
         $product->short_description = $request->short_description;
         $product->description = $request->description;
-        $product->category_id = $request->category_id;
-        $product->subcategory_id = $request->subcategory_id;
-        $product->childcategory_id = $request->childcategory_id;
-        $product->brand_id = $request->brand_id;
         $product->price = $request->price;
         $product->discount_price = $request->discount_price ?? 0;
-        $product->unit_id = $request->unit_id;
-        $product->stock = $request->stock;
-        $product->low_stock = $request->low_stock;  
         $product->tags = $request->tags;
         $product->meta_title = $request->meta_title;
         $product->meta_keywords = $request->meta_keywords;
@@ -400,13 +404,39 @@ class PackageProductController extends Controller
      */
     public function addItem(Request $request, $packageId)
     {
-
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
-            'color_id' => 'required|exists:colors,id',
-            'size_id' => 'required|exists:product_sizes,id',
+            'color_id' => 'nullable|exists:colors,id',
+            'size_id' => 'nullable|exists:product_sizes,id',
         ]);
+
+        // Additional stock validation
+        $product = Product::findOrFail($request->product_id);
+        
+        // Check stock availability
+        if ($request->color_id || $request->size_id) {
+            // Check variant stock
+            $variantStock = DB::table('product_variants')
+                ->where('product_id', $request->product_id)
+                ->when($request->color_id, function($query) use ($request) {
+                    return $query->where('color_id', $request->color_id);
+                })
+                ->when($request->size_id, function($query) use ($request) {
+                    return $query->where('size_id', $request->size_id);
+                })
+                ->sum('stock');
+                
+            if ($variantStock < $request->quantity) {
+                return back()->with('error', 'Insufficient stock. Available: ' . $variantStock);
+            }
+        } else {
+            // Check product stock
+            $productStock = $product->stock ?? 0;
+            if ($productStock < $request->quantity) {
+                return back()->with('error', 'Insufficient stock. Available: ' . $productStock);
+            }
+        }
 
         // Check if item already exists
         $existingItem = PackageProductItem::where('package_product_id', $packageId)

@@ -72,83 +72,73 @@
             padding: 20px;
             margin-bottom: 20px;
         }
-
+        
         /* Stock Status Styling */
         .stock-issue {
             background-color: #ffebee !important;
             border-left: 4px solid #f44336 !important;
         }
-
+        
         .stock-warning {
             background-color: #fff8e1 !important;
             border-left: 4px solid #ff9800 !important;
         }
-
+        
         .stock-ok {
             background-color: #e8f5e8 !important;
             border-left: 4px solid #4caf50 !important;
         }
-
+        
         /* Form Validation */
         .is-invalid {
             border-color: #dc3545 !important;
             box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
         }
-
+        
         .invalid-feedback {
             display: block !important;
         }
-
+        
         /* Stock Badge Styling */
         #available_stock.badge-danger {
             background-color: #dc3545;
         }
-
+        
         #available_stock.badge-warning {
             background-color: #ffc107;
             color: #212529;
         }
-
+        
         #available_stock.badge-success {
             background-color: #28a745;
         }
-
+        
         /* Add Item Form Styling */
         .add-item-form.stock-error {
             border-color: #dc3545;
             background-color: #fff5f5;
         }
-
+        
         .add-item-form.stock-warning {
             border-color: #ffc107;
             background-color: #fffbf0;
         }
-
+        
         .add-item-form.stock-ok {
             border-color: #28a745;
             background-color: #f8fff9;
         }
-
+        
         .add-item-form.duplicate-error {
             border-color: #6f42c1;
             background-color: #f8f4ff;
             animation: shake 0.5s ease-in-out;
         }
-
+        
         @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-5px);
-            }
-
-            75% {
-                transform: translateX(5px);
-            }
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
     </style>
 @endsection
@@ -166,252 +156,28 @@
             <div class="card">
                 <div class="card-body">
 
-                    <div class="row border-bottom mb-4 pb-2">
-                        <div class="col-lg-6 product-card-title">
-                            <h4 class="card-title mb-3" style="font-size: 18px; padding-top: 12px;">Edit Package Product
-                            </h4>
-                        </div>
-                        <div class="col-lg-6 text-right">
-                            <a href="{{ url('package-products') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Back to List
-                            </a>
-                        </div>
-                    </div>
-                    <!-- Package Items Management Section (Separate from main form) -->
-                    <div class="card mt-4">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <div>
-                                    <h4 class="card-title mb-1">Package Items Management</h4>
-                                    <p class="text-muted">Add and manage items for this package</p>
-                                </div>
-                                <div>
-                                    <span class="badge badge-info">{{ count($packageItems) }} items</span>
-                                </div>
-                            </div>
-
-                            <!-- Add New Item Form -->
-                            <div class="add-item-form">
-                                <h5 class="mb-3"><i class="fas fa-plus"></i> Add Item to Package</h5>
-                                <form method="POST" action="{{ url('package-products/' . $product->id . '/add-item') }}"
-                                    id="add-item-form">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-lg-3">
-                                            <div class="form-group">
-                                                <label for="product_id">Select Product <span
-                                                        class="text-danger">*</span></label>
-                                                <select name="product_id" id="product_id" class="form-control select2">
-                                                    <option value="">Choose Product...</option>
-                                                    @foreach ($products as $product_item)
-                                                        <option value="{{ $product_item->id }}">{{ $product_item->name }}
-                                                            (৳{{ $product_item->price }})
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                @error('product_id')
-                                                    <div class="text-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <div class="form-group">
-                                                <label for="color_id">Color</label>
-                                                <select name="color_id" id="color_id" class="form-control select2">
-                                                    <option value="">Any Color</option>
-                                                    <!-- Will be populated via AJAX -->
-                                                </select>
-                                                @error('color_id')
-                                                    <div class="text-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <div class="form-group">
-                                                <label for="size_id">Size</label>
-                                                <select name="size_id" id="size_id" class="form-control select2">
-                                                    <option value="">Any Size</option>
-                                                    <!-- Will be populated via AJAX -->
-                                                </select>
-                                                @error('size_id')
-                                                    <div class="text-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <div class="form-group">
-                                                <label for="quantity">Quantity <span class="text-danger">*</span></label>
-                                                <input type="number" name="quantity" id="quantity" class="form-control"
-                                                    min="1" value="1">
-                                                <small class="form-text text-muted">
-                                                    Stock: <span id="available_stock" class="badge badge-secondary">-</span>
-                                                </small>
-                                                @error('quantity')
-                                                    <div class="text-danger">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="form-group">
-                                                <label>&nbsp;</label>
-                                                <button type="submit" id="add_item_btn" class="btn btn-primary btn-block"
-                                                    disabled>
-                                                    <i class="fas fa-plus"></i> Add Item
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <!-- Package Items List -->
-                            <div class="mt-4">
-                                <h5 class="mb-3">
-                                    <i class="fas fa-list"></i> Current Package Items
-                                </h5>
-
-                                @if (count($packageItems) > 0)
-                                    @foreach ($packageItems as $item)
-                                        <div class="package-item-card">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="item-info">
-                                                    <img src="{{ $item->product->image ? url($item->product->image) : url('demo_products/demo_product.png') }}"
-                                                        alt="{{ $item->product->name }}" class="item-image">
-                                                    <div class="item-details">
-                                                        <h6>{{ $item->product->name }}</h6>
-                                                        <p>
-                                                            Price: ৳{{ number_format($item->product->price, 2) }}
-                                                            @if ($item->color)
-                                                                | Color: {{ $item->color->name }}
-                                                            @endif
-                                                            @if ($item->size)
-                                                                | Size: {{ $item->size->name }}
-                                                            @endif
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="d-flex align-items-center">
-                                                    <span class="quantity-badge mr-2">{{ $item->quantity }}x</span>
-
-                                                    <div class="btn-group">
-                                                        <button type="button" class="btn btn-sm btn-warning mr-2"
-                                                            data-toggle="modal"
-                                                            data-target="#editModal{{ $item->id }}">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                        <button type="button" class="btn btn-sm btn-danger"
-                                                            onclick="removeItem({{ $item->id }})">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Edit Modal -->
-                                        <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1"
-                                            role="dialog">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <form method="POST"
-                                                        action="{{ url('package-products/' . $product->id . '/items/' . $item->id) }}">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Edit Item: {{ $item->product->name }}
-                                                            </h5>
-                                                            <button type="button" class="close" data-dismiss="modal">
-                                                                <span>&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="form-group">
-                                                                <label>Product</label>
-                                                                <input type="text" class="form-control"
-                                                                    value="{{ $item->product->name }}" readonly>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label
-                                                                            for="edit_color_id_{{ $item->id }}">Color</label>
-                                                                        <select name="color_id"
-                                                                            id="edit_color_id_{{ $item->id }}"
-                                                                            class="form-control">
-                                                                            <option value="">Any Color</option>
-                                                                            @foreach ($colors as $color)
-                                                                                <option value="{{ $color->id }}"
-                                                                                    {{ $item->color_id == $color->id ? 'selected' : '' }}>
-                                                                                    {{ $color->name }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label
-                                                                            for="edit_size_id_{{ $item->id }}">Size</label>
-                                                                        <select name="size_id"
-                                                                            id="edit_size_id_{{ $item->id }}"
-                                                                            class="form-control">
-                                                                            <option value="">Any Size</option>
-                                                                            @foreach ($sizes as $size)
-                                                                                <option value="{{ $size->id }}"
-                                                                                    {{ $item->size_id == $size->id ? 'selected' : '' }}>
-                                                                                    {{ $size->name }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label
-                                                                    for="edit_quantity_{{ $item->id }}">Quantity</label>
-                                                                <input type="number" name="quantity"
-                                                                    id="edit_quantity_{{ $item->id }}"
-                                                                    class="form-control" min="1"
-                                                                    value="{{ $item->quantity }}" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-dismiss="modal">Cancel</button>
-                                                            <button type="submit" class="btn btn-primary">Update
-                                                                Item</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                @else
-                                    <div class="text-center py-4">
-                                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                                        <h5 class="text-muted">No items in this package yet</h5>
-                                        <p class="text-muted">Use the form above to add items to this package.</p>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    
                     <form class="needs-validation" method="POST" action="{{ url('package-products/' . $product->id) }}"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
+                        <div class="row border-bottom mb-4 pb-2">
+                            <div class="col-lg-6 product-card-title">
+                                <h4 class="card-title mb-3" style="font-size: 18px; padding-top: 12px;">Edit Package Product
+                                </h4>
+                            </div>
+                            <div class="col-lg-6 text-right">
+                                <a href="{{ url('package-products') }}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Back to List
+                                </a>
+                            </div>
+                        </div>
 
                         <div class="row">
-                            <div class="col-lg-3">
+                             <div class="col-lg-3">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h5 class="card-title">Package Image</h5>
+                                         <h5 class="card-title">Package Image</h5>
                                         @if ($product->image)
                                             <div class="text-center mt-2">
                                                 <img src="{{ url($product->image) }}" class="img-fluid"
@@ -496,8 +262,7 @@
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="form-group">
-                                                    <label for="status">Status <span
-                                                            class="text-danger">*</span></label>
+                                                    <label for="status">Status <span class="text-danger">*</span></label>
                                                     <select name="status" class="form-control" id="status" required>
                                                         <option value="1"
                                                             {{ old('status', $product->status) == '1' ? 'selected' : '' }}>
@@ -510,6 +275,230 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-list"></i> Package Items
+                                    <span class="badge badge-info">{{ count($packageItems) }} items</span>
+                                </h5>
+
+                                <!-- Add New Item Form -->
+                                <div class="add-item-form">
+                                    <h5 class="mb-3"><i class="fas fa-plus"></i> Add Item to Package</h5>
+                                    <form method="POST"
+                                        action="{{ url('package-products/' . $product->id . '/add-item') }}">
+                                        @csrf
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <div class="form-group">
+                                                    <label for="product_id">Select Product <span
+                                                            class="text-danger">*</span></label>
+                                                    <select name="product_id" id="product_id"
+                                                        class="form-control select2">
+                                                        <option value="">Choose Product...</option>
+                                                        @foreach (App\Models\Product::where('is_package', false)->where('status', 1)->get() as $availableProduct)
+                                                            <option value="{{ $availableProduct->id }}">
+                                                                {{ $availableProduct->name }}
+                                                                (৳{{ $availableProduct->price }})</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('product_id')
+                                                        <div class="text-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <label for="color_id">Color</label>
+                                                    <select name="color_id" id="color_id" class="form-control select2">
+                                                        <option value="">Any Color</option>
+                                                        @foreach ($colors as $color)
+                                                            <option value="{{ $color->id }}">{{ $color->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('color_id')
+                                                        <div class="text-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <label for="size_id">Size</label>
+                                                    <select name="size_id" id="size_id" class="form-control select2">
+                                                        <option value="">Any Size</option>
+                                                        @foreach ($sizes as $size)
+                                                            <option value="{{ $size->id }}">{{ $size->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('size_id')
+                                                        <div class="text-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-1">
+                                                <div class="form-group">
+                                                    <label>Stock</label>
+                                                    <div class="form-control-plaintext">
+                                                        <span id="available_stock" class="badge badge-secondary">-</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <label for="quantity">Quantity <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="number" name="quantity" id="quantity"
+                                                        class="form-control" min="1" max="0" value="1">
+                                                    @error('quantity')
+                                                        <div class="text-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <label>&nbsp;</label>
+                                                    <button type="submit" class="btn btn-primary btn-block" id="add_item_btn" disabled>
+                                                        <i class="fas fa-plus"></i> Add Item
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Package Items List -->
+                                <div class="mt-4">
+                                    @if (count($packageItems) > 0)
+                                        @foreach ($packageItems as $item)
+                                            <div class="package-item-card">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="item-info">
+                                                        <img src="{{ $item->product->image ? url($item->product->image) : url('demo_products/demo_product.png') }}"
+                                                            alt="{{ $item->product->name }}" class="item-image">
+                                                        <div class="item-details">
+                                                            <h6>{{ $item->product->name }}</h6>
+                                                            <p>
+                                                                Price: ৳{{ number_format($item->product->price, 2) }}
+                                                                @if ($item->color)
+                                                                    | Color: {{ $item->color->name }}
+                                                                @endif
+                                                                @if ($item->size)
+                                                                    | Size: {{ $item->size->name }}
+                                                                @endif
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="quantity-badge mr-2">{{ $item->quantity }}x</span>
+
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-sm btn-warning mr-2"
+                                                                data-toggle="modal"
+                                                                data-target="#editModal{{ $item->id }}">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button type="button" class="btn btn-sm btn-danger"
+                                                                onclick="removeItem({{ $item->id }})">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Edit Modal -->
+                                            <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1"
+                                                role="dialog">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <form method="POST"
+                                                            action="{{ url('package-products/' . $product->id . '/items/' . $item->id) }}">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Edit Item:
+                                                                    {{ $item->product->name }}</h5>
+                                                                <button type="button" class="close"
+                                                                    data-dismiss="modal">
+                                                                    <span>&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <label>Product</label>
+                                                                    <input type="text" class="form-control"
+                                                                        value="{{ $item->product->name }}" readonly>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label
+                                                                                for="edit_color_id_{{ $item->id }}">Color</label>
+                                                                            <select name="color_id"
+                                                                                id="edit_color_id_{{ $item->id }}"
+                                                                                class="form-control">
+                                                                                <option value="">Any Color</option>
+                                                                                @foreach ($colors as $color)
+                                                                                    <option value="{{ $color->id }}"
+                                                                                        {{ $item->color_id == $color->id ? 'selected' : '' }}>
+                                                                                        {{ $color->name }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label
+                                                                                for="edit_size_id_{{ $item->id }}">Size</label>
+                                                                            <select name="size_id"
+                                                                                id="edit_size_id_{{ $item->id }}"
+                                                                                class="form-control">
+                                                                                <option value="">Any Size</option>
+                                                                                @foreach ($sizes as $size)
+                                                                                    <option value="{{ $size->id }}"
+                                                                                        {{ $item->size_id == $size->id ? 'selected' : '' }}>
+                                                                                        {{ $size->name }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label
+                                                                        for="edit_quantity_{{ $item->id }}">Quantity</label>
+                                                                    <input type="number" name="quantity"
+                                                                        id="edit_quantity_{{ $item->id }}"
+                                                                        class="form-control" min="1"
+                                                                        value="{{ $item->quantity }}" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-dismiss="modal">Cancel</button>
+                                                                <button type="submit" class="btn btn-primary">Update
+                                                                    Item</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="text-center py-5">
+                                            <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                                            <h5 class="text-muted">No items added to this package yet</h5>
+                                            <p class="text-muted">Use the form above to add products to this package</p>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -591,15 +580,13 @@
 
                         <div class="form-group text-center pt-3">
                             <a href="{{ url('package-products') }}" style="width: 130px;"
-                                class="btn btn-danger d-inline-block text-white m-2"><i class="mdi mdi-cancel"></i>
-                                Cancel</a>
+                                class="btn btn-danger d-inline-block text-white m-2" type="submit"><i
+                                    class="mdi mdi-cancel"></i> Cancel</a>
                             <button class="btn btn-primary m-2" style="width: 180px;" type="submit"><i
                                     class="fas fa-save"></i> Update Package</button>
                         </div>
 
                     </form>
-
-
                 </div>
             </div>
         </div>
@@ -642,7 +629,7 @@
         $('#product_id').on('change', function() {
             var productId = $(this).val();
             resetAddItemForm();
-
+            
             if (productId) {
                 $.ajax({
                     url: "{{ url('get-product-variants') }}/" + productId,
@@ -650,13 +637,12 @@
                     success: function(response) {
                         selectedProductData = response;
                         selectedProductHasVariants = response.has_variants;
-
+                        
                         // Update colors
                         $('#color_id').empty().append('<option value="">Any Color</option>');
                         if (response.colors && response.colors.length > 0) {
                             $.each(response.colors, function(key, color) {
-                                $('#color_id').append('<option value="' + color.id + '">' +
-                                    color.name + '</option>');
+                                $('#color_id').append('<option value="' + color.id + '">' + color.name + '</option>');
                             });
                         }
 
@@ -664,8 +650,7 @@
                         $('#size_id').empty().append('<option value="">Any Size</option>');
                         if (response.sizes && response.sizes.length > 0) {
                             $.each(response.sizes, function(key, size) {
-                                $('#size_id').append('<option value="' + size.id + '">' + size
-                                    .name + '</option>');
+                                $('#size_id').append('<option value="' + size.id + '">' + size.name + '</option>');
                             });
                         }
 
@@ -678,8 +663,7 @@
                             // For products with variants, show total stock but require variant selection
                             updateStockDisplay(response.total_stock, true);
                             $('#available_stock').text('Select variant');
-                            $('#available_stock').removeClass(
-                                'badge-success badge-warning badge-danger').addClass('badge-info');
+                            $('#available_stock').removeClass('badge-success badge-warning badge-danger').addClass('badge-info');
                             currentAvailableStock = 0;
                             validateAddItemForm();
                         }
@@ -746,7 +730,7 @@
         function updateStockDisplay(stock, showVariantMessage = false) {
             const stockBadge = $('#available_stock');
             const addItemForm = $('.add-item-form');
-
+            
             if (showVariantMessage) {
                 stockBadge.text('Total: ' + stock);
                 stockBadge.removeClass('badge-success badge-warning badge-danger').addClass('badge-info');
@@ -775,15 +759,14 @@
             currentAvailableStock = 0;
             selectedProductHasVariants = false;
             selectedProductData = null;
-
+            
             $('#color_id').empty().append('<option value="">Any Color</option>');
             $('#size_id').empty().append('<option value="">Any Size</option>');
-            $('#available_stock').text('-').removeClass('badge-success badge-warning badge-danger badge-info').addClass(
-                'badge-secondary');
+            $('#available_stock').text('-').removeClass('badge-success badge-warning badge-danger badge-info').addClass('badge-secondary');
             $('#quantity').val(1).attr('max', 0);
             $('.add-item-form').removeClass('stock-error stock-warning stock-ok duplicate-error');
             $('#product_id, #color_id, #size_id, #quantity').removeClass('is-invalid');
-
+            
             validateAddItemForm();
         }
 
@@ -819,7 +802,7 @@
             const sizeId = $('#size_id').val();
             const quantity = parseInt($('#quantity').val()) || 0;
             const addButton = $('#add_item_btn');
-
+            
             let isValid = true;
             let errorMessage = '';
 
@@ -857,14 +840,14 @@
                 addButton.prop('disabled', false).removeClass('btn-secondary').addClass('btn-primary');
                 $('#quantity').attr('max', currentAvailableStock);
                 addButton.removeAttr('title');
-
+                
                 // Remove error styling from form elements
                 $('#product_id, #color_id, #size_id, #quantity').removeClass('is-invalid');
                 $('.add-item-form').removeClass('duplicate-error');
             } else {
                 addButton.prop('disabled', true).removeClass('btn-primary').addClass('btn-secondary');
                 addButton.attr('title', errorMessage);
-
+                
                 // Add visual feedback for different error types
                 if (errorMessage.includes('variant already exists')) {
                     $('.add-item-form').addClass('duplicate-error');
@@ -872,7 +855,7 @@
                     if (productId) $('#product_id').addClass('is-invalid');
                     if (colorId) $('#color_id').addClass('is-invalid');
                     if (sizeId) $('#size_id').addClass('is-invalid');
-
+                    
                     // Show toast notification for duplicate (with debounce)
                     clearTimeout(duplicateCheckTimeout);
                     duplicateCheckTimeout = setTimeout(function() {
@@ -888,18 +871,18 @@
         function checkForDuplicateVariantInExisting(productId, colorId, sizeId) {
             let duplicateFound = false;
             const selectedProductName = $('#product_id option:selected').text().split(' (৳')[0];
-
+            
             // Get existing package items data from the page
             $('.package-item-card').each(function() {
                 const itemDetails = $(this).find('.item-details p').text();
                 const existingProductName = $(this).find('.item-details h6').text().trim();
-
+                
                 // Check if this is the same product
                 if (existingProductName === selectedProductName) {
                     // Extract existing color and size from the details text
                     let existingColorId = null;
                     let existingSizeId = null;
-
+                    
                     // Parse color from "Color: ColorName" pattern
                     const colorMatch = itemDetails.match(/Color:\s*([^|]+)/);
                     if (colorMatch) {
@@ -911,7 +894,7 @@
                             }
                         });
                     }
-
+                    
                     // Parse size from "Size: SizeName" pattern
                     const sizeMatch = itemDetails.match(/Size:\s*([^|]+)/);
                     if (sizeMatch) {
@@ -923,21 +906,21 @@
                             }
                         });
                     }
-
+                    
                     // Check if this exact variant combination already exists
                     const sameColor = (colorId || '') === (existingColorId || '');
                     const sameSize = (sizeId || '') === (existingSizeId || '');
-
+                    
                     // For products without variants, if the same product exists without color/size, it's duplicate
                     const isPlainProduct = !colorId && !sizeId && !existingColorId && !existingSizeId;
-
+                    
                     if ((sameColor && sameSize) || isPlainProduct) {
                         duplicateFound = true;
                         return false; // Break the loop
                     }
                 }
             });
-
+            
             return duplicateFound;
         }
 
@@ -965,7 +948,7 @@
             }
         }
 
-        // Enhanced form submission validation for add item form
+        // Enhanced form submission validation
         $('.add-item-form form').on('submit', function(e) {
             if (!validateAddItemForm()) {
                 e.preventDefault();
@@ -980,65 +963,27 @@
         // Initialize form on page load
         $(document).ready(function() {
             resetAddItemForm();
-
+            
             // Show any flash messages
-            @if (session('success'))
+            @if(session('success'))
                 toastr.success('{{ session('success') }}', 'Success');
             @endif
-
-            @if (session('error'))
+            
+            @if(session('error'))
                 toastr.error('{{ session('error') }}', 'Error');
             @endif
         });
 
         // Main form validation (for package update) - only validate basic package info
         $('form.needs-validation').on('submit', function(e) {
+            // Skip this validation for add item form
+            if ($(this).find('#add_item_btn').length > 0) {
+                return; // This is the add item form
+            }
+            
             // This is the main package update form
             console.log('Submitting main package form');
             toastr.info('Updating package product...', 'Processing');
-        });
-
-        // Add item form validation and submission
-        $('#add-item-form').on('submit', function(e) {
-            e.preventDefault();
-
-            if (!validateAddItemForm()) {
-                return false;
-            }
-
-            // Check for duplicates
-            if (checkForDuplicateVariant()) {
-                $('.add-item-form').addClass('duplicate-error');
-                setTimeout(() => $('.add-item-form').removeClass('duplicate-error'), 2000);
-                toastr.error('This product variant is already in the package!', 'Duplicate Item');
-                return false;
-            }
-
-            // Submit via AJAX
-            var formData = $(this).serialize();
-            var submitButton = $('#add_item_btn');
-
-            submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Adding...');
-
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'POST',
-                data: formData,
-                success: function(response) {
-                    toastr.success('Item added to package successfully!', 'Success');
-                    location.reload(); // Reload to show the new item
-                },
-                error: function(xhr) {
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        toastr.error(xhr.responseJSON.message, 'Error');
-                    } else {
-                        toastr.error('Error adding item to package', 'Error');
-                    }
-                },
-                complete: function() {
-                    submitButton.prop('disabled', false).html('<i class="fas fa-plus"></i> Add Item');
-                }
-            });
         });
     </script>
 @endsection
