@@ -353,28 +353,18 @@
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <div class="form-group">
-                                                                        <label for="edit_color_id_{{ $item->id }}">Color</label>
-                                                                        <select name="color_id" id="edit_color_id_{{ $item->id }}" class="form-control">
-                                                                            <option value="">Any Color</option>
-                                                                            @foreach ($colors as $color)
-                                                                                <option value="{{ $color->id }}" {{ $item->color_id == $color->id ? 'selected' : '' }}>
-                                                                                    {{ $color->name }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        <label>Color</label>
+                                                                        <input type="text" class="form-control" 
+                                                                               value="{{ $item->color ? $item->color->name : 'Any Color' }}" readonly>
+                                                                        <input type="hidden" name="color_id" value="{{ $item->color_id }}">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="form-group">
-                                                                        <label for="edit_size_id_{{ $item->id }}">Size</label>
-                                                                        <select name="size_id" id="edit_size_id_{{ $item->id }}" class="form-control">
-                                                                            <option value="">Any Size</option>
-                                                                            @foreach ($sizes as $size)
-                                                                                <option value="{{ $size->id }}" {{ $item->size_id == $size->id ? 'selected' : '' }}>
-                                                                                    {{ $size->name }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        <label>Size</label>
+                                                                        <input type="text" class="form-control" 
+                                                                               value="{{ $item->size ? $item->size->name : 'Any Size' }}" readonly>
+                                                                        <input type="hidden" name="size_id" value="{{ $item->size_id }}">
                                                                     </div>
                                                                 </div>
                                                             </div>
