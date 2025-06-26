@@ -112,8 +112,6 @@ class PackageProductController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all()); // Debugging line to check request data
-
         $request->validate([
             'name' => 'required|max:255',
             'price' => 'required|numeric|min:0',
@@ -187,7 +185,6 @@ class PackageProductController extends Controller
             }
 
             DB::commit();
-            Toastr::success('Package Product Created Successfully!', 'Success');
             return redirect()->route('PackageProducts.Index')->with('success', 'Package Product Created Successfully with ' . count($request->package_items) . ' items');
         } catch (\Exception $e) {
             DB::rollback();
@@ -245,7 +242,6 @@ class PackageProductController extends Controller
             'package_items.*.product_id' => 'required|exists:products,id',
             'package_items.*.quantity' => 'required|integer|min:1',
         ]);
-dd($request->all()); // Debugging line to check request data
         $product = Product::where('id', $id)->where('is_package', 1)->firstOrFail();
 
         // Handle image upload
@@ -287,7 +283,6 @@ dd($request->all()); // Debugging line to check request data
         $product->updated_at = Carbon::now();
         $product->save();
 
-        Toastr::success('Package Product Updated Successfully!', 'Success');
         return back()->with('success', 'Package Product Updated Successfully');
     }
 
@@ -307,7 +302,6 @@ dd($request->all()); // Debugging line to check request data
         }
 
         $product->delete();
-        Toastr::success('Package Product Deleted Successfully!', 'Success');
         return response()->json(['success' => 'Package Product deleted successfully.']);
     }
 
@@ -402,7 +396,6 @@ dd($request->all()); // Debugging line to check request data
         }
         $item->delete();
 
-        Toastr::success('Item removed from package Successfully!', 'Success');
         return response()->json(['success' => 'Item removed from package successfully.']);
     }
 
@@ -411,6 +404,8 @@ dd($request->all()); // Debugging line to check request data
      */
     public function getProductVariants($productId)
     {
+        // Get product details
+        $product = Product::findOrFail($productId);
 
         // First try to get variants from product_variants table
         $colors = DB::table('product_variants')
@@ -430,9 +425,52 @@ dd($request->all()); // Debugging line to check request data
             ->groupBy('product_variants.size_id')
             ->get();
 
+        // Calculate total stock
+        $hasVariants = DB::table('product_variants')
+            ->where('product_id', $productId)
+            ->exists();
+
+        if ($hasVariants) {
+            // If product has variants, sum all variant stocks
+            $totalStock = DB::table('product_variants')
+                ->where('product_id', $productId)
+                ->sum('stock');
+        } else {
+            // If no variants, use product stock
+            $totalStock = $product->stock ?? 0;
+        }
+
         return response()->json([
             'colors' => $colors,
-            'sizes' => $sizes
+            'sizes' => $sizes,
+            'total_stock' => $totalStock,
+            'has_variants' => $hasVariants
+        ]);
+    }
+
+    /**
+     * Get specific variant stock for AJAX
+     */
+    public function getVariantStock(Request $request, $productId)
+    {
+        $colorId = $request->color_id;
+        $sizeId = $request->size_id;
+
+        $query = DB::table('product_variants')
+            ->where('product_id', $productId);
+
+        if ($colorId) {
+            $query->where('color_id', $colorId);
+        }
+
+        if ($sizeId) {
+            $query->where('size_id', $sizeId);
+        }
+
+        $stock = $query->sum('stock');
+
+        return response()->json([
+            'stock' => $stock
         ]);
     }
 }

@@ -213,6 +213,7 @@ Route::group(['middleware' => ['auth', 'CheckUserType', 'DemoMode']], function (
     Route::put('package-products/{packageId}/items/{itemId}', [PackageProductController::class, 'updateItem'])->name('PackageProducts.UpdateItem');
     Route::delete('package-products/{packageId}/items/{itemId}', [PackageProductController::class, 'removeItem'])->name('PackageProducts.RemoveItem');
     Route::get('get-product-variants/{productId}', [PackageProductController::class, 'getProductVariants'])->name('GetProductVariants');
+    Route::post('get-variant-stock/{productId}', [PackageProductController::class, 'getVariantStock'])->name('GetVariantStock');
 
     // generate report
     Route::get('sales/report', [ReportController::class, 'salesReport'])->name('SalesReport');
