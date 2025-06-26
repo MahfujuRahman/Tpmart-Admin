@@ -786,7 +786,7 @@
 
             $('#color_id').empty().append('<option value="">Any Color</option>');
             $('#size_id').empty().append('<option value="">Any Size</option>');
-            $('#available_stock').text('-').removeClass('badge-success badge-warning badge-danger badge-info').addClass('badge-secondary');
+            $('#available_stock').text('').removeClass('badge-success badge-warning badge-danger badge-info').addClass('badge-secondary');
             $('#quantity').val(1).attr('max', 0);
             $('.add-item-form').removeClass('stock-error stock-warning stock-ok duplicate-error');
             $('#product_id, #color_id, #size_id, #quantity').removeClass('is-invalid');

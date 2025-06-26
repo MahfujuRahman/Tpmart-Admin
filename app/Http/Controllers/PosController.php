@@ -37,7 +37,10 @@ class PosController extends Controller
     {
         $categories = Category::where('status', 1)->orderBy('name', 'asc')->get();
         $brands = Brand::where('status', 1)->orderBy('name', 'asc')->get();
-        $products = Product::where('status', 1)->orderBy('name', 'asc')->get();
+        $products = Product::where('status', 1)
+            ->where('is_package', 0) // Exclude package products
+            ->orderBy('name', 'asc')
+            ->get();
         $customers = User::where('user_type', 3)->orderBy('name', 'asc')->get();
         $districts = DB::table('districts')->orderBy('name', 'asc')->get();
 
@@ -551,7 +554,7 @@ class PosController extends Controller
 
         $request->validate($validationRules);
 
-        
+
         if (!session('cart') || (session('cart') && count(session('cart')) <= 0)) {
             Toastr::error('No Products Found in Cart');
             return back();
