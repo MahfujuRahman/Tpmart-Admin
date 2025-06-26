@@ -119,7 +119,7 @@
                     <form class="needs-validation" method="POST" action="{{ url('package-products') }}"
                         enctype="multipart/form-data">
                         @csrf
-
+                        {{-- 
                         @if ($errors->any())
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 <strong>Please fix the following errors:</strong>
@@ -132,7 +132,7 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                        @endif
+                        @endif --}}
 
                         <div class="row border-bottom mb-4 pb-2">
                             <div class="col-lg-6 product-card-title">
@@ -264,7 +264,7 @@
                                             <div class="row" id="available_products">
                                                 @foreach (App\Models\Product::where('is_package', false)->where('status', 1)->get() as $product)
                                                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3 product-item">
-                                                        <div class="card product-card h-100" style="cursor: pointer;"
+                                                        <div class="card product-card" style="cursor: pointer;"
                                                             data-product-id="{{ $product->id }}"
                                                             data-name="{{ $product->name }}"
                                                             data-price="{{ $product->price }}"
@@ -274,15 +274,16 @@
                                                                 <img src="{{ asset($product->image ?? 'assets/images/default-product.png') }}"
                                                                     class="card-img-top"
                                                                     style="height: 150px; object-fit: cover;"
-                                                                    alt="{{ $product->name }}">                                                <div class="badge badge-primary position-absolute"
-                                                    style="top: 5px; right: 5px;">
-                                                    ৳{{ number_format($product->discount_price > 0 ? $product->discount_price : $product->price, 2) }}
-                                                </div>
-                                                <div class="badge badge-info position-absolute variant-counter"
-                                                    style="top: 5px; left: 5px; display: none;"
-                                                    data-product-id="{{ $product->id }}">
-                                                    0/0
-                                                </div>
+                                                                    alt="{{ $product->name }}">
+                                                                <div class="badge badge-primary position-absolute"
+                                                                    style="top: 5px; right: 5px;">
+                                                                    ৳{{ number_format($product->discount_price > 0 ? $product->discount_price : $product->price, 2) }}
+                                                                </div>
+                                                                <div class="badge badge-info position-absolute variant-counter"
+                                                                    style="top: 5px; left: 5px; display: none;"
+                                                                    data-product-id="{{ $product->id }}">
+                                                                    0/0
+                                                                </div>
                                                                 @php
                                                                     $hasVariants = DB::table('product_variants')
                                                                         ->where('product_id', $product->id)
@@ -302,8 +303,11 @@
                                                             </div>
                                                             <div class="card-body p-2">
                                                                 <h6 class="card-title mb-1" style="font-size: 12px;">
-                                                                    {{ Str::limit($product->name, 40) }}</h6>
+                                                                    {{ Str::limit($product->name, 20) }}</h6>
                                                                 <small class="text-muted">Click to add</small>
+                                                                <span class="text-primary" title="Add to package">
+                                                                    <i class="fas fa-plus-circle"></i>
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -522,26 +526,26 @@
 
         // Restore package items from old input if validation failed
         $(document).ready(function() {
-            @if($errors->any())
+            @if ($errors->any())
                 toastr.warning('Please fix the validation errors and try again.', 'Form Validation Failed');
             @endif
-            
-            @if(old('package_items'))
+
+            @if (old('package_items'))
                 const oldItems = @json(old('package_items'));
                 console.log('Restoring old items:', oldItems);
-                
+
                 toastr.info('Restoring your previously selected products...', 'Form Data Restored');
-                
+
                 // Restore each item
                 Object.keys(oldItems).forEach(function(key) {
                     const item = oldItems[key];
                     restorePackageItem(item, parseInt(key));
                 });
-                
+
                 // Update total after a short delay to ensure all items are loaded
                 setTimeout(function() {
                     updatePackageTotal();
-                    
+
                     // Update variant counters for all products
                     const productIds = [...new Set(Object.values(oldItems).map(item => item.product_id))];
                     productIds.forEach(productId => {
@@ -550,7 +554,8 @@
                             type: "GET",
                             success: function(response) {
                                 if (response.has_variants) {
-                                    const maxVariants = getMaxVariantCombinations(response.colors, response.sizes);
+                                    const maxVariants = getMaxVariantCombinations(
+                                        response.colors, response.sizes);
                                     updateVariantCounter(productId, maxVariants);
                                 } else {
                                     updateVariantCounter(productId, 1);
@@ -570,22 +575,22 @@
             // Get product data from the product cards
             const productCard = $(`.product-card[data-product-id="${itemData.product_id}"]`);
             if (productCard.length === 0) return;
-            
+
             const productName = productCard.data('name');
             const productPrice = parseFloat(productCard.data('price'));
             const productDiscountPrice = parseFloat(productCard.data('discount_price'));
             const productImage = productCard.find('img').attr('src');
-            
+
             // Mark card as selected
             productCard.addClass('selected').css({
                 'border-color': '#28a745',
                 'background-color': '#f8fff9'
             });
-            
+
             // Set counter to match the form counter
             itemCounter = Math.max(itemCounter, counter);
             const itemId = 'item_' + counter;
-            
+
             // Get product variants and restore the item
             $.ajax({
                 url: "{{ url('get-product-variants') }}/" + itemData.product_id,
@@ -603,7 +608,7 @@
                         total_stock: response.total_stock,
                         has_variants: response.has_variants
                     };
-                    
+
                     addRestoredItemToTable(productData, response.colors, response.sizes, counter, itemData);
                 },
                 error: function() {
@@ -714,23 +719,27 @@
                     console.log('Variants response:', response);
                     productData.total_stock = response.total_stock;
                     productData.has_variants = response.has_variants;
-                    
+
                     // Check if we can add this product
                     if (canAddProduct(productId, response)) {
                         addItemToTable(productData, response.colors, response.sizes);
-                        
+
                         if (response.has_variants) {
-                            const currentCount = packageItems.filter(item => item.product_id == productId).length;
+                            const currentCount = packageItems.filter(item => item.product_id == productId)
+                                .length;
                             const maxVariants = getMaxVariantCombinations(response.colors, response.sizes);
                             const remaining = maxVariants - currentCount;
-                            
+
                             // Update variant counter badge
                             updateVariantCounter(productId, maxVariants);
-                            
+
                             if (remaining > 0) {
-                                toastr.success(`${productData.name} added to package (${remaining} more variants possible)`, 'Product Added');
+                                toastr.success(
+                                    `${productData.name} added to package (${remaining} more variants possible)`,
+                                    'Product Added');
                             } else {
-                                toastr.success(`${productData.name} added to package (all variants now added)`, 'Product Added');
+                                toastr.success(`${productData.name} added to package (all variants now added)`,
+                                    'Product Added');
                             }
                         } else {
                             // Update variant counter for non-variant product
@@ -745,8 +754,12 @@
                     // If no variants, add with empty options if allowed
                     productData.total_stock = 0;
                     productData.has_variants = false;
-                    
-                    if (canAddProduct(productId, {has_variants: false, colors: [], sizes: []})) {
+
+                    if (canAddProduct(productId, {
+                            has_variants: false,
+                            colors: [],
+                            sizes: []
+                        })) {
                         addItemToTable(productData, [], []);
                         updateVariantCounter(productId, 1);
                         toastr.success(`${productData.name} added to package`, 'Product Added');
@@ -758,7 +771,7 @@
         // Function to check if a product can be added based on variant limits
         function canAddProduct(productId, variantData) {
             const existingItems = packageItems.filter(item => item.product_id == productId);
-            
+
             if (!variantData.has_variants) {
                 // Product has no variants - can only add once
                 if (existingItems.length > 0) {
@@ -769,9 +782,10 @@
             } else {
                 // Product has variants - check maximum possible combinations
                 const maxVariants = getMaxVariantCombinations(variantData.colors, variantData.sizes);
-                
+
                 if (existingItems.length >= maxVariants) {
-                    toastr.warning(`All possible variants of this product are already added to the package.`, 'All Variants Added');
+                    toastr.warning(`All possible variants of this product are already added to the package.`,
+                        'All Variants Added');
                     return false;
                 }
                 return true;
@@ -781,7 +795,7 @@
         // Function to calculate maximum variant combinations
         function getMaxVariantCombinations(colors, sizes) {
             const colorCount = colors.length || 1; // At least 1 for "No Color"
-            const sizeCount = sizes.length || 1;   // At least 1 for "No Size"
+            const sizeCount = sizes.length || 1; // At least 1 for "No Size"
             return colorCount * sizeCount;
         }
 
@@ -789,10 +803,10 @@
         function updateVariantCounter(productId, maxVariants = null) {
             const currentCount = packageItems.filter(item => item.product_id == productId).length;
             const counterBadge = $(`.variant-counter[data-product-id="${productId}"]`);
-            
+
             if (maxVariants !== null && maxVariants > 1) {
                 counterBadge.text(`${currentCount}/${maxVariants}`).show();
-                
+
                 // Change badge color based on progress
                 counterBadge.removeClass('badge-info badge-warning badge-success badge-secondary');
                 if (currentCount === 0) {
@@ -820,14 +834,14 @@
         // Add restored item to table (used when validation fails)
         function addRestoredItemToTable(productData, colors, sizes, counter, oldItemData) {
             const itemId = 'item_' + counter;
-            
+
             // Build color options with selection
             let colorOptions = '<option value="">No Color</option>';
             colors.forEach(color => {
                 const selected = color.id == oldItemData.color_id ? 'selected' : '';
                 colorOptions += `<option value="${color.id}" ${selected}>${color.name}</option>`;
             });
-            
+
             // Build size options with selection
             let sizeOptions = '<option value="">No Size</option>';
             sizes.forEach(size => {
@@ -917,13 +931,13 @@
                         newRow.find('.stock-display').text(stock);
                         newRow.find('.current-stock').val(stock);
                         newRow.find('.quantity-input').attr('max', stock);
-                        
+
                         // Update item in array
                         const item = packageItems.find(item => item.id === itemId);
                         if (item) {
                             item.current_stock = stock;
                         }
-                        
+
                         updateRowStockStatus(newRow, stock);
                         updatePackageTotal();
                     }
@@ -1029,7 +1043,7 @@
 
             // Check remaining instances of this product
             const remainingInstances = packageItems.filter(item => item.product_id == productId);
-            
+
             // If no more instances of this product, deselect the card
             if (remainingInstances.length === 0) {
                 $(`.product-card[data-product-id="${productId}"]`).removeClass('selected').css({
@@ -1048,7 +1062,7 @@
             }
 
             updatePackageTotal();
-            
+
             // Provide feedback about remaining slots for variants
             if (removedItem && removedItem.has_variants) {
                 // Get product variants to calculate remaining slots
@@ -1057,14 +1071,17 @@
                     type: "GET",
                     success: function(response) {
                         const maxVariants = getMaxVariantCombinations(response.colors, response.sizes);
-                        const currentCount = packageItems.filter(item => item.product_id == productId).length;
+                        const currentCount = packageItems.filter(item => item.product_id == productId)
+                            .length;
                         const remaining = maxVariants - currentCount;
-                        
+
                         // Update variant counter badge
                         updateVariantCounter(productId, maxVariants);
-                        
+
                         if (remaining > 0) {
-                            toastr.info(`${productName} removed from package (${remaining} more variants can be added)`, 'Product Removed');
+                            toastr.info(
+                                `${productName} removed from package (${remaining} more variants can be added)`,
+                                'Product Removed');
                         } else {
                             toastr.info(`${productName} removed from package`, 'Product Removed');
                         }
@@ -1180,23 +1197,25 @@
         // Function to check for duplicate variant combinations
         function checkForDuplicateVariant(currentItemId, productId, colorId, sizeId) {
             // Find if this exact variant combination already exists
-            const duplicateFound = packageItems.find(item => 
-                item.id !== currentItemId && 
-                item.product_id == productId && 
-                (item.color_id || '') == (colorId || '') && 
+            const duplicateFound = packageItems.find(item =>
+                item.id !== currentItemId &&
+                item.product_id == productId &&
+                (item.color_id || '') == (colorId || '') &&
                 (item.size_id || '') == (sizeId || '')
             );
 
             if (duplicateFound) {
-                const colorName = colorId ? $(`#${currentItemId} .color-select option[value="${colorId}"]`).text() : 'No Color';
+                const colorName = colorId ? $(`#${currentItemId} .color-select option[value="${colorId}"]`).text() :
+                    'No Color';
                 const sizeName = sizeId ? $(`#${currentItemId} .size-select option[value="${sizeId}"]`).text() : 'No Size';
-                
-                toastr.warning(`This product variant (${colorName}, ${sizeName}) is already added to the package.`, 'Duplicate Variant');
-                
+
+                toastr.warning(`This product variant (${colorName}, ${sizeName}) is already added to the package.`,
+                    'Duplicate Variant');
+
                 // Reset the selects to empty values
                 $(`#${currentItemId} .color-select`).val('');
                 $(`#${currentItemId} .size-select`).val('');
-                
+
                 return true;
             }
             return false;
@@ -1276,10 +1295,10 @@
                     const productId = $(this).find('.color-select').data('product-id');
                     const colorId = $(this).find('.color-select').val() || '';
                     const sizeId = $(this).find('.size-select').val() || '';
-                    
+
                     // Get the product data to check if it has variants
                     const item = packageItems.find(item => item.id === $(this).attr('id'));
-                    
+
                     // Check for mandatory variant selection
                     if (item && item.has_variants) {
                         // For products with variants, require at least color OR size to be selected
@@ -1293,13 +1312,15 @@
                             $(this).find('.color-select, .size-select').removeClass('is-invalid');
                         }
                     }
-                    
+
                     // Check for duplicate variant combinations
                     const variantKey = `${productId}-${colorId}-${sizeId}`;
                     if (variantCombinations.has(variantKey)) {
                         hasVariantIssues = true;
-                        const colorName = colorId ? $(this).find('.color-select option:selected').text() : 'No Color';
-                        const sizeName = sizeId ? $(this).find('.size-select option:selected').text() : 'No Size';
+                        const colorName = colorId ? $(this).find('.color-select option:selected').text() :
+                            'No Color';
+                        const sizeName = sizeId ? $(this).find('.size-select option:selected').text() :
+                            'No Size';
                         toastr.error(
                             `Duplicate variant found: ${productName} (${colorName}, ${sizeName}). Each variant can only be added once.`,
                             'Duplicate Variant');
