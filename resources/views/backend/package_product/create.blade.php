@@ -90,6 +90,16 @@
         .alert-danger ul {
             padding-left: 20px;
         }
+
+        .variant-counter {
+            font-size: 9px !important;
+            min-width: 35px;
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+        }
     </style>
 @endsection
 
@@ -109,7 +119,21 @@
                     <form class="needs-validation" method="POST" action="{{ url('package-products') }}"
                         enctype="multipart/form-data">
                         @csrf
-                        
+
+                        @if ($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Please fix the following errors:</strong>
+                                <ul class="mb-0 mt-2">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
+
                         <div class="row border-bottom mb-4 pb-2">
                             <div class="col-lg-6 product-card-title">
                                 <h4 class="card-title mb-3" style="font-size: 18px; padding-top: 12px;">Add New Package
@@ -1241,12 +1265,49 @@
             // Check for items with zero stock or invalid quantities
             let hasStockIssues = false;
             let hasInvalidQuantities = false;
+            let hasVariantIssues = false;
+            const variantCombinations = new Set();
 
             $('#package_items_tbody tr').each(function() {
                 if ($(this).attr('id') !== 'no_items_row') {
                     const stock = parseInt($(this).find('.current-stock').val()) || 0;
                     const quantity = parseInt($(this).find('.quantity-input').val()) || 0;
                     const productName = $(this).find('td:nth-child(2)').text().trim();
+                    const productId = $(this).find('.color-select').data('product-id');
+                    const colorId = $(this).find('.color-select').val() || '';
+                    const sizeId = $(this).find('.size-select').val() || '';
+                    
+                    // Get the product data to check if it has variants
+                    const item = packageItems.find(item => item.id === $(this).attr('id'));
+                    
+                    // Check for mandatory variant selection
+                    if (item && item.has_variants) {
+                        // For products with variants, require at least color OR size to be selected
+                        if (!colorId && !sizeId) {
+                            hasVariantIssues = true;
+                            toastr.error(
+                                `${productName} has variants but no color or size is selected. Please select a variant or remove the item.`,
+                                'Variant Required');
+                            $(this).find('.color-select, .size-select').addClass('is-invalid');
+                        } else {
+                            $(this).find('.color-select, .size-select').removeClass('is-invalid');
+                        }
+                    }
+                    
+                    // Check for duplicate variant combinations
+                    const variantKey = `${productId}-${colorId}-${sizeId}`;
+                    if (variantCombinations.has(variantKey)) {
+                        hasVariantIssues = true;
+                        const colorName = colorId ? $(this).find('.color-select option:selected').text() : 'No Color';
+                        const sizeName = sizeId ? $(this).find('.size-select option:selected').text() : 'No Size';
+                        toastr.error(
+                            `Duplicate variant found: ${productName} (${colorName}, ${sizeName}). Each variant can only be added once.`,
+                            'Duplicate Variant');
+                        $(this).find('.color-select, .size-select').addClass('is-invalid');
+                    } else {
+                        variantCombinations.add(variantKey);
+                        $(this).find('.color-select, .size-select').removeClass('is-invalid');
+                    }
 
                     if (stock === 0) {
                         hasStockIssues = true;
@@ -1266,9 +1327,9 @@
                 }
             });
 
-            if (hasStockIssues || hasInvalidQuantities) {
+            if (hasStockIssues || hasInvalidQuantities || hasVariantIssues) {
                 e.preventDefault();
-                toastr.error('Please fix stock and quantity issues before submitting.', 'Validation Failed');
+                toastr.error('Please fix all validation issues before submitting.', 'Validation Failed');
                 return false;
             }
 

@@ -132,6 +132,68 @@ class PackageProductController extends Controller
             'package_items.*.quantity' => 'required|integer|min:1',
         ]);
 
+        // Additional validation for package items with variants
+        foreach ($request->package_items as $index => $item) {
+            // Check if this variant combination already exists in the current package
+            $duplicateIndex = null;
+            foreach ($request->package_items as $checkIndex => $checkItem) {
+                if ($checkIndex !== $index && 
+                    $checkItem['product_id'] == $item['product_id'] &&
+                    ($checkItem['color_id'] ?? '') == ($item['color_id'] ?? '') &&
+                    ($checkItem['size_id'] ?? '') == ($item['size_id'] ?? '')) {
+                    $duplicateIndex = $checkIndex;
+                    break;
+                }
+            }
+            
+            if ($duplicateIndex !== null) {
+                Toastr('Duplicate variant combination found. Each product variant can only be added once.', 'error');
+                return back()->withInput()->withErrors([
+                    "package_items.{$index}.product_id" => "Duplicate variant combination found. Each product variant can only be added once."
+                ]);
+            }
+
+            // Validate stock for the specific variant
+            $product = Product::find($item['product_id']);
+            if (!$product) continue;
+
+            if ($product->has_variant) {
+                // Check variant stock
+                $variantStock = DB::table('product_variants')
+                    ->where('product_id', $item['product_id'])
+                    ->where('color_id', $item['color_id'] ?? null)
+                    ->where('size_id', $item['size_id'] ?? null)
+                    ->first();
+
+                $availableStock = $variantStock ? $variantStock->stock : 0;
+            } else {
+                // Check product stock
+                $availableStock = $product->stock ?? 0;
+            }
+
+            if ($item['quantity'] > $availableStock) {
+                $productName = $product->name;
+                $colorName = '';
+                $sizeName = '';
+                
+                if (!empty($item['color_id'])) {
+                    $color = Color::find($item['color_id']);
+                    $colorName = $color ? " ({$color->name}" : '';
+                }
+                
+                if (!empty($item['size_id'])) {
+                    $size = ProductSize::find($item['size_id']);
+                    $sizeName = $size ? ($colorName ? ", {$size->name})" : " ({$size->name})") : ($colorName ? ')' : '');
+                } else if ($colorName) {
+                    $colorName .= ')';
+                }
+
+                return back()->withInput()->withErrors([
+                    "package_items.{$index}.quantity" => "Insufficient stock for {$productName}{$colorName}{$sizeName}. Available: {$availableStock}, Requested: {$item['quantity']}"
+                ]);
+            }
+        }
+
         // Handle image upload
         $imageName = null;
         if ($request->hasFile('image')) {
