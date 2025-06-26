@@ -20,6 +20,39 @@
         .product-card-title .card-title::before{
             top: 13px
         }
+
+        .product-card {
+            border: 2px solid #dee2e6;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-color: #007bff;
+        }
+
+        .product-card.selected {
+            border-color: #28a745 !important;
+            background-color: #f8fff9 !important;
+        }
+
+        .product-card .badge {
+            font-size: 10px;
+        }
+
+        .product-search {
+            margin-bottom: 15px;
+        }
+
+        #available_products {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+        }
     </style>
 @endsection
 
@@ -87,95 +120,6 @@
                                             </div>
                                         </div>
 
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="stock">Stock <span class="text-danger">*</span></label>
-                                                    <input type="number" id="stock" name="stock" min="1" class="form-control" value="{{ old('stock') ?? 1}}">
-                                                    <div class="invalid-feedback" style="display: block;">
-                                                        @error('stock')
-                                                            {{ $message }}
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="low_stock">Low Stock <span class="text-danger">*</span></label>
-                                                    <input type="number" id="low_stock" name="low_stock" min="1" class="form-control" value="{{ old('low_stock') ?? 1}}">
-                                                    <div class="invalid-feedback" style="display: block;">
-                                                        @error('low_stock')
-                                                            {{ $message }}
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="category_id">Category<span class="text-danger">*</span></label>
-                                                    <select name="category_id" data-toggle="select2" class="form-control" id="category_id" >
-                                                        @php
-                                                            echo App\Models\Category::getDropDownList('name', old('category_id'));
-                                                        @endphp
-                                                    </select>
-                                                    <div class="invalid-feedback" style="display: block;">
-                                                        @error('category_id')
-                                                            {{ $message }}
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="subcategory_id">Subcategory</label>
-                                                    <select name="subcategory_id" data-toggle="select2" class="form-control" id="subcategory_id">
-                                                        <option value="">Select Subcategory</option>
-                                                    </select>
-                                                    <div class="invalid-feedback" style="display: block;">
-                                                        @error('subcategory_id')
-                                                            {{ $message }}
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="childcategory_id">Child Category</label>
-                                                    <select name="childcategory_id" data-toggle="select2" class="form-control" id="childcategory_id">
-                                                        <option value="">Select Child Category</option>
-                                                    </select>
-                                                    <div class="invalid-feedback" style="display: block;">
-                                                        @error('childcategory_id')
-                                                            {{ $message }}
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="brand_id">Brand</label>
-                                                    <select name="brand_id" data-toggle="select2" class="form-control" id="brand_id">
-                                                        @php
-                                                            echo App\Models\Brand::getDropDownList('name', old('brand_id'));
-                                                        @endphp
-                                                    </select>
-                                                    <div class="invalid-feedback" style="display: block;">
-                                                        @error('brand_id')
-                                                            {{ $message }}
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
 
                                         <div class="row">
                                             <div class="col-lg-6">
@@ -204,7 +148,7 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-lg-6">
+                                            {{-- <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <label for="unit_id">Unit</label>
                                                     <select name="unit_id" data-toggle="select2" class="form-control" id="unit_id">
@@ -213,9 +157,9 @@
                                                         @endphp
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-12">
                                                 <div class="form-group">
                                                     <label for="status">Status <span class="text-danger">*</span></label>
                                                     <select name="status" class="form-control" id="status" >
@@ -226,6 +170,84 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Package Items <span class="text-danger">*</span></h5>
+                                <p class="text-muted">Click on products below to add them to the package</p>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label>Available Products</label>
+                                            <div class="product-search">
+                                                <input type="text" id="product_search" class="form-control" placeholder="Search products..." />
+                                            </div>
+                                            <div class="row" id="available_products">
+                                                @foreach(App\Models\Product::where('is_package', false)->where('status', 1)->get() as $product)
+                                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-3 product-item">
+                                                        <div class="card product-card h-100" style="cursor: pointer;" 
+                                                             data-product-id="{{ $product->id }}" 
+                                                             data-name="{{ $product->name }}" 
+                                                             data-price="{{ $product->price }}"
+                                                             data-discount_price="{{ $product->discount_price }}"
+                                                             data-search="{{ strtolower($product->name) }}">
+                                                            <div class="position-relative">
+                                                                <img src="{{ asset($product->image ?? 'assets/images/default-product.png') }}" 
+                                                                     class="card-img-top" 
+                                                                     style="height: 150px; object-fit: cover;" 
+                                                                     alt="{{ $product->name }}">
+                                                                <div class="badge badge-primary position-absolute" style="top: 5px; right: 5px;">
+                                                                    ৳{{ number_format($product->discount_price > 0 ? $product->discount_price : $product->price, 2) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body p-2">
+                                                                <h6 class="card-title mb-1" style="font-size: 12px;">{{ Str::limit($product->name, 40) }}</h6>
+                                                                <small class="text-muted">Click to add</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="package_items_table">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th style="width: 60px;">Image</th>
+                                                <th>Product</th>
+                                                <th>Color</th>
+                                                <th>Size</th>
+                                                <th>Quantity</th>
+                                                <th>Unit Price</th>
+                                                <th>Total</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="package_items_tbody">
+                                            <tr id="no_items_row">
+                                                <td colspan="8" class="text-center text-muted">No products added to package yet</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="6" class="text-right">Package Total:</th>
+                                                <th id="package_total">৳0.00</th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i> 
+                                    <strong>Note:</strong> The package price above should be less than the total of individual items to provide value to customers.
                                 </div>
                             </div>
                         </div>
@@ -259,64 +281,6 @@
                                             <input type="text" id="tags" name="tags" class="form-control" data-role="tagsinput" placeholder="Enter Tags" value="{{ old('tags') }}">
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Package Items <span class="text-danger">*</span></h5>
-                                <p class="text-muted">Select products to include in this package</p>
-                                
-                                <div class="row mb-3">
-                                    <div class="col-lg-8">
-                                        <select id="product_select" class="form-control select2" style="width: 100%;">
-                                            <option value="">Select a product to add...</option>
-                                            @foreach(App\Models\Product::where('is_package', false)->where('status', 1)->get() as $product)
-                                                <option value="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}">
-                                                    {{ $product->name }} - ৳{{ number_format($product->price, 2) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <button type="button" id="add_product_btn" class="btn btn-primary">
-                                            <i class="fas fa-plus"></i> Add Product
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" id="package_items_table">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th>Product</th>
-                                                <th>Color</th>
-                                                <th>Size</th>
-                                                <th>Quantity</th>
-                                                <th>Unit Price</th>
-                                                <th>Total</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="package_items_tbody">
-                                            <tr id="no_items_row">
-                                                <td colspan="7" class="text-center text-muted">No products added to package yet</td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th colspan="5" class="text-right">Package Total:</th>
-                                                <th id="package_total">৳0.00</th>
-                                                <th></th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i> 
-                                    <strong>Note:</strong> The package price above should be less than the total of individual items to provide value to customers.
                                 </div>
                             </div>
                         </div>
@@ -440,40 +404,80 @@
         let packageItems = [];
         let itemCounter = 0;
 
-        // Initialize Select2 for product selection
-        $('#product_select').select2({
-            placeholder: 'Search and select a product...',
-            allowClear: true
+        // Product search functionality
+        $('#product_search').on('input', function() {
+            const searchTerm = $(this).val().toLowerCase();
+            $('.product-item').each(function() {
+                const productName = $(this).find('.product-card').data('search');
+                if (productName.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                    if ($('#available_products .product-item:visible').length === 0) {
+                        if ($('#no_products_found').length === 0) {
+                            $('#available_products').append('<div id="no_products_found" class="col-12 text-center text-muted py-4">No products found</div>');
+                        }
+                    } else {
+                        $('#no_products_found').remove();
+                    }
+                }
+            });
         });
 
-        // Add product to package
-        $('#add_product_btn').on('click', function() {
-            const productSelect = $('#product_select');
-            const selectedProductId = productSelect.val();
-            const selectedOption = productSelect.find('option:selected');
-
-            if (!selectedProductId) {
-                alert('Please select a product first.');
-                return;
+        // Product card hover effects
+        $(document).on('mouseenter', '.product-card', function() {
+            if (!$(this).hasClass('selected')) {
+                $(this).css({
+                    'transform': 'translateY(-5px)',
+                    'box-shadow': '0 4px 20px rgba(0,0,0,0.1)',
+                    'border-color': '#007bff'
+                });
             }
+        });
+
+        $(document).on('mouseleave', '.product-card', function() {
+            if (!$(this).hasClass('selected')) {
+                $(this).css({
+                    'transform': 'translateY(0)',
+                    'box-shadow': 'none',
+                    'border-color': '#dee2e6'
+                });
+            }
+        });
+
+        // Add product to package when card is clicked
+        $(document).on('click', '.product-card', function() {
+            const productId = $(this).data('product-id');
+            const productName = $(this).data('name');
+            const productPrice = parseFloat($(this).data('price'));
+            const productDiscountPrice = parseFloat($(this).data('discount_price'));
+            const productImage = $(this).find('img').attr('src');
 
             // Check if product already exists
-            if (packageItems.find(item => item.product_id == selectedProductId)) {
+            if (packageItems.find(item => item.product_id == productId)) {
                 alert('This product is already added to the package.');
                 return;
             }
 
             const productData = {
-                product_id: selectedProductId,
-                name: selectedOption.data('name'),
-                price: parseFloat(selectedOption.data('price')),
+                product_id: productId,
+                name: productName,
+                price: productPrice,
+                discount_price: productDiscountPrice,
+                image: productImage,
                 quantity: 1,
                 color_id: '',
                 size_id: ''
             };
 
+            // Mark card as selected
+            $(this).addClass('selected').css({
+                'border-color': '#28a745',
+                'background-color': '#f8fff9'
+            });
+
             // Get product variants
-            getProductVariants(selectedProductId, productData);
+            getProductVariants(productId, productData);
         });
 
         // Get product variants (colors and sizes)
@@ -485,14 +489,12 @@
                 success: function(response) {
                     console.log('Variants response:', response);
                     addItemToTable(productData, response.colors, response.sizes);
-                    $('#product_select').val('').trigger('change');
                 },
                 error: function(xhr, status, error) {
                     console.log('Error getting variants:', error);
                     console.log('Response:', xhr.responseText);
                     // If no variants, add with empty options
                     addItemToTable(productData, [], []);
-                    $('#product_select').val('').trigger('change');
                 }
             });
         }
@@ -517,6 +519,9 @@
             const row = `
                 <tr id="${itemId}">
                     <td>
+                        <img src="${productData.image}" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;" alt="${productData.name}">
+                    </td>
+                    <td>
                         ${productData.name}
                         <input type="hidden" name="package_items[${itemCounter}][product_id]" value="${productData.product_id}">
                     </td>
@@ -535,9 +540,9 @@
                                class="form-control quantity-input" min="1" value="1" data-price="${productData.price}">
                     </td>
                     <td>৳${productData.price.toFixed(2)}</td>
-                    <td class="item-total">৳${productData.price.toFixed(2)}</td>
+                    <td class="item-total">৳${productData.discount_price.toFixed(2) ?? productData.price.toFixed(2)}</td>
                     <td>
-                        <button type="button" class="btn btn-danger btn-sm remove-item" data-item-id="${itemId}">
+                        <button type="button" class="btn btn-danger btn-sm remove-item" data-item-id="${itemId}" data-product-id="${productData.product_id}">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
@@ -555,6 +560,7 @@
                 id: itemId,
                 product_id: productData.product_id,
                 price: productData.price,
+                discount_price: productData.discount_price,
                 quantity: 1
             });
 
@@ -564,6 +570,7 @@
         // Remove item from package
         $(document).on('click', '.remove-item', function() {
             const itemId = $(this).data('item-id');
+            const productId = $(this).data('product-id');
             
             // Remove from array
             packageItems = packageItems.filter(item => item.id !== itemId);
@@ -571,11 +578,17 @@
             // Remove row
             $('#' + itemId).remove();
             
+            // Deselect product card
+            $(`.product-card[data-product-id="${productId}"]`).removeClass('selected').css({
+                'border-color': '#dee2e6',
+                'background-color': '#fff'
+            });
+            
             // Show "no items" row if table is empty
             if (packageItems.length === 0) {
                 $('#package_items_tbody').append(`
                     <tr id="no_items_row">
-                        <td colspan="7" class="text-center text-muted">No products added to package yet</td>
+                        <td colspan="8" class="text-center text-muted">No products added to package yet</td>
                     </tr>
                 `);
             }
@@ -607,7 +620,7 @@
         function updatePackageTotal() {
             let total = 0;
             packageItems.forEach(item => {
-                total += item.price * item.quantity;
+                total += item.discount_price ? item.discount_price : item.price * item.quantity;
             });
             $('#package_total').text('৳' + total.toFixed(2));
         }

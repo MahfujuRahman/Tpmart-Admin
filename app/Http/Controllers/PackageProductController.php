@@ -112,14 +112,21 @@ class PackageProductController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all()); // Debugging line to check request data
+        dd($request->all()); // Debugging line to check request data
+
         $request->validate([
             'name' => 'required|max:255',
-            'category_id' => 'required',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'low_stock' => 'nullable|integer|min:0',
-            'discount_price' => 'nullable|numeric|min:0',
+            'discount_price' => [
+                'nullable',
+                'numeric',
+                'min:0',
+                function ($attribute, $value, $fail) use ($request) {
+                    if (!is_null($value) && $value >= $request->price) {
+                        $fail('The discount price must be less than the price.');
+                    }
+                },
+            ],
             'status' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'package_items' => 'required|array|min:1',
@@ -153,18 +160,10 @@ class PackageProductController extends Controller
             $product->name = $request->name;
             $product->short_description = $request->short_description;
             $product->description = $request->description;
-            $product->category_id = $request->category_id;
-            $product->subcategory_id = $request->subcategory_id;
-            $product->childcategory_id = $request->childcategory_id;
-            $product->brand_id = $request->brand_id;
             $product->image = $imageFileName;
             $product->price = $request->price;
-            $product->stock = $request->stock;
-            $product->low_stock = $request->low_stock;
 
             $product->discount_price = $request->discount_price ?? 0;
-            $product->stock = 0; // Package products don't have direct stock
-            $product->unit_id = $request->unit_id;
             $product->tags = $request->tags;
             $product->meta_title = $request->meta_title;
             $product->meta_keywords = $request->meta_keywords;
@@ -229,14 +228,24 @@ class PackageProductController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255',
-            'category_id' => 'required',
-            'stock' => 'required|integer|min:1',
-            'low_stock' => 'nullable|integer|min:1',
             'price' => 'required|numeric|min:0',
+            'discount_price' => [
+                'nullable',
+                'numeric',
+                'min:0',
+                function ($attribute, $value, $fail) use ($request) {
+                    if (!is_null($value) && $value >= $request->price) {
+                        $fail('The discount price must be less than the price.');
+                    }
+                },
+            ],
             'status' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'package_items' => 'required|array|min:1',
+            'package_items.*.product_id' => 'required|exists:products,id',
+            'package_items.*.quantity' => 'required|integer|min:1',
         ]);
-
+dd($request->all()); // Debugging line to check request data
         $product = Product::where('id', $id)->where('is_package', 1)->firstOrFail();
 
         // Handle image upload
