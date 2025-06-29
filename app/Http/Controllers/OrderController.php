@@ -753,18 +753,36 @@ class OrderController extends Controller
 
         foreach ($order_details as $order_detail) {
             $product = Product::find($order_detail->product_id);
+
             if ($product) {
                 if ($product->is_package) {
                     // If it's a package, increment stock for each item in the package
-                    $packageItems = DB::table('package_products')
-                        ->where('package_id', $product->id)
+                    $packageItems = DB::table('package_product_items')
+                        ->where('package_product_id', $product->id)
                         ->get();
 
                     foreach ($packageItems as $item) {
                         $itemProduct = Product::find($item->product_id);
-                        if ($itemProduct) {
-                            // Multiply by order qty and package item qty
-                            $itemProduct->increment('stock', $order_detail->qty * $item->qty);
+                        if (!$itemProduct) continue;
+
+                        // Check if the package item has color_id or size_id (variant)
+                        if ($item->color_id || $item->size_id) {
+                            // It's a variant, increment variant stock
+                            $variantQuery = DB::table('product_variants')
+                                ->where('product_id', $item->product_id);
+                            
+                            if ($item->color_id) {
+                                $variantQuery->where('color_id', $item->color_id);
+                            }
+                            
+                            if ($item->size_id) {
+                                $variantQuery->where('size_id', $item->size_id);
+                            }
+                            
+                            $variantQuery->increment('stock', $order_detail->qty * $item->quantity);
+                        } else {
+                            // Normal product without variant
+                            $itemProduct->increment('stock', $order_detail->qty * $item->quantity);
                         }
                     }
                 } else {
