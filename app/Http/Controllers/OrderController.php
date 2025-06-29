@@ -754,7 +754,23 @@ class OrderController extends Controller
         foreach ($order_details as $order_detail) {
             $product = Product::find($order_detail->product_id);
             if ($product) {
-                $product->increment('stock', $order_detail->qty);
+                if ($product->is_package) {
+                    // If it's a package, increment stock for each item in the package
+                    $packageItems = DB::table('package_products')
+                        ->where('package_id', $product->id)
+                        ->get();
+
+                    foreach ($packageItems as $item) {
+                        $itemProduct = Product::find($item->product_id);
+                        if ($itemProduct) {
+                            // Multiply by order qty and package item qty
+                            $itemProduct->increment('stock', $order_detail->qty * $item->qty);
+                        }
+                    }
+                } else {
+                    // Normal product
+                    $product->increment('stock', $order_detail->qty);
+                }
             }
         }
 
