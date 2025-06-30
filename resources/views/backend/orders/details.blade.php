@@ -12,6 +12,11 @@
             .hidden-print {
                 display: none !important;
             }
+            
+            .badge {
+                border: none !important;
+                box-shadow: none !important;
+            }
         }
 
         table tbody tr td {
