@@ -17,7 +17,7 @@ class DemoMode
      */
     public function handle(Request $request, Closure $next)
     {
-        if (env('DEMO_MODE') == true) {
+        if (env('DEMO_MODE') == true && auth()->user()->email == 'demo@example.com') {
             if ($request->method() === 'POST') {
                 Toastr::error("You're using Demo Mode","You cannot change content");
                 return back();

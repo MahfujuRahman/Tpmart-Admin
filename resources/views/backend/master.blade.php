@@ -281,7 +281,7 @@
         //for demo user checking
         function check_demo_user() {
             const DEMO_MODE = @json(env('DEMO_MODE'));
-            if (DEMO_MODE) {
+            if (DEMO_MODE == true && @json(auth()->user()->email) == 'demo@example.com') {
                 toastr.error("You cannot change content.", "You're using Demo Mode!");
                 return true;
             }
