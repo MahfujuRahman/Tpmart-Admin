@@ -103,6 +103,8 @@ class ProductController extends Controller
 
         $product->low_stock = $request->low_stock;
 
+        $product->is_product_qty_multiply = $request->is_product_qty_multiply ?? 0;
+
         $product->brand_id = $request->brand_id;
         $product->model_id = $request->model_id;
         $product->code = $request->code;
@@ -431,6 +433,8 @@ class ProductController extends Controller
 
 
         $product->low_stock = $request->low_stock;
+
+        $product->is_product_qty_multiply = $request->is_product_qty_multiply;
 
         $product->brand_id = $request->brand_id;
         $product->model_id = $request->model_id;

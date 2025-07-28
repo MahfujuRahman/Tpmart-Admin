@@ -351,6 +351,23 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="is_product_qty_multiply" class="font-weight-bold mb-1">Is Product Quantity Multiply</label>
+                                    <span class="text-muted d-block mb-2" style="font-size: 13px;">
+                                        If enabled, delivery charges will be calculated based on the total quantity of this product in the order.
+                                    </span>
+                                    <select name="is_product_qty_multiply" class="form-control" id="is_product_qty_multiply">
+                                        <option value="">Select One</option>
+                                        <option value="1" >Yes</option>
+                                        <option value="0" >No</option>
+                                    </select>
+                                    <div class="invalid-feedback" style="display: block;">
+                                        @error('is_product_qty_multiply')
+                                            {{ $message }}
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label for="video_url">Video URL</label>
                                     <input type="text" id="video_url" name="video_url" class="form-control" placeholder="https://youtube.com/YGUYUTYG">
                                     <div class="invalid-feedback" style="display: block;">
