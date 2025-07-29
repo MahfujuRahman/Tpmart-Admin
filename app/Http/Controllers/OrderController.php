@@ -985,6 +985,11 @@ class OrderController extends Controller
 
         $data = Order::where('id', $request->order_id)->first();
 
+        if ($data->order_status == 2 && $request->order_status == 2) {
+            Toastr::error('Delivery Man Already Assigned', 'Error');
+            return back();
+        }
+
         if ($request->order_status) {
 
             if ($request->order_status == 4 && $data->payment_method == 1) {
@@ -1009,6 +1014,7 @@ class OrderController extends Controller
             $data->estimated_dd = $request->estimated_dd;
             $data->updated_at = Carbon::now();
             $data->save();
+
 
             OrderProgress::insert([
                 'order_id' => $request->order_id,
