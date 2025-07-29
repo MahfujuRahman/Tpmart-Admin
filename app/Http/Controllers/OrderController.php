@@ -322,11 +322,43 @@ class OrderController extends Controller
         if ($request->ajax()) {
 
             // $data = Order::where('order_status', 0)->orderBy('id', 'desc')->get();
+            // $data = DB::table('orders')
+            //     ->leftJoin('shipping_infos', 'shipping_infos.order_id', '=', 'orders.id')
+            //     ->select('orders.*', 'shipping_infos.full_name as customer_name', 'shipping_infos.email as customer_email', 'shipping_infos.phone as customer_phone')
+            //     ->where('order_status', 2)
+            //     ->orderBy('id', 'desc')
+            //     ->get();
+
+             $qtySub = DB::table('order_details')
+                ->select('order_id', DB::raw('SUM(qty) as total_qty'))
+                ->groupBy('order_id');
+
+            // Subquery to get latest shipping_info per order
+            $shippingSub = DB::table('shipping_infos as si1')
+                ->select('si1.*')
+                ->whereRaw('si1.id = (
+                SELECT MAX(si2.id)
+                FROM shipping_infos si2
+                WHERE si2.order_id = si1.order_id
+            )');
+
             $data = DB::table('orders')
-                ->leftJoin('shipping_infos', 'shipping_infos.order_id', '=', 'orders.id')
-                ->select('orders.*', 'shipping_infos.full_name as customer_name', 'shipping_infos.email as customer_email', 'shipping_infos.phone as customer_phone')
+                ->leftJoinSub($shippingSub, 'shipping_infos', function ($join) {
+                    $join->on('shipping_infos.order_id', '=', 'orders.id');
+                })
+                ->leftJoinSub($qtySub, 'order_qty', function ($join) {
+                    $join->on('order_qty.order_id', '=', 'orders.id');
+                })
+                ->select(
+                    'orders.*',
+                    'shipping_infos.full_name as customer_name',
+                    'shipping_infos.email as customer_email',
+                    'shipping_infos.phone as customer_phone',
+                    'order_qty.total_qty as quantity'
+                )
                 ->where('order_status', 2)
-                ->orderBy('id', 'desc')
+                ->whereNull('orders.deleted_at')
+                ->orderByDesc('orders.id')
                 ->get();
 
             return Datatables::of($data)
@@ -555,7 +587,39 @@ class OrderController extends Controller
     {
         if ($request->ajax()) {
 
-            $data = Order::where('order_status', 4)->orderBy('id', 'desc')->get();
+            // $data = Order::where('order_status', 4)->orderBy('id', 'desc')->get();
+
+             $qtySub = DB::table('order_details')
+                ->select('order_id', DB::raw('SUM(qty) as total_qty'))
+                ->groupBy('order_id');
+
+            // Subquery to get latest shipping_info per order
+            $shippingSub = DB::table('shipping_infos as si1')
+                ->select('si1.*')
+                ->whereRaw('si1.id = (
+                SELECT MAX(si2.id)
+                FROM shipping_infos si2
+                WHERE si2.order_id = si1.order_id
+            )');
+
+            $data = DB::table('orders')
+                ->leftJoinSub($shippingSub, 'shipping_infos', function ($join) {
+                    $join->on('shipping_infos.order_id', '=', 'orders.id');
+                })
+                ->leftJoinSub($qtySub, 'order_qty', function ($join) {
+                    $join->on('order_qty.order_id', '=', 'orders.id');
+                })
+                ->select(
+                    'orders.*',
+                    'shipping_infos.full_name as customer_name',
+                    'shipping_infos.email as customer_email',
+                    'shipping_infos.phone as customer_phone',
+                    'order_qty.total_qty as quantity'
+                )
+                ->where('order_status', 4)
+                ->whereNull('orders.deleted_at')
+                ->orderByDesc('orders.id')
+                ->get();
 
             return Datatables::of($data)
                 ->editColumn('order_status', function ($data) {
