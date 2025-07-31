@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Requirements Specification - TPmart Admin System</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+        
+        .document-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 30px;
+        }
+        
+        .document-info table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .document-info td {
+            padding: 5px 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .document-info td:first-child {
+            font-weight: bold;
+            width: 150px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            page-break-before: auto;
+        }
+        
+        h2 {
+            color: #34495e;
+            font-size: 20px;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            color: #2c3e50;
+            font-size: 16px;
+            margin-top: 25px;
+        }
+        
+        h4 {
+            color: #34495e;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        .toc {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin: 20px 0;
+        }
+        
+        .toc h2 {
+            margin-top: 0;
+            border: none;
+            padding: 0;
+        }
+        
+        .toc ol {
+            counter-reset: item;
+            padding-left: 0;
+        }
+        
+        .toc li {
+            display: block;
+            margin-bottom: 0.5em;
+            margin-left: 2em;
+        }
+        
+        .toc li:before {
+            content: counters(item, ".") ". ";
+            counter-increment: item;
+            font-weight: bold;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .code-block {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .api-example {
+            background-color: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .requirement {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+        
+        ul, ol {
+            margin: 10px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin-bottom: 5px;
+        }
+        
+        .feature-box {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .warning {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        
+        @media print {
+            body {
+                font-size: 12px;
+            }
+            .header {
+                page-break-after: always;
+            }
+            h1 {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">Software Requirements Specification (SRS)</div>
+        <div class="subtitle">TPmart E-commerce Admin Management System</div>
+    </div>
+    
+    <div class="document-info">
+        <table>
+            <tr><td>Document Version</td><td>1.0</td></tr>
+            <tr><td>Date</td><td>July 31, 2025</td></tr>
+            <tr><td>Project</td><td>TPmart E-commerce Admin Backend System</td></tr>
+            <tr><td>Technology Stack</td><td>Laravel 8+, PHP 8+, MySQL</td></tr>
+            <tr><td>Document Type</td><td>Software Requirements Specification</td></tr>
+            <tr><td>Classification</td><td>Internal Use</td></tr>
+        </table>
+    </div>
+
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ol>
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#overall-description">Overall Description</a></li>
+            <li><a href="#system-features">System Features</a></li>
+            <li><a href="#external-interface-requirements">External Interface Requirements</a></li>
+            <li><a href="#system-requirements">System Requirements</a></li>
+            <li><a href="#database-design">Database Design</a></li>
+            <li><a href="#api-specifications">API Specifications</a></li>
+            <li><a href="#security-requirements">Security Requirements</a></li>
+            <li><a href="#performance-requirements">Performance Requirements</a></li>
+            <li><a href="#quality-attributes">Quality Attributes</a></li>
+        </ol>
+    </div>
+
+    <h1 id="introduction">1. Introduction</h1>
+
+    <h2>1.1 Purpose</h2>
+    <p>This Software Requirements Specification (SRS) document provides a comprehensive description of the TPmart E-commerce Admin Management System. The document outlines the functional and non-functional requirements, system architecture, and technical specifications for a robust backend administration platform designed to manage all aspects of an e-commerce operation.</p>
+
+    <h2>1.2 Scope</h2>
+    <p>The TPmart Admin System is a comprehensive backend management platform that encompasses:</p>
+    <ul>
+        <li><strong>Product Management</strong>: Complete product lifecycle management including variants, packages, and inventory</li>
+        <li><strong>Order Management</strong>: End-to-end order processing, tracking, and fulfillment</li>
+        <li><strong>Customer Relationship Management (CRM)</strong>: Customer data, communication, and support systems</li>
+        <li><strong>Inventory Management</strong>: Real-time stock tracking, warehouse management, and purchase orders</li>
+        <li><strong>Financial Management</strong>: Accounting, transactions, payments, and reporting</li>
+        <li><strong>Content Management</strong>: Website content, blogs, banners, and SEO management</li>
+        <li><strong>User & Role Management</strong>: Multi-level user access control and permission systems</li>
+        <li><strong>API Services</strong>: RESTful APIs for mobile and web applications</li>
+    </ul>
+
+    <h2>1.3 Definitions, Acronyms, and Abbreviations</h2>
+    <table>
+        <tr><th>Term</th><th>Definition</th></tr>
+        <tr><td>SRS</td><td>Software Requirements Specification</td></tr>
+        <tr><td>API</td><td>Application Programming Interface</td></tr>
+        <tr><td>CRM</td><td>Customer Relationship Management</td></tr>
+        <tr><td>SKU</td><td>Stock Keeping Unit</td></tr>
+        <tr><td>COD</td><td>Cash on Delivery</td></tr>
+        <tr><td>JWT</td><td>JSON Web Token</td></tr>
+        <tr><td>CRUD</td><td>Create, Read, Update, Delete</td></tr>
+        <tr><td>MVC</td><td>Model-View-Controller</td></tr>
+    </table>
+
+    <h2>1.4 References</h2>
+    <ul>
+        <li>Laravel Framework Documentation</li>
+        <li>PHP 8+ Documentation</li>
+        <li>MySQL Database Documentation</li>
+        <li>RESTful API Design Standards</li>
+    </ul>
+
+    <h1 id="overall-description">2. Overall Description</h1>
+
+    <h2>2.1 Product Perspective</h2>
+    <p>The TPmart Admin System is a standalone backend application built on the Laravel framework, designed to serve as the central management hub for e-commerce operations. The system provides:</p>
+    
+    <div class="feature-box">
+        <ul>
+            <li><strong>Web-based Administrative Interface</strong>: Complete admin dashboard for system management</li>
+            <li><strong>RESTful API Layer</strong>: Comprehensive APIs for mobile applications and third-party integrations</li>
+            <li><strong>Database Management</strong>: Robust MySQL database structure for data persistence</li>
+            <li><strong>File Management</strong>: Integrated file upload and management system</li>
+            <li><strong>Reporting System</strong>: Advanced analytics and reporting capabilities</li>
+        </ul>
+    </div>
+
+    <h2>2.2 Product Functions</h2>
+    <p>The system provides the following major functional areas:</p>
+
+    <h3>2.2.1 Authentication & Authorization</h3>
+    <ul>
+        <li>Multi-level user authentication system</li>
+        <li>Role-based access control (RBAC)</li>
+        <li>JWT token-based API authentication</li>
+        <li>Social login integration</li>
+        <li>Password recovery and account management</li>
+    </ul>
+
+    <h3>2.2.2 E-commerce Management</h3>
+    <ul>
+        <li>Product catalog management with variants</li>
+        <li>Package product creation and management</li>
+        <li>Order processing and fulfillment</li>
+        <li>Payment gateway integration</li>
+        <li>Shipping and delivery management</li>
+    </ul>
+
+    <h3>2.2.3 Inventory Control</h3>
+    <ul>
+        <li>Real-time stock tracking</li>
+        <li>Warehouse and room-based inventory</li>
+        <li>Purchase order management</li>
+        <li>Supplier relationship management</li>
+        <li>Stock alerts and notifications</li>
+    </ul>
+
+    <h3>2.2.4 Customer Management</h3>
+    <ul>
+        <li>Customer profile management</li>
+        <li>Order history tracking</li>
+        <li>Support ticket system</li>
+        <li>Communication management</li>
+        <li>Customer analytics</li>
+    </ul>
+
+    <h3>2.2.5 Financial Operations</h3>
+    <ul>
+        <li>Transaction recording and tracking</li>
+        <li>Payment method management</li>
+        <li>Expense categorization</li>
+        <li>Ledger and accounting reports</li>
+        <li>Revenue analytics</li>
+    </ul>
+
+    <h3>2.2.6 Content Management</h3>
+    <ul>
+        <li>Website content management</li>
+        <li>Blog and article publishing</li>
+        <li>Banner and slider management</li>
+        <li>SEO optimization tools</li>
+        <li>Multi-media file management</li>
+    </ul>
+
+    <h2>2.3 User Classes and Characteristics</h2>
+
+    <table>
+        <tr><th>User Class</th><th>Access Level</th><th>Responsibilities</th><th>Technical Expertise</th></tr>
+        <tr>
+            <td>Super Administrator</td>
+            <td>Full system access</td>
+            <td>System configuration, user management, security oversight</td>
+            <td>High</td>
+        </tr>
+        <tr>
+            <td>Administrator</td>
+            <td>Most system functions</td>
+            <td>Daily operations management, order processing, inventory management</td>
+            <td>Medium</td>
+        </tr>
+        <tr>
+            <td>Manager</td>
+            <td>Department-specific functions</td>
+            <td>Team management, reporting, specific module oversight</td>
+            <td>Medium</td>
+        </tr>
+        <tr>
+            <td>Employee</td>
+            <td>Limited operational functions</td>
+            <td>Data entry, order processing, customer support</td>
+            <td>Basic</td>
+        </tr>
+        <tr>
+            <td>API Users</td>
+            <td>Programmatic access via APIs</td>
+            <td>Data consumption and submission</td>
+            <td>Developer-level</td>
+        </tr>
+    </table>
+
+    <h2>2.4 Operating Environment</h2>
+    <table>
+        <tr><th>Component</th><th>Specification</th></tr>
+        <tr><td>Server Environment</td><td>Linux/Ubuntu Server</td></tr>
+        <tr><td>Web Server</td><td>Apache/Nginx</td></tr>
+        <tr><td>Database</td><td>MySQL 8.0+</td></tr>
+        <tr><td>PHP Version</td><td>8.0+</td></tr>
+        <tr><td>Framework</td><td>Laravel 8+</td></tr>
+        <tr><td>Frontend</td><td>Blade Templates with Bootstrap</td></tr>
+        <tr><td>API Format</td><td>RESTful JSON APIs</td></tr>
+    </table>
+
+    <h1 id="system-features">3. System Features</h1>
+
+    <h2>3.1 Authentication Module</h2>
+
+    <h3>3.1.1 Description</h3>
+    <p>Comprehensive authentication and authorization system supporting multiple user types and access levels.</p>
+
+    <h3>3.1.2 Functional Requirements</h3>
+    <div class="requirement">
+        <ul>
+            <li><strong>FR-3.1.1</strong>: User login with email/username and password</li>
+            <li><strong>FR-3.1.2</strong>: Multi-factor authentication support</li>
+            <li><strong>FR-3.1.3</strong>: Social login integration (Google, Facebook)</li>
+            <li><strong>FR-3.1.4</strong>: Password reset via email</li>
+            <li><strong>FR-3.1.5</strong>: Session management and timeout</li>
+            <li><strong>FR-3.1.6</strong>: API authentication using JWT tokens</li>
+            <li><strong>FR-3.1.7</strong>: Role-based access control</li>
+        </ul>
+    </div>
+
+    <h3>3.1.3 Input/Output Specifications</h3>
+    <ul>
+        <li><strong>Input</strong>: User credentials, reset tokens, social auth tokens</li>
+        <li><strong>Output</strong>: Authentication status, user profile, access tokens</li>
+    </ul>
+
+    <h2>3.2 Product Management Module</h2>
+
+    <h3>3.2.1 Description</h3>
+    <p>Complete product lifecycle management including creation, variants, packages, and inventory tracking.</p>
+
+    <h3>3.2.2 Functional Requirements</h3>
+    <div class="requirement">
+        <ul>
+            <li><strong>FR-3.2.1</strong>: Create and manage product catalog</li>
+            <li><strong>FR-3.2.2</strong>: Product variant management (color, size, storage, etc.)</li>
+            <li><strong>FR-3.2.3</strong>: Package product creation with multiple items</li>
+            <li><strong>FR-3.2.4</strong>: Product categorization and subcategorization</li>
+            <li><strong>FR-3.2.5</strong>: Product image and media management</li>
+            <li><strong>FR-3.2.6</strong>: Inventory tracking and stock management</li>
+            <li><strong>FR-3.2.7</strong>: Product pricing and discount management</li>
+            <li><strong>FR-3.2.8</strong>: Product SEO optimization</li>
+            <li><strong>FR-3.2.9</strong>: Product review and rating system</li>
+            <li><strong>FR-3.2.10</strong>: Product question and answer system</li>
+        </ul>
+    </div>
+
+    <h3>3.2.3 Key Features</h3>
+    <div class="feature-box">
+        <ul>
+            <li><strong>Complex Variant System</strong>: Support for multiple variant types including color, size, storage, region, SIM type, warranty, and device condition</li>
+            <li><strong>Package Products</strong>: Ability to create bundles with multiple products and variants</li>
+            <li><strong>Duplicate Detection</strong>: Advanced validation to prevent duplicate variant combinations</li>
+            <li><strong>Stock Management</strong>: Real-time stock tracking with warehouse and room-level organization</li>
+            <li><strong>Media Management</strong>: Multiple image support with drag-and-drop functionality</li>
+        </ul>
+    </div>
+
+    <h2>3.3 Order Management Module</h2>
+
+    <h3>3.3.1 Description</h3>
+    <p>End-to-end order processing system from placement to delivery with comprehensive tracking.</p>
+
+    <h3>3.3.2 Functional Requirements</h3>
+    <div class="requirement">
+        <ul>
+            <li><strong>FR-3.3.1</strong>: Order creation and modification</li>
+            <li><strong>FR-3.3.2</strong>: Order status tracking (Pending, Approved, Dispatch, Transit, Delivered, Cancelled)</li>
+            <li><strong>FR-3.3.3</strong>: Payment processing and status management</li>
+            <li><strong>FR-3.3.4</strong>: Shipping and delivery management</li>
+            <li><strong>FR-3.3.5</strong>: Order cancellation and refund processing</li>
+            <li><strong>FR-3.3.6</strong>: Invoice generation and printing</li>
+            <li><strong>FR-3.3.7</strong>: Order analytics and reporting</li>
+            <li><strong>FR-3.3.8</strong>: Delivery man assignment and tracking</li>
+        </ul>
+    </div>
+
+    <h3>3.3.3 Order Workflow</h3>
+    <ol>
+        <li><strong>Order Placement</strong>: Customer places order via API or admin interface</li>
+        <li><strong>Validation</strong>: System validates product availability and pricing</li>
+        <li><strong>Payment Processing</strong>: Integration with multiple payment gateways</li>
+        <li><strong>Order Confirmation</strong>: Automatic confirmation and notification</li>
+        <li><strong>Fulfillment</strong>: Inventory allocation and picking</li>
+        <li><strong>Shipping</strong>: Delivery assignment and tracking</li>
+        <li><strong>Completion</strong>: Delivery confirmation and feedback collection</li>
+    </ol>
+
+    <h1 id="external-interface-requirements">4. External Interface Requirements</h1>
+
+    <h2>4.1 User Interfaces</h2>
+
+    <h3>4.1.1 Administrative Web Interface</h3>
+    <ul>
+        <li><strong>Technology</strong>: Blade templates with Bootstrap 4/5</li>
+        <li><strong>Features</strong>: Responsive design, intuitive navigation, role-based dashboards</li>
+        <li><strong>Components</strong>: Data tables, forms, charts, modals, notifications</li>
+    </ul>
+
+    <h3>4.1.2 API Interface</h3>
+    <ul>
+        <li><strong>Format</strong>: JSON REST APIs</li>
+        <li><strong>Authentication</strong>: JWT token-based</li>
+        <li><strong>Documentation</strong>: Comprehensive API documentation</li>
+        <li><strong>Rate Limiting</strong>: Configurable request throttling</li>
+    </ul>
+
+    <h2>4.2 Hardware Interfaces</h2>
+    <div class="info">
+        <strong>Minimum Server Specifications:</strong>
+        <ul>
+            <li>CPU: 2+ cores</li>
+            <li>RAM: 4GB minimum, 8GB recommended</li>
+            <li>Storage: 50GB minimum</li>
+            <li>Network: High-speed internet connection</li>
+        </ul>
+    </div>
+
+    <h1 id="database-design">6. Database Design</h1>
+
+    <h2>6.1 Database Architecture</h2>
+    <p>The system uses a relational database design with the following key characteristics:</p>
+    <ul>
+        <li><strong>Normalization</strong>: 3NF compliant design</li>
+        <li><strong>Referential Integrity</strong>: Foreign key constraints</li>
+        <li><strong>Indexing</strong>: Optimized query performance</li>
+        <li><strong>Partitioning</strong>: Large table optimization</li>
+    </ul>
+
+    <h2>6.2 Core Entity Relationships</h2>
+
+    <h3>6.2.1 Product Entities</h3>
+    <div class="code-block">
+products (main product table)
+├── product_variants (color, size, storage variants)
+├── product_images (multiple product images)
+├── package_product_items (for package products)
+├── categories (product categorization)
+├── subcategories (product subcategorization)
+├── childcategories (third-level categorization)
+├── brands (product brands)
+├── colors (available colors)
+├── product_sizes (available sizes)
+└── units (measurement units)
+    </div>
+
+    <h3>6.2.2 Order Entities</h3>
+    <div class="code-block">
+orders (main order table)
+├── order_details (order line items)
+├── order_progress (status tracking)
+├── shipping_infos (delivery information)
+├── billing_addresses (billing information)
+├── order_payments (payment records)
+└── order_delivery_men (delivery assignments)
+    </div>
+
+    <h2>6.3 Key Database Tables</h2>
+
+    <h3>6.3.1 Products Table</h3>
+    <div class="code-block">
+CREATE TABLE products (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    category_id BIGINT,
+    subcategory_id BIGINT,
+    childcategory_id BIGINT,
+    brand_id BIGINT,
+    name VARCHAR(255) NOT NULL,
+    code VARCHAR(100),
+    image VARCHAR(255),
+    price DECIMAL(10,2) DEFAULT 0,
+    discount_price DECIMAL(10,2) DEFAULT 0,
+    stock DECIMAL(8,2) DEFAULT 0,
+    has_variant TINYINT DEFAULT 0,
+    is_package BOOLEAN DEFAULT FALSE,
+    status TINYINT DEFAULT 1,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+    </div>
+
+    <h3>6.3.2 Package Product Items Table</h3>
+    <div class="code-block">
+CREATE TABLE package_product_items (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    package_product_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    color_id BIGINT NULL,
+    size_id BIGINT NULL,
+    quantity INT NOT NULL,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+    </div>
+
+    <h1 id="api-specifications">7. API Specifications</h1>
+
+    <h2>7.1 API Architecture</h2>
+    <ul>
+        <li><strong>Style</strong>: RESTful</li>
+        <li><strong>Format</strong>: JSON</li>
+        <li><strong>Authentication</strong>: JWT Bearer Token</li>
+        <li><strong>Versioning</strong>: URL-based versioning</li>
+        <li><strong>Error Handling</strong>: Standardized error responses</li>
+    </ul>
+
+    <h2>7.2 Authentication APIs</h2>
+
+    <h3>7.2.1 User Registration</h3>
+    <div class="api-example">
+        <div class="code-block">
+POST /api/user/registration
+Content-Type: application/json
+
+Request:
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "phone": "+1234567890",
+    "password": "securePassword123"
+}
+
+Response:
+{
+    "status": "success",
+    "message": "Registration successful",
+    "data": {
+        "user_id": 123,
+        "verification_required": true
+    }
+}
+        </div>
+    </div>
+
+    <h3>7.2.2 User Login</h3>
+    <div class="api-example">
+        <div class="code-block">
+POST /api/user/login
+Content-Type: application/json
+
+Request:
+{
+    "email": "john@example.com",
+    "password": "securePassword123"
+}
+
+Response:
+{
+    "status": "success",
+    "message": "Login successful",
+    "data": {
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+        "user": {
+            "id": 123,
+            "name": "John Doe",
+            "email": "john@example.com"
+        }
+    }
+}
+        </div>
+    </div>
+
+    <h1 id="security-requirements">8. Security Requirements</h1>
+
+    <h2>8.1 Authentication Security</h2>
+    <ul>
+        <li><strong>Password Hashing</strong>: bcrypt with salt</li>
+        <li><strong>JWT Tokens</strong>: RS256 algorithm with expiration</li>
+        <li><strong>Session Security</strong>: HttpOnly, Secure, SameSite cookies</li>
+        <li><strong>Brute Force Protection</strong>: Rate limiting on login attempts</li>
+    </ul>
+
+    <h2>8.2 Data Security</h2>
+    <ul>
+        <li><strong>Input Validation</strong>: Server-side validation for all inputs</li>
+        <li><strong>SQL Injection Prevention</strong>: Parameterized queries</li>
+        <li><strong>XSS Prevention</strong>: Output encoding and CSP headers</li>
+        <li><strong>CSRF Protection</strong>: CSRF tokens for state-changing operations</li>
+    </ul>
+
+    <h1 id="performance-requirements">9. Performance Requirements</h1>
+
+    <h2>9.1 System Performance Metrics</h2>
+    <table>
+        <tr><th>Metric</th><th>Target</th></tr>
+        <tr><td>Page Load Time</td><td>&lt; 3 seconds for 95% of requests</td></tr>
+        <tr><td>API Response Time</td><td>&lt; 1 second for standard operations</td></tr>
+        <tr><td>Database Query Time</td><td>&lt; 500ms for complex queries</td></tr>
+        <tr><td>Concurrent Users</td><td>Support for 500+ simultaneous users</td></tr>
+    </table>
+
+    <h1 id="quality-attributes">10. Quality Attributes</h1>
+
+    <h2>10.1 Reliability</h2>
+    <ul>
+        <li><strong>Uptime Target</strong>: 99.9% availability</li>
+        <li><strong>Error Recovery</strong>: Graceful degradation and recovery mechanisms</li>
+        <li><strong>Data Consistency</strong>: ACID compliance for critical operations</li>
+        <li><strong>Backup Strategy</strong>: Automated daily backups with point-in-time recovery</li>
+    </ul>
+
+    <h2>10.2 Maintainability</h2>
+    <ul>
+        <li><strong>Code Quality</strong>: PSR standards compliance</li>
+        <li><strong>Documentation</strong>: Comprehensive code and API documentation</li>
+        <li><strong>Testing</strong>: Unit tests, integration tests, and automated testing</li>
+        <li><strong>Version Control</strong>: Git-based version control with branching strategy</li>
+    </ul>
+
+    <h2>10.3 Scalability</h2>
+    <ul>
+        <li><strong>Horizontal Scaling</strong>: Load balancer and multi-server support</li>
+        <li><strong>Database Scaling</strong>: Read replicas and sharding capabilities</li>
+        <li><strong>Microservices Ready</strong>: Modular architecture for future decomposition</li>
+        <li><strong>Cloud Integration</strong>: Cloud deployment and auto-scaling support</li>
+    </ul>
+
+    <div class="document-info" style="margin-top: 50px;">
+        <h2>Document Control</h2>
+        <table>
+            <tr><td>Created By</td><td>Development Team</td></tr>
+            <tr><td>Reviewed By</td><td>Project Manager</td></tr>
+            <tr><td>Approved By</td><td>System Architect</td></tr>
+            <tr><td>Last Updated</td><td>July 31, 2025</td></tr>
+            <tr><td>Next Review</td><td>January 31, 2026</td></tr>
+        </table>
+    </div>
+</body>
+</html>
