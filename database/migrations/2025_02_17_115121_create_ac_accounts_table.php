@@ -40,8 +40,8 @@ class CreateAcAccountsTable extends Migration
             $table->string('account_selection_name', 50)->nullable();   
 
             $table->unsignedBigInteger('paymenttypes_id')->nullable();
-            $table->unsignedBigInteger('customer_id')->nullable();
-            $table->unsignedBigInteger('supplier_id')->nullable();
+            // $table->unsignedBigInteger('customer_id')->nullable();
+            // $table->unsignedBigInteger('supplier_id')->nullable();
             $table->unsignedBigInteger('expense_id')->nullable();
 
             $table->unsignedBigInteger('creator')->nullable();
