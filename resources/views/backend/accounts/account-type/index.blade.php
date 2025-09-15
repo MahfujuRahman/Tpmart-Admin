@@ -417,12 +417,12 @@
                                                     <i class="fa fa-{{ $accountType->status ? 'eye-slash' : 'eye' }}"></i>
                                                 </button>
                                                 
-                                                <button type="button" 
+                                                <!-- <button type="button" 
                                                         class="btn btn-sm btn-delete" 
                                                         onclick="deleteAccountType({{ $accountType->id }})"
                                                         title="Delete">
                                                     <i class="fa fa-trash"></i>
-                                                </button>
+                                                </button> -->
                                             </div>
                                         </td>
                                     </tr>

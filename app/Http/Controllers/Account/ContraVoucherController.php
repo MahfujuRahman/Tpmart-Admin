@@ -15,67 +15,14 @@ use App\Http\Controllers\Account\Models\SubsidiaryLedgerGroup;
 use App\Http\Controllers\Account\Models\SubsidiaryLedgerCategory;
 use App\Http\Controllers\Account\Models\PaymentVoucher;
 use Illuminate\Support\Facades\DB;
-
+use App\Http\Controllers\Account\AccountsHelper;
+use App\Http\Controllers\Account\Models\AccountsConfiguration;
 class ContraVoucherController extends Controller
 {
     /**
      * Convert number to words
      */
-    private function numberToWords($number)
-    {
-        $ones = array(
-            0 => 'Zero', 1 => 'One', 2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five',
-            6 => 'Six', 7 => 'Seven', 8 => 'Eight', 9 => 'Nine', 10 => 'Ten',
-            11 => 'Eleven', 12 => 'Twelve', 13 => 'Thirteen', 14 => 'Fourteen', 15 => 'Fifteen',
-            16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen', 19 => 'Nineteen'
-        );
-        
-        $tens = array(
-            20 => 'Twenty', 30 => 'Thirty', 40 => 'Forty', 50 => 'Fifty',
-            60 => 'Sixty', 70 => 'Seventy', 80 => 'Eighty', 90 => 'Ninety'
-        );
-        
-        if ($number < 20) {
-            return $ones[$number];
-        } elseif ($number < 100) {
-            $tens_digit = floor($number / 10) * 10;
-            $ones_digit = $number % 10;
-            return $tens[$tens_digit] . ($ones_digit > 0 ? ' ' . $ones[$ones_digit] : '');
-        } elseif ($number < 1000) {
-            $hundreds = floor($number / 100);
-            $remainder = $number % 100;
-            $result = $ones[$hundreds] . ' Hundred';
-            if ($remainder > 0) {
-                $result .= ' ' . $this->numberToWords($remainder);
-            }
-            return $result;
-        } elseif ($number < 100000) {
-            $thousands = floor($number / 1000);
-            $remainder = $number % 1000;
-            $result = $this->numberToWords($thousands) . ' Thousand';
-            if ($remainder > 0) {
-                $result .= ' ' . $this->numberToWords($remainder);
-            }
-            return $result;
-        } elseif ($number < 10000000) {
-            $lakhs = floor($number / 100000);
-            $remainder = $number % 100000;
-            $result = $this->numberToWords($lakhs) . ' Lakh';
-            if ($remainder > 0) {
-                $result .= ' ' . $this->numberToWords($remainder);
-            }
-            return $result;
-        } else {
-            $crores = floor($number / 10000000);
-            $remainder = $number % 10000000;
-            $result = $this->numberToWords($crores) . ' Crore';
-            if ($remainder > 0) {
-                $result .= ' ' . $this->numberToWords($remainder);
-            }
-            return $result;
-        }
-    }
-    
+ 
     public function index(Request $request)
     {
         $query = AccountTransaction::with('accTransactionDetails')
@@ -122,11 +69,11 @@ class ContraVoucherController extends Controller
         try {
             DB::beginTransaction();
     
-            // 🔹 Generate Voucher Number
+            // Generate Voucher Number
             $voucherCount = AccountTransaction::where('trans_type', 4)->count();
             $voucherNo = 'CV-' . date('Y') . '-' . str_pad($voucherCount + 1, 4, '0', STR_PAD_LEFT);
     
-            // 🔹 Create Master Transaction
+            // Create Master Transaction
             $contraVoucher = AccountTransaction::create([
                 'voucher_no'     => $voucherNo,
                 'voucher_int_no' => $voucherCount + 1,
@@ -141,13 +88,13 @@ class ContraVoucherController extends Controller
            
             $transaction_id = $contraVoucher->id;
             
-            // 🔹 Loop through line items
+            // Loop through line items
             foreach ($request->line_items as $item) {
     
                 $fromLedger = SubsidiaryLedger::findOrFail($item['from_ledger_id']);
                 $toLedger  = SubsidiaryLedger::findOrFail($item['to_ledger_id']);
     
-                // 🔹 Create Transaction Detail (Child)
+                // Create Transaction Detail (Child)
                 $detail = AccountTransactionDetail::create([
                     'acc_transaction_id'  => $transaction_id,
                     'dr_adjust_trans_id'  => 0,
@@ -167,7 +114,7 @@ class ContraVoucherController extends Controller
     
                 $tran_details_id = $detail->id;
     
-                // 🔹 Double Entry in SubsidiaryCalculation
+                // Double Entry in SubsidiaryCalculation
                 SubsidiaryCalculation::create([
                     'particular'              => $toLedger->id,
                     'particular_control_group' => $toLedger->group_id,
@@ -253,7 +200,7 @@ class ContraVoucherController extends Controller
                 'updated_by' => auth()->id(),
             ]);
 
-            // পুরানো details ডিলিট করে নতুন যোগ করব
+            // Details Delete and New Details Add
             AccountTransactionDetail::where('acc_transaction_id', $id)->delete();
             SubsidiaryCalculation::where('transaction_id', $id)->delete();
 
@@ -381,7 +328,7 @@ class ContraVoucherController extends Controller
             $totalCredit += $detail->amount;
         }
         
-        $amountInWords = $this->numberToWords($totalDebit) . ' Taka Only';
+        $amountInWords = AccountsHelper::numberToWords($totalDebit) . ' Taka Only';
         
         return view('backend.accounts.contra-voucher.show', compact('contraVoucher', 'debitEntries', 'creditEntries', 'totalDebit', 'totalCredit', 'amountInWords'));
     }
@@ -429,7 +376,7 @@ class ContraVoucherController extends Controller
             $totalCredit += $detail->amount;
         }
         
-        $amountInWords = $this->numberToWords($totalDebit) . ' Taka Only';
+        $amountInWords = AccountsHelper::numberToWords($totalDebit) . ' Taka Only';
         
         return view('backend.accounts.contra-voucher.print', compact('contraVoucher', 'debitEntries', 'creditEntries', 'totalDebit', 'totalCredit', 'amountInWords'));
     }

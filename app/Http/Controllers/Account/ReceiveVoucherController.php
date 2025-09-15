@@ -14,6 +14,8 @@ use App\Http\Controllers\Account\Models\SubsidiaryLedgerGroup;
 use App\Http\Controllers\Account\Models\SubsidiaryLedgerCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use App\Http\Controllers\Account\AccountsHelper;
+use App\Http\Controllers\Account\Models\AccountsConfiguration;
 
 class ReceiveVoucherController extends Controller
 {
@@ -188,7 +190,7 @@ class ReceiveVoucherController extends Controller
             $totalCredit += $detail->amount;
         }
         
-        $amountInWords = $this->numberToWords($totalDebit) . ' Taka Only';
+        $amountInWords = AccountsHelper::numberToWords($totalDebit) . ' Taka Only';
         
         return view('backend.accounts.receive-voucher.show', compact('receiveVoucher', 'debitEntries', 'creditEntries', 'totalDebit', 'totalCredit', 'amountInWords'));
     }
@@ -228,9 +230,8 @@ class ReceiveVoucherController extends Controller
             $creditEntries[$creditKey]['amount'] += $detail->amount;
             $totalCredit += $detail->amount;
         }
-        
-        $amountInWords = $this->numberToWords($totalDebit) . ' Taka Only';
-        
+            
+            $amountInWords = AccountsHelper::numberToWords($totalDebit) . ' Taka Only'; 
         return view('backend.accounts.receive-voucher.print', compact('receiveVoucher', 'debitEntries', 'creditEntries', 'totalDebit', 'totalCredit', 'amountInWords'));
     }
     
@@ -360,94 +361,5 @@ class ReceiveVoucherController extends Controller
         }
     }
     
-    private function numberToWords($number)
-    {
-        $ones = array(
-            0 => '', 1 => 'One', 2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five',
-            6 => 'Six', 7 => 'Seven', 8 => 'Eight', 9 => 'Nine', 10 => 'Ten',
-            11 => 'Eleven', 12 => 'Twelve', 13 => 'Thirteen', 14 => 'Fourteen', 15 => 'Fifteen',
-            16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen', 19 => 'Nineteen'
-        );
-        
-        $tens = array(
-            2 => 'Twenty', 3 => 'Thirty', 4 => 'Forty', 5 => 'Fifty',
-            6 => 'Sixty', 7 => 'Seventy', 8 => 'Eighty', 9 => 'Ninety'
-        );
-        
-        $number = (int)$number;
-        
-        if ($number == 0) return 'Zero';
-        
-        $result = '';
-        
-        // Crores
-        if ($number >= 10000000) {
-            $crores = intval($number / 10000000);
-            $result .= $this->convertHundreds($crores, $ones, $tens) . ' Crore ';
-            $number %= 10000000;
-        }
-        
-        // Lakhs
-        if ($number >= 100000) {
-            $lakhs = intval($number / 100000);
-            $result .= $this->convertHundreds($lakhs, $ones, $tens) . ' Lakh ';
-            $number %= 100000;
-        }
-        
-        // Thousands
-        if ($number >= 1000) {
-            $thousands = intval($number / 1000);
-            $result .= $this->convertHundreds($thousands, $ones, $tens) . ' Thousand ';
-            $number %= 1000;
-        }
-        
-        // Hundreds
-        if ($number >= 100) {
-            $hundreds = intval($number / 100);
-            $result .= $ones[$hundreds] . ' Hundred ';
-            $number %= 100;
-        }
-        
-        // Tens and Ones
-        if ($number > 0) {
-            if ($number < 20) {
-                $result .= $ones[$number];
-            } else {
-                $tensDigit = intval($number / 10);
-                $onesDigit = $number % 10;
-                $result .= $tens[$tensDigit];
-                if ($onesDigit > 0) {
-                    $result .= ' ' . $ones[$onesDigit];
-                }
-            }
-        }
-        
-        return trim($result);
-    }
-    
-    private function convertHundreds($number, $ones, $tens)
-    {
-        $result = '';
-        
-        if ($number >= 100) {
-            $hundreds = intval($number / 100);
-            $result .= $ones[$hundreds] . ' Hundred ';
-            $number %= 100;
-        }
-        
-        if ($number > 0) {
-            if ($number < 20) {
-                $result .= $ones[$number];
-            } else {
-                $tensDigit = intval($number / 10);
-                $onesDigit = $number % 10;
-                $result .= $tens[$tensDigit];
-                if ($onesDigit > 0) {
-                    $result .= ' ' . $ones[$onesDigit];
-                }
-            }
-        }
-        
-        return trim($result);
-    }
+   
 }

@@ -580,6 +580,12 @@
                     <span>Chart of Accounts</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('accounts-configuration.index') }}" data-active-paths="{{ route('accounts-configuration.index') }}">
+                    <i class="fas fa-cogs"></i>
+                    <span>Accounts Configuration</span>
+                </a>
+            </li>
         </ul>
     </li>
     

@@ -14,67 +14,11 @@ use App\Http\Controllers\Account\Models\Group;
 use App\Http\Controllers\Account\Models\SubsidiaryLedgerGroup;
 use App\Http\Controllers\Account\Models\SubsidiaryLedgerCategory;
 use App\Http\Controllers\Account\Models\PaymentVoucher;
+use App\Http\Controllers\Account\AccountsHelper;
 use Illuminate\Support\Facades\DB;
 
 class PaymentVoucherController extends Controller
 {
-    /**
-     * Convert number to words
-     */
-    private function numberToWords($number)
-    {
-        $ones = array(
-            0 => 'Zero', 1 => 'One', 2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five',
-            6 => 'Six', 7 => 'Seven', 8 => 'Eight', 9 => 'Nine', 10 => 'Ten',
-            11 => 'Eleven', 12 => 'Twelve', 13 => 'Thirteen', 14 => 'Fourteen', 15 => 'Fifteen',
-            16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen', 19 => 'Nineteen'
-        );
-        
-        $tens = array(
-            20 => 'Twenty', 30 => 'Thirty', 40 => 'Forty', 50 => 'Fifty',
-            60 => 'Sixty', 70 => 'Seventy', 80 => 'Eighty', 90 => 'Ninety'
-        );
-        
-        if ($number < 20) {
-            return $ones[$number];
-        } elseif ($number < 100) {
-            $tens_digit = floor($number / 10) * 10;
-            $ones_digit = $number % 10;
-            return $tens[$tens_digit] . ($ones_digit > 0 ? ' ' . $ones[$ones_digit] : '');
-        } elseif ($number < 1000) {
-            $hundreds = floor($number / 100);
-            $remainder = $number % 100;
-            $result = $ones[$hundreds] . ' Hundred';
-            if ($remainder > 0) {
-                $result .= ' ' . $this->numberToWords($remainder);
-            }
-            return $result;
-        } elseif ($number < 100000) {
-            $thousands = floor($number / 1000);
-            $remainder = $number % 1000;
-            $result = $this->numberToWords($thousands) . ' Thousand';
-            if ($remainder > 0) {
-                $result .= ' ' . $this->numberToWords($remainder);
-            }
-            return $result;
-        } elseif ($number < 10000000) {
-            $lakhs = floor($number / 100000);
-            $remainder = $number % 100000;
-            $result = $this->numberToWords($lakhs) . ' Lakh';
-            if ($remainder > 0) {
-                $result .= ' ' . $this->numberToWords($remainder);
-            }
-            return $result;
-        } else {
-            $crores = floor($number / 10000000);
-            $remainder = $number % 10000000;
-            $result = $this->numberToWords($crores) . ' Crore';
-            if ($remainder > 0) {
-                $result .= ' ' . $this->numberToWords($remainder);
-            }
-            return $result;
-        }
-    }
     public function index(Request $request)
     {
         // Debug: Check all transactions first
@@ -106,7 +50,7 @@ class PaymentVoucherController extends Controller
      */
     public function create()
     {
-        $groups = Group::with('subsidiaryLedgers')->where('status', 1)->get();
+        $groups = Group::with('subsidiaryLedgers')->where('account_type_id', 2)->where('status', 1)->get();
         $subsidiaryLedgers = SubsidiaryLedger::with('group')->where('status', 1)->get();
 
         return view('backend.accounts.payment-voucher.create', compact('groups', 'subsidiaryLedgers'));
@@ -260,7 +204,7 @@ class PaymentVoucherController extends Controller
                 'updated_by' => auth()->id(),
             ]);
 
-            // পুরানো details ডিলিট করে নতুন যোগ করব
+            // Details Delete and New Details Add
             AccountTransactionDetail::where('acc_transaction_id', $id)->delete();
             SubsidiaryCalculation::where('transaction_id', $id)->delete();
 
@@ -387,7 +331,7 @@ class PaymentVoucherController extends Controller
             $totalCredit += $detail->amount;
         }
         
-        $amountInWords = $this->numberToWords($totalDebit) . ' Taka Only';
+        $amountInWords = AccountsHelper::numberToWords($totalDebit) . ' Taka Only';
         
         return view('backend.accounts.payment-voucher.show', compact('paymentVoucher', 'debitEntries', 'creditEntries', 'totalDebit', 'totalCredit', 'amountInWords'));
     }
@@ -435,7 +379,7 @@ class PaymentVoucherController extends Controller
             $totalCredit += $detail->amount;
         }
         
-        $amountInWords = $this->numberToWords($totalDebit) . ' Taka Only';
+        $amountInWords = AccountsHelper::numberToWords($totalDebit) . ' Taka Only';
         
         return view('backend.accounts.payment-voucher.print', compact('paymentVoucher', 'debitEntries', 'creditEntries', 'totalDebit', 'totalCredit', 'amountInWords'));
     }

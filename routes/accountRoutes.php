@@ -17,6 +17,7 @@ use App\Http\Controllers\Account\ReceiveVoucherController;
 use App\Http\Controllers\Account\JournalVoucherController;
 use App\Http\Controllers\Account\ContraVoucherController;
 use App\Http\Controllers\Account\AccountReportsController;
+use App\Http\Controllers\Account\AccountsConfigurationController;
 
 
 
@@ -101,6 +102,17 @@ Route::group(['prefix' => 'account', 'middleware' => ['auth', 'CheckUserType', '
         Route::get('/subsidiary-ledger/toggle-status/{id}', [SubsidiaryLedgerController::class, 'toggleStatus'])->name('subsidiary-ledger.toggle-status');
         
         Route::get('/chart-of-accounts', [ChartOfAccountsController::class, 'index'])->name('chart-of-accounts.index');
+        
+        // Accounts Configuration
+        Route::get('/configuration', [AccountsConfigurationController::class, 'index'])->name('accounts-configuration.index');
+        Route::get('/configuration/create', [AccountsConfigurationController::class, 'create'])->name('accounts-configuration.create');
+        Route::post('/configuration/store', [AccountsConfigurationController::class, 'store'])->name('accounts-configuration.store');
+        Route::get('/configuration/show/{accountsConfiguration}', [AccountsConfigurationController::class, 'show'])->name('accounts-configuration.show');
+        Route::get('/configuration/edit/{accountsConfiguration}', [AccountsConfigurationController::class, 'edit'])->name('accounts-configuration.edit');
+        Route::put('/configuration/update/{accountsConfiguration}', [AccountsConfigurationController::class, 'update'])->name('accounts-configuration.update');
+        Route::delete('/configuration/destroy/{accountsConfiguration}', [AccountsConfigurationController::class, 'destroy'])->name('accounts-configuration.destroy');
+        Route::post('/configuration/bulk-update', [AccountsConfigurationController::class, 'bulkUpdate'])->name('accounts-configuration.bulk-update');
+        Route::post('/configuration/reset', [AccountsConfigurationController::class, 'resetToDefault'])->name('accounts-configuration.reset');
     });
 
 

@@ -14,6 +14,8 @@ use App\Http\Controllers\Account\Models\SubsidiaryLedgerGroup;
 use App\Http\Controllers\Account\Models\SubsidiaryLedgerCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use App\Http\Controllers\Account\AccountsHelper;
+use App\Http\Controllers\Account\Models\AccountsConfiguration;
 
 class JournalVoucherController extends Controller
 {
@@ -194,7 +196,7 @@ class JournalVoucherController extends Controller
             }
         }
         
-        $amountInWords = $this->numberToWords($journalVoucher->amount);
+        $amountInWords = AccountsHelper::numberToWords($journalVoucher->amount).' Taka Only';
         
         return view('backend.accounts.journal-voucher.show', compact(
             'journalVoucher', 'debitEntries', 'creditEntries', 'totalDebit', 'totalCredit', 'amountInWords'
@@ -371,97 +373,12 @@ class JournalVoucherController extends Controller
             }
         }
         
-        $amountInWords = $this->numberToWords($journalVoucher->amount);
+        $amountInWords = AccountsHelper::numberToWords($journalVoucher->amount).' Taka Only'	;
         
         return view('backend.accounts.journal-voucher.print', compact(
             'journalVoucher', 'debitEntries', 'creditEntries', 'totalDebit', 'totalCredit', 'amountInWords'
         ));
     }
     
-    private function numberToWords($number)
-    {
-        $ones = array(
-            0 => '', 1 => 'One', 2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five',
-            6 => 'Six', 7 => 'Seven', 8 => 'Eight', 9 => 'Nine', 10 => 'Ten',
-            11 => 'Eleven', 12 => 'Twelve', 13 => 'Thirteen', 14 => 'Fourteen', 15 => 'Fifteen',
-            16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen', 19 => 'Nineteen'
-        );
-        
-        $tens = array(
-            2 => 'Twenty', 3 => 'Thirty', 4 => 'Forty', 5 => 'Fifty',
-            6 => 'Sixty', 7 => 'Seventy', 8 => 'Eighty', 9 => 'Ninety'
-        );
-        
-        $number = (int)$number;
-        
-        if ($number == 0) return 'Zero';
-        
-        $result = '';
-        
-        // Crores
-        if ($number >= 10000000) {
-            $crores = intval($number / 10000000);
-            $result .= $this->convertHundreds($crores, $ones, $tens) . ' Crore ';
-            $number %= 10000000;
-        }
-        
-        // Lakhs
-        if ($number >= 100000) {
-            $lakhs = intval($number / 100000);
-            $result .= $this->convertHundreds($lakhs, $ones, $tens) . ' Lakh ';
-            $number %= 100000;
-        }
-        
-        // Thousands
-        if ($number >= 1000) {
-            $thousands = intval($number / 1000);
-            $result .= $this->convertHundreds($thousands, $ones, $tens) . ' Thousand ';
-            $number %= 1000;
-        }
-        
-        // Hundreds
-        if ($number >= 100) {
-            $hundreds = intval($number / 100);
-            $result .= $ones[$hundreds] . ' Hundred ';
-            $number %= 100;
-        }
-        
-        // Tens and Ones
-        if ($number >= 20) {
-            $tens_digit = intval($number / 10);
-            $ones_digit = $number % 10;
-            $result .= $tens[$tens_digit];
-            if ($ones_digit > 0) {
-                $result .= ' ' . $ones[$ones_digit];
-            }
-        } elseif ($number > 0) {
-            $result .= $ones[$number];
-        }
-        
-        return trim($result) . ' Taka Only';
-    }
     
-    private function convertHundreds($number, $ones, $tens)
-    {
-        $result = '';
-        
-        if ($number >= 100) {
-            $hundreds = intval($number / 100);
-            $result .= $ones[$hundreds] . ' Hundred ';
-            $number %= 100;
-        }
-        
-        if ($number >= 20) {
-            $tens_digit = intval($number / 10);
-            $ones_digit = $number % 10;
-            $result .= $tens[$tens_digit];
-            if ($ones_digit > 0) {
-                $result .= ' ' . $ones[$ones_digit];
-            }
-        } elseif ($number > 0) {
-            $result .= $ones[$number];
-        }
-        
-        return trim($result);
-    }
 }
