@@ -551,8 +551,122 @@
     {{-- Start Accounts Module --}}
     <hr style="border-color: #c8c8c836; margin-top: 12px; margin-bottom: 12px;">
     <li class="menu-title" style="color: khaki; text-shadow: 1px 1px 2px black;">Accounts Modules</li>
+    <li>
+        <a href="javascript:void(0);" class="has-arrow">
+            <i class="feather-layers"></i><span>Chart of Accounts</span>
+        </a>
+        <ul class="sub-menu" aria-expanded="false">
+            <li>
+                <a href="{{ route('account-types.index') }}" data-active-paths="{{ route('account-types.index') }}">
+                    <i class="feather-list"></i>
+                    <span>Account Types</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('group.index') }}" data-active-paths="{{ route('group.index') }}">
+                    <i class="feather-folder"></i>
+                    <span>Group Name</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('subsidiary-ledger.index') }}" data-active-paths="{{ route('subsidiary-ledger.index') }}">
+                    <i class="feather-layers"></i>
+                    <span>Subsidiary Ledger</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('chart-of-accounts.index') }}" data-active-paths="{{ route('chart-of-accounts.index') }}">
+                    <i class="fas fa-sitemap"></i>
+                    <span>Chart of Accounts</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('accounts-configuration.index') }}" data-active-paths="{{ route('accounts-configuration.index') }}">
+                    <i class="fas fa-cogs"></i>
+                    <span>Accounts Configuration</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    
+    
 
     <li>
+        <a href="javascript:void(0);" class="has-arrow">
+            <i class="feather-file-text"></i><span>Voucher Entry</span>
+        </a>
+        <ul class="sub-menu" aria-expanded="false">
+            <li>
+                <a href="{{ route('voucher.payment') }}" data-active-paths="{{ route('voucher.payment') }}">
+                    <i class="feather-credit-card"></i>
+                    <span>Payment Voucher</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('voucher.receive') }}" data-active-paths="{{ route('voucher.receive') }}">
+                    <i class="feather-download"></i>
+                    <span>Receive Voucher</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('voucher.journal') }}" data-active-paths="{{ route('voucher.journal') }}">
+                    <i class="feather-book"></i>
+                    <span>Journal Voucher</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('contra-voucher.index') }}" data-active-paths="{{ route('contra-voucher.index') }}, {{ route('contra-voucher.create') }}, {{ route('contra-voucher.edit', '*') }}, {{ route('contra-voucher.show', '*') }}, {{ route('contra-voucher.print', '*') }}">
+                    <i class="feather-refresh-ccw"></i>
+                    <span>Contra Voucher</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <!-- Route::get('/journal-report', [JournalVoucherController::class, 'journalReport'])->name('reports.journal-report');
+        Route::get('/lager-report', [PaymentVoucherController::class, 'lagerReport'])->name('reports.lager-report');
+        Route::get('/balance-sheet-report', [ReceiveVoucherController::class, 'balanceSheetReport'])->name('reports.balance-sheet-report');
+        Route::get('/income-statement-report', [ContraVoucherController::class, 'incomeStatementReport'])->name('reports.income-statement-report'); -->
+    <li>
+        <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>Reports</span></a>
+        <ul class="sub-menu" aria-expanded="false">
+            <li>
+                <a href="{{ route('reports.journal-report') }}" data-active-paths="{{ route('reports.journal-report') }}">
+                    <i class="feather-book"></i>
+                    <span>Journal</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('reports.lager-report') }}" data-active-paths="{{ route('reports.lager-report') }}">
+                    <i class="feather-credit-card"></i>
+                    <span>Lager</span></a>
+            </li>
+            <li>
+                <a href="{{ route('reports.balance-sheet-report') }}"
+                    data-active-paths="{{ route('reports.balance-sheet-report') }}">
+                    <i class="feather-layers"></i>
+                    <span>Balance Sheet</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('reports.income-statement-report') }}"
+                    data-active-paths="{{ route('reports.income-statement-report') }}">
+                        <i class="feather-trending-up"></i>
+                    <span>Income Statement</span>
+                </a>
+            </li>
+            <!-- <li>
+                <a href="{{ route('reports.journal-report') }}" data-active-paths="{{ route('reports.journal-report') }}">
+                    <i class="feather-trending-up"></i>
+                    <span>Journal Voucher Report</span>
+                </a>
+            </li> -->
+        </ul>
+    </li>
+    
+
+
+    <!-- <li>
         <a href="{{ url('/view/all/payment-type') }}"
             data-active-paths="{{ url('/view/all/payment-type') }}, {{ url('/add/new/payment-type') }}, {{ url('/edit/payment-type/*') }}">
             <i class="feather-box"></i> Payment Types
@@ -598,10 +712,10 @@
                 ({{ DB::table('ac_transactions')->count() }})
             </span>
         </a>
-    </li>
+    </li> -->
 
 
-    <li>
+    <!-- <li>
         <a href="javascript: void(0);" class="has-arrow"><i class="feather-settings"></i><span>Reports</span></a>
         <ul class="sub-menu" aria-expanded="false">
             <li>
@@ -629,8 +743,14 @@
                     <span>Income Statement</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('voucher.journal.report') }}" data-active-paths="{{ route('voucher.journal.report') }}">
+                    <i class="feather-bar-chart-2"></i>
+                    <span>Journal Voucher Report</span>
+                </a>
+            </li>
         </ul>
-    </li>
+    </li> -->
     {{-- End Accounts Module --}}
 
     {{-- Start Crm Module --}}

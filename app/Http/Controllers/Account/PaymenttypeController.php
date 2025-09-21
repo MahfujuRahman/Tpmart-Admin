@@ -57,51 +57,7 @@ class PaymenttypeController extends Controller
 
     }
 
-    // public function viewAllPaymentType(Request $request)
-    // {
-    //     if ($request->ajax()) {
-    //         $data = DbPaymentType::with('user')
-    //             ->where('status', 'active')
-    //             ->orderBy('id', 'DESC')
-    //             ->get();
-
-    //         $col_data = Datatables::of($data)
-    //             // ->editColumn('status', function ($data) {
-    //             //     return $data->status == "active" ? 'Active' : 'Inactive';
-    //             // })
-    //             // ->editColumn('created_at', function ($data) {
-    //             //     return date("Y-m-d", strtotime($data->created_at));
-    //             // })
-    //             // ->addIndexColumn()
-    //             ->addColumn('payment_type', function ($data) {
-    //                 return $data->payment_type ? $data->payment_type : 'N/A';
-    //             });
-    //         // ->addColumn('customer_source_type', function ($data) {
-    //         //     return $data->customerSourceType ? $data->customerSourceType->title : 'N/A';
-    //         // })
-    //         // ->addColumn('reference_by', function ($data) {
-    //         //     return $data->referenceBy ? $data->referenceBy->name : 'N/A';
-    //         // })
-
-    //             $col_data->addColumn('user', function ($data) {
-    //                 return $data->user ? $data->user->name : 'N/A';
-    //             });
-
-    //             // return $col_data;
-    //             $col_data->addColumn('action', function ($data) {
-    //                 $btn = '<a href="' . url('edit/payment-type') . '/' . $data->slug . '" class="btn-sm btn-warning rounded editBtn"><i class="fas fa-edit"></i></a>';
-    //                 $btn .= ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $data->slug . '" data-original-title="Delete" class="btn-sm btn-danger rounded deleteBtn"><i class="fas fa-trash-alt"></i></a>';
-    //                 return $btn;
-    //             })
-    //             ;
-
-    //         return $col_data->rawColumns(['action'])
-    //         ->make(true);
-    //     }
-    //     return view('backend.paymenttype.view');
-    // }
-
-
+    
 
     public function viewAllPaymentType(Request $request)
     {
